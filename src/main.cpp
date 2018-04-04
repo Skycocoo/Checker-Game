@@ -46,15 +46,17 @@ public:
     bool humanRegular(int origx, int origy, vector<int>& moves){
         // return bool to indicate whether there is a legal move for (origx, origy)
         // any legal move will be stored in moves
-
         moves.clear();
-        if (origx >= 0 && origy >= 0 && origx < board.b.size() && origy < board.b[origx].size() && board.b[origx][origy] != HUSS) return false;
 
-        int newx = origx - 1, lefty = origy - 1, righty = origy + 1;
-        if (newx >= 0){
-            if (lefty >= 0 && board.b[newx][lefty] == 0) moves.insert(moves.end(), {newx, lefty});
-            if (righty < board.b[newx].size() && board.b[newx][righty] == 0) moves.insert(moves.end(), {newx, righty});
-            if (moves.size() > 0) return true;
+        if (origx >= 0 && origy >= 0 && origx < board.b.size() && origy < board.b[origx].size()){
+            if (board.b[origx][origy] != HUSS) return false;
+
+            int newx = origx - 1, lefty = origy - 1, righty = origy + 1;
+            if (newx >= 0){
+                if (lefty >= 0 && board.b[newx][lefty] == 0) moves.insert(moves.end(), {newx, lefty});
+                if (righty < board.b[newx].size() && board.b[newx][righty] == 0) moves.insert(moves.end(), {newx, righty});
+                if (moves.size() > 0) return true;
+            }
         }
         return false;
     }
@@ -137,7 +139,7 @@ public:
         // determine the winner / draw
 
         cout << "Checker Game, 6 * 6 board" << endl;
-        cout << "The Board is Row-Major; which means that the bottom-left W checker's position is (5, 0)" << endl;
+        cout << "The Board is Row-Major; \ne.g. the bottom-left W checker's position is (5, 0)" << endl;
         cout << board;
 
         cout << "input 1 to take first move; 2 to take second move" << endl;
@@ -159,7 +161,7 @@ private:
     void displayMoves() const {
         cout << "You have a total of " << humanMoves.size() / 2 << " moves" << endl;
         for (size_t i = 0; i < humanMoves.size() / 2; i++){
-            cout << humanMoves[i] << " " << humanMoves[i+1] << endl;
+            cout << "The " << i+1 << " move: (" << humanMoves[2 * i] << ", " << humanMoves[2 * i + 1] << ")" << endl;
         }
     }
 
