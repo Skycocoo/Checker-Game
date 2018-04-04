@@ -110,20 +110,26 @@ public:
         // if not: provide all avaliable slots that could be moved?
 
         cout << "Please indicate the checker to be moved in the format of \'x, y\'" << endl;
+        bool select = false;
         int x = 0, y = 0;
         char comma;
-        cin >> x >> comma >> y;
-
-        if (humanRegular(x, y, humanMoves)){
-            displayMoves();
-            cout << "Please indicate where to move the checker in the format of \'x, y\'" << endl;
-            int targx = 0, targy = 0;
-            cin >> targx >> comma >> targy;
-            if (checkMove(targx, targy)) move(x, y, targx, targy, HUSS);
-
+        while (!select){
+            cin >> x >> comma >> y;
+            if ((select = humanRegular(x, y, humanMoves))){
+                displayMoves();
+                cout << "Please indicate where to move the checker in the format of \'x, y\'" << endl;
+                bool target = false;
+                int targx = 0, targy = 0;
+                while (!target){
+                    cin >> targx >> comma >> targy;
+                    // make the move
+                    if ((target = checkMove(targx, targy))) move(x, y, targx, targy, HUSS);
+                    else cout << "Not a legal target location; please indicate again" << endl;
+                }
+            } else cout << "Not a legal checker could be moved; please indicate again" << endl;
         }
 
-        // make the move
+        cout << board;
     }
 
     void computer(){
@@ -142,9 +148,9 @@ public:
         cout << "The Board is Row-Major; \ne.g. the bottom-left W checker's position is (5, 0)" << endl;
         cout << board;
 
-        cout << "input 1 to take first move; 2 to take second move" << endl;
-        int flag = 0;
-        cin >> flag;
+        // cout << "input 1 to take first move; 2 to take second move" << endl;
+        int flag = 1;
+        // cin >> flag;
         if (flag == 2) computer();
         while (!endState()){
             human();
@@ -161,13 +167,14 @@ private:
     void displayMoves() const {
         cout << "You have a total of " << humanMoves.size() / 2 << " moves" << endl;
         for (size_t i = 0; i < humanMoves.size() / 2; i++){
-            cout << "The " << i+1 << " move: (" << humanMoves[2 * i] << ", " << humanMoves[2 * i + 1] << ")" << endl;
+            cout << "\tThe " << i+1 << " move: (" << humanMoves[2 * i] << ", " << humanMoves[2 * i + 1] << ")" << endl;
         }
     }
 
     bool checkMove(int x, int y) const {
+        cout << x << " " << y << endl;
         for (size_t i = 0; i < humanMoves.size() / 2; i++){
-            if (humanMoves[x] == x && humanMoves[y] == y) return true;
+            if (humanMoves[2 * i] == x && humanMoves[2 * i + 1] == y) return true;
         }
         return false;
     }
