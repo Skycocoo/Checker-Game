@@ -12,6 +12,58 @@
 
 using namespace std;
 
+struct Point{
+    int x;
+    int y;
+    Point(int x = -1, int y = -1): x(x), y(y){}
+
+    void update(int x, int y){
+        this->x = x;
+        this->y = y;
+    }
+
+    explicit operator bool() const {
+        return (x != -1 && y != -1);
+    }
+};
+
+class Move{
+public:
+    Move(int x, int y, const Board& board, int type): cur(x, y), board(&board), isHuman(false){
+        if (type == HUSS) isHuman = true;
+        updateMove();
+    }
+
+    // both capture move & regular move?
+    void updateMove(){
+        int x = cur.x, y = cur.y;
+
+        if (isHuman){
+            int up1x = x - 1, up2x = x - 2,
+                left1y = y - 1, right1y = y + 1, left2y = y - 2, right2y = y + 2;
+
+            if (up2x >= 0){
+                if (left2y >= 0 && board->b[up1x][left1y] == COMP && board->b[up2x][left2y] == 0) left2.update(up2x, left2y);
+                if (right2y < board->b[up2x].size() && board->b[up1x][right1y] == COMP && board->b[up2x][right2y] == 0) right2.update(up2x, right2y);
+            }
+
+            if (up1x >= 0){
+                if (left1y >= 0 && board->b[up1x][left1y] == 0) left1.update(up1x, left1y);
+                if (right1y < board->b[up1x].size() && board->b[up1x][right1y] == 0) right1.update(up1x, right1y);
+            }
+
+        } else {
+            // this is moves for computer
+        }
+
+    }
+
+    Point cur;
+    Point left1, right1, left2, right2;
+private:
+    const Board* board;
+    bool isHuman;
+};
 
 
 class Checker{
@@ -43,46 +95,51 @@ public:
 
     // if there is no capture move
     // moves contains the possible target position for (origx, origy)
-    bool humanRegular(int origx, int origy, vector<int>& moves){
+    bool humanRegular(int origx, int origy){
         // return bool to indicate whether there is a legal move for (origx, origy)
         // any legal move will be stored in moves
-        moves.clear();
+        humanMoves.clear();
 
         if (origx >= 0 && origy >= 0 && origx < board.b.size() && origy < board.b[origx].size()){
             if (board.b[origx][origy] != HUSS) return false;
 
             int newx = origx - 1, lefty = origy - 1, righty = origy + 1;
             if (newx >= 0){
-                if (lefty >= 0 && board.b[newx][lefty] == 0) moves.insert(moves.end(), {newx, lefty});
-                if (righty < board.b[newx].size() && board.b[newx][righty] == 0) moves.insert(moves.end(), {newx, righty});
-                if (moves.size() > 0) return true;
+                if (lefty >= 0 && board.b[newx][lefty] == 0) humanMoves.insert(humanMoves.end(), {newx, lefty});
+                if (righty < board.b[newx].size() && board.b[newx][righty] == 0) humanMoves.insert(humanMoves.end(), {newx, righty});
+                if (humanMoves.size() > 0) return true;
             }
         }
         return false;
     }
 
     // if there is capture move
-    // moves contains the possible target position for (origx, origy)
-    bool humanCapture(vector<int>& moves){
-        moves.clear();
+    // moves contains the possible target position for each (origx, origy)
+    bool humanCapture(){
+        humanMoves.clear();
+        humanCapLoc.clear();
 
         for (int i = 0; i < board.b.size(); i++){
             for (int j = 0; j < board.b[i].size(); j++){
                 if (board.b[i][j] == HUSS){
                     int newx = i - 2, lefty = j - 2, righty = j + 2;
+                    bool found = false;
                     if (newx >= 0){
                         if (lefty >= 0 && board.b[newx][lefty] == 0 && board.b[newx + 1][lefty + 1] == COMP){
-                            moves.insert(moves.end(), {newx, lefty});
+                            humanMoves.insert(humanMoves.end(), {newx, lefty});
+                            found = true;
                         }
                         if (righty < board.b[newx].size() && board.b[newx][righty] == 0 && board.b[newx + 1][righty - 1] == COMP){
-                            moves.insert(moves.end(), {newx, righty});
+                            humanMoves.insert(humanMoves.end(), {newx, righty});
+                            found = true;
                         }
+                        if (found) humanCapLoc.insert(humanCapLoc.end(), {i, j});
                     }
                 }
             }
         }
 
-        if (moves.size() > 0) return true;
+        if (humanMoves.size() > 0) return true;
         else return false;
     }
 
@@ -104,6 +161,11 @@ public:
 
     void human(){
         cout << "Human turn" << endl;
+        if (humanCapture()){
+            cout << "You should take a capture move fort his turn" << endl;
+            // displayMoves();
+
+        }
         // check if there is capture move
         // provide avaliable capture moves
 
@@ -115,7 +177,7 @@ public:
         char comma;
         while (!select){
             cin >> x >> comma >> y;
-            if ((select = humanRegular(x, y, humanMoves))){
+            if ((select = humanRegular(x, y))){
                 displayMoves();
                 cout << "Please indicate where to move the checker in the format of \'x, y\'" << endl;
                 bool target = false;
@@ -133,7 +195,7 @@ public:
     }
 
     void computer(){
-
+        cout << "Computer turn" << endl;
     }
 
     void play(){
@@ -146,6 +208,7 @@ public:
 
         cout << "Checker Game, 6 * 6 board" << endl;
         cout << "The Board is Row-Major; \ne.g. the bottom-left W checker's position is (5, 0)" << endl;
+        cout << endl;
         cout << board;
 
         // cout << "input 1 to take first move; 2 to take second move" << endl;
@@ -163,12 +226,18 @@ public:
 private:
     Board board;
     vector<int> humanMoves;
+    vector<int> humanCapLoc;
 
     void displayMoves() const {
         cout << "You have a total of " << humanMoves.size() / 2 << " moves" << endl;
         for (size_t i = 0; i < humanMoves.size() / 2; i++){
             cout << "\tThe " << i+1 << " move: (" << humanMoves[2 * i] << ", " << humanMoves[2 * i + 1] << ")" << endl;
         }
+    }
+
+    // keep each location for each location?
+    void displayCap() const {
+
     }
 
     bool checkMove(int x, int y) const {

@@ -60,6 +60,6 @@ std::ostream& operator<<(std::ostream& os, const Board& b){
         os << "|" << std::endl;
     }
     return os;
-}
+};
 
 #endif
