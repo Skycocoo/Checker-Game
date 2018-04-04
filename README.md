@@ -32,4 +32,4 @@ Run the executable of this project:
 
 ## Notes
 
-the proximity to the other side && # of pieces could be captured by enemy
+the proximity to the other side; # of pieces could be captured by enemy; ...
