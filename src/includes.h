@@ -3,6 +3,6 @@
 
 #include "extern/Board.h"
 #include "extern/Move.h"
-#include "extern/HumanMoves.h"
+#include "extern/AvaMoves.h"
 
 #endif

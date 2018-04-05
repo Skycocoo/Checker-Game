@@ -13,8 +13,7 @@ Point::operator bool() const {
 }
 
 
-Move::Move(int x, int y, const Board& board, int type): cur(x, y), board(&board), isHuman(false){
-    if (type == HUSS) isHuman = true;
+Move::Move(int x, int y, const Board& board, int type): board(&board), isHuman(type == HUSS), cur(x, y){
     updateMove();
 }
 
@@ -52,6 +51,7 @@ void Move::updateMove(){
     int left1y = y - 1, right1y = y + 1, left2y = y - 2, right2y = y + 2;
     int new1x = x - 1, new2x = x - 2;
 
+    // if the move is for enemy
     if (!isHuman) new1x = x + 1, new2x = x + 2;
 
     if (new2x >= 0 && new2x < board->b.size()){

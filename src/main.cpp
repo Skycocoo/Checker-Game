@@ -13,46 +13,9 @@
 
 using namespace std;
 
-class ComputerMoves{
-    friend std::ostream& operator<<(std::ostream& os, const ComputerMoves& c){
-        return os;
-    }
-public:
-    ComputerMoves(const Board& board): type(COMP), board(&board) {
-        for (size_t i = 0; i < this->board->b.size(); i++){
-            for (size_t j = 0; j < this->board->b[i].size(); j++){
-                if (this->board->b[i][j] == type){
-                    moves.push_back(Move(i, j, board, type));
-                }
-            }
-        }
-        updateMoves();
-    }
-
-    void updateMoves(){
-        for (size_t i = 0; i < moves.size(); i++){
-            moves[i].updateMove();
-        }
-
-        // // only allow capture move for this checker
-        // if (avaCapture()){
-        //     for (size_t i = 0; i < moves.size(); i++){
-        //         if (!moves[i].isCapture()) moves[i].clearMove();
-        //     }
-        // }
-    }
-
-
-private:
-    int type;
-    const Board* board;
-    std::vector<Move> moves;
-};
-
-
 class Checker{
 public:
-    Checker(): board(), human(board), comp(board){}
+    Checker(): board(), human(board, HUSS), comp(board, COMP){}
 
     bool endState() const {
         // check if the game is ended
@@ -83,32 +46,40 @@ public:
     void humanTurn(){
         cout << "Human turn" << endl << human;
 
-        cout << "Please indicate the checker to be moved in the format of \'x y\'" << endl;
+        cout << "Please select the checker in \'x y\' format" << endl;
         bool select = false;
         int x = 0, y = 0;
         while (!select){
             cin >> x >> y;
             if ((select = human.select(x, y))){
-                cout << "Please indicate where to move the checker in the format of \'x y\'" << endl;
+                cout << "Please choose the location to move in \'x y\' format" << endl;
                 bool target = false;
                 int targx = 0, targy = 0;
                 while (!target){
                     cin >> targx >> targy;
                     // make the move
                     if ((target = human.checkMove(targx, targy))) move(x, y, targx, targy, HUSS);
-                    else cout << "Not a legal target location; please indicate again" << endl;
+                    else cout << "Not a legal target location; please input correct locaion" << endl;
                 }
-            } else cout << "Not a legal checker could be moved; please indicate again" << endl;
+            } else cout << "Not a legal checker to be moved; please correct location" << endl;
         }
 
         cout << board;
+        update();
 
-        // remember to update moves for each turn
-        human.updateMoves();
     }
 
     void computerTurn(){
         cout << "Computer turn" << endl;
+        cout << comp;
+        cout << board;
+        update();
+    }
+
+    void update(){
+        // remember to update moves for each turn
+        human.updateMoves();
+        comp.updateMoves();
     }
 
     void play(){
@@ -138,8 +109,8 @@ public:
 
 private:
     Board board;
-    HumanMoves human;
-    ComputerMoves comp;
+    AvaMoves human;
+    AvaMoves comp;
 };
 
 

@@ -1,5 +1,5 @@
-#ifndef HUMANMOVES_H
-#define HUMANMOVES_H
+#ifndef AVAMOVES_H
+#define AVAMOVES_H
 
 #include <iostream>
 #include <vector>
@@ -7,11 +7,11 @@
 class Board;
 class Move;
 
-class HumanMoves{
+class AvaMoves{
     // provide all avaliable moves
-    friend std::ostream& operator<<(std::ostream& os, const HumanMoves& h);
+    friend std::ostream& operator<<(std::ostream& os, const AvaMoves& h);
 public:
-    HumanMoves(const Board& board);
+    AvaMoves(const Board& board, int type);
 
     void updateMoves();
 
