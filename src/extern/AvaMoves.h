@@ -12,7 +12,7 @@ class AvaMoves{
     friend std::ostream& operator<<(std::ostream& os, const AvaMoves& h);
 public:
     AvaMoves(const Board& board, int type);
-
+    void updateBoard(const Board& board);
     void updateMoves();
 
     bool select(int x, int y);

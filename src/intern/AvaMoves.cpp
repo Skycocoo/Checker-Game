@@ -24,6 +24,10 @@ AvaMoves::AvaMoves(const Board& board, int type): type(type), cur(-1), board(&bo
     updateMoves();
 }
 
+void AvaMoves::updateBoard(const Board& board){
+    this->board = &board;
+}
+
 void AvaMoves::updateMoves(){
     for (size_t i = 0; i < moves.size(); i++){
         moves[i].updateMove();

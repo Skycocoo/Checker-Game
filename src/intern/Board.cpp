@@ -20,7 +20,7 @@ void Board::updateCount(){
     }
 }
 
-bool Board::endState() const {
+bool Board::terminalState() const {
     return (numH == 0 || numC == 0);
 }
 

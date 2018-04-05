@@ -8,20 +8,146 @@
 
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include "includes.h"
 
 using namespace std;
 
+class Search{
+public:
+    Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
+    human(human), comp(comp), board(board){
+        human.updateBoard(board);
+        comp.updateBoard(board);
+
+        // unnecessary?
+        updateMoves();
+    }
+
+    void updateMoves(){
+        // remember to update moves for each turn
+        human.updateMoves();
+        comp.updateMoves();
+    }
+
+    void updateBoard(const Board& board){
+        for (size_t i = 0; i < this->board->b.size(); i++){
+            for (size_t j = 0; j < this->board->b[i].size(); j++){
+                this->board->b[i][j] = board.b[i][j];
+            }
+        }
+        updateMoves();
+    }
+
+    Move iterativeDeep(int maxDepth = 100){
+        Move result(-1, -1, board, COMP);
+
+        auto start = std::chrono::system_clock::now();
+        for (int i = 1; i < maxDepth; i++){
+
+            // alphaBeta();
+            // if the utility value for the returned move is larger
+            // change the current result to the returned move
+
+
+            // if the duration >= 14
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) break;
+        }
+    }
+
+    // return the action or the estimated value?
+    void alphaBeta(){
+        // parameters: depth
+        maxVal();
+    }
+
+    // maxVal: for COMP player
+    void maxVal(){
+        // parameters: alpha, beta, depth
+
+        // if terminalState: return utility
+        // if depth == 0: return evaluated value
+        // if times up: return 0? (didnt finish searching for this level)
+
+        // initial v = -6
+
+        // for each avaliable moves for computer:
+
+            // // need to remember the move & restore the board after iteration
+            // v = max(v, minVal(updated board, alpha, beta))
+            // if v >= beta: return v (pruned)
+            // alpha = max(alpha, v)
+
+        // return v?
+
+    }
+
+    // minVal: for HUSS player
+    void minVal(){
+        // parameters: alpha, beta, depth
+
+        // if terminalState: return utility
+        // if depth == 0: return evaluated value
+        // if times up: return 0? (didnt finish searching for this level)
+
+        // initial v = 6
+
+        // for each avaliable moves for human:
+            // // need to remember the move & restore the board after iteration
+            // v = min(v, maxVal(updated board, alpha, beta))
+            // if v <= alpha: return v (pruned)
+            // beta = min(beta, v)
+
+        // return v?
+    }
+
+    // heuristics to estimate the expected utility
+    void evaluation(){
+        // parameters: player type, (board)
+        // should be in range [-6, 6]
+
+        // features:
+        // number of avaliable checkers for current player
+        // for each avalible checker: proximity to the other end
+        // number of captured enemy
+
+        // negative: number of enemies
+        // negative: for each avalible checker of enemy: proximity to the other end
+
+        // linear weighted sum of features
+    }
+
+    // utility value for terminal state: range [-6, 6] = numC - numH
+    void utility(){
+        // numC - numH
+    }
+
+
+
+    void terminalState() const {
+        return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
+    }
+
+private:
+    AvaMoves human;
+    AvaMoves comp;
+    Board board;
+};
+
+
 class Checker{
 public:
     Checker(): board(), human(board, HUSS), comp(board, COMP){}
 
-    bool endState() const {
+    bool terminalState() const {
         // check if the game is ended
 
         // NEED: whether there is any legal move for both players
-        return board.endState() || human.avaMoves() == 0;
+        return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
 
     }
 
@@ -65,18 +191,18 @@ public:
         }
 
         cout << board;
-        update();
+        updateMoves();
 
     }
 
     void computerTurn(){
         cout << "Computer turn" << endl;
-        cout << comp;
+        // cout << comp;
         cout << board;
-        update();
+        updateMoves();
     }
 
-    void update(){
+    void updateMoves(){
         // remember to update moves for each turn
         human.updateMoves();
         comp.updateMoves();
@@ -99,7 +225,7 @@ public:
         int flag = 1;
         // cin >> flag;
         if (flag == 2) computerTurn();
-        while (!endState()){
+        while (!terminalState()){
             humanTurn();
             computerTurn();
         }

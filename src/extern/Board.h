@@ -15,7 +15,7 @@ public:
 
     Board();
     void updateCount();
-    bool endState() const;
+    bool terminalState() const;
 
 private:
     // int size = 6;
