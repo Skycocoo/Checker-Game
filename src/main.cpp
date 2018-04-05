@@ -54,14 +54,16 @@ public:
         for (size_t i = 0; i < moves.size(); i++){
             if (moves[i].select(x, y) && moves[i]){
                 cur = i;
+                cout << "You selected " << moves[cur];
                 return true;
             }
         }
+        // cout << "Not a legal selection" << endl;
         return false;
     }
 
-    bool checkMove(int x, int y, int targx, int targy) const {
-        return (moves[cur].select(x, y) && moves[cur].checkMove(targx, targy));
+    bool checkMove(int targx, int targy) const {
+        return moves[cur].checkMove(targx, targy);
     }
 
 
@@ -107,19 +109,18 @@ public:
 
     }
 
-    void move(int origx, int origy, int x, int y, int type){
-        // move a checker forom (origx, origy) to (x, y)
-        board.b[origx][origy] = 0;
+    void move(int x, int y, int targx, int targy, int type){
+        // move a checker forom (x, y) to (targx, targy)
+        board.b[x][y] = 0;
 
         // if capture move
-        if (abs(y - origy) == 2 && type == HUSS){
-            if (origy - y > 0) board.b[x - 1][y - 1] = 0;
-            else board.b[x - 1][y + 1] = 0;
+        if (abs(targy - y) == 2 && type == HUSS){
+            if (y - targy > 0) board.b[targx - 1][targy - 1] = 0;
+            else board.b[targx - 1][targy + 1] = 0;
 
             board.updateCount();
         }
-
-        board.b[x][y] = type;
+        board.b[targx][targy] = type;
     }
 
     // // if there is no capture move
@@ -211,20 +212,21 @@ public:
         int x = 0, y = 0;
         while (!select){
             cin >> x >> y;
-            if (human.select(x, y)){
+            if ((select = human.select(x, y))){
                 cout << "Please indicate where to move the checker in the format of \'x y\'" << endl;
                 bool target = false;
                 int targx = 0, targy = 0;
                 while (!target){
                     cin >> targx >> targy;
                     // make the move
-                    if (human.checkMove(x, y, targx, targy)) move(x, y, targx, targy, HUSS);
+                    if ((target = human.checkMove(targx, targy))) move(x, y, targx, targy, HUSS);
                     else cout << "Not a legal target location; please indicate again" << endl;
                 }
             } else cout << "Not a legal checker could be moved; please indicate again" << endl;
         }
 
         cout << board;
+        human.updateMoves();
     }
 
     void computerTurn(){
