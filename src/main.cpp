@@ -13,88 +13,9 @@
 
 using namespace std;
 
-class HumanMoves{
-    friend ostream& operator<<(ostream& os, const HumanMoves& h){
-        os << "You have " << h.avaMoves() << " avaliable moves\n";
-        for (size_t i = 0; i < h.moves.size(); i++){
-            if (h.moves[i]) os << h.moves[i];
-        }
-        os << "\n";
-        return os;
-    }
-
-public:
-    HumanMoves(const Board& board): type(HUSS), cur(-1), board(&board){
-        for (size_t i = 0; i < this->board->b.size(); i++){
-            for (size_t j = 0; j < this->board->b[i].size(); j++){
-                if (this->board->b[i][j] == type){
-                    moves.push_back(Move(i, j, board, type));
-                }
-            }
-        }
-        updateMoves();
-    }
-
-    void updateMoves(){
-        for (size_t i = 0; i < moves.size(); i++){
-            moves[i].updateMove();
-        }
-
-        // only allow capture move for this checker
-        if (avaCapture()){
-            for (size_t i = 0; i < moves.size(); i++){
-                if (!moves[i].isCapture()) moves[i].clearMove();
-            }
-        }
-    }
-
-
-    bool select(int x, int y) {
-        cur = -1;
-        for (size_t i = 0; i < moves.size(); i++){
-            if (moves[i].select(x, y) && moves[i]){
-                cur = i;
-                cout << "You selected " << moves[cur];
-                return true;
-            }
-        }
-        // cout << "Not a legal selection" << endl;
-        return false;
-    }
-
-    bool checkMove(int targx, int targy) const {
-        return moves[cur].checkMove(targx, targy);
-    }
-
-
-
-    bool avaCapture() const {
-        for (size_t i = 0; i < moves.size(); i++){
-            if (moves[i].isCapture()) return true;
-        }
-        return false;
-    }
-
-    int avaMoves() const {
-        int count = 0;
-        for (size_t i = 0; i < moves.size(); i++){
-            if (moves[i]) ++count;
-        }
-        return count;
-    }
-
-private:
-    int type;
-    int cur;
-
-    const Board* board;
-    vector<Move> moves;
-};
-
 class ComputerMoves{
 
 };
-
 
 
 class Checker{
@@ -105,7 +26,7 @@ public:
         // check if the game is ended
 
         // NEED: whether there is any legal move for both players
-        return board.endState();
+        return board.endState() || human.avaMoves() == 0;
 
     }
 
@@ -115,97 +36,16 @@ public:
 
         // if capture move
         if (abs(targy - y) == 2 && type == HUSS){
-            if (y - targy > 0) board.b[targx - 1][targy - 1] = 0;
-            else board.b[targx - 1][targy + 1] = 0;
+            if (y - targy > 0) board.b[x - 1][y - 1] = 0;
+            else board.b[x - 1][y + 1] = 0;
 
             board.updateCount();
         }
         board.b[targx][targy] = type;
     }
 
-    // // if there is no capture move
-    // // moves contains the possible target position for (origx, origy)
-    // bool humanRegular(int origx, int origy){
-    //     // return bool to indicate whether there is a legal move for (origx, origy)
-    //     // any legal move will be stored in moves
-    //     humanMoves.clear();
-    //
-    //     if (origx >= 0 && origy >= 0 && origx < board.b.size() && origy < board.b[origx].size()){
-    //         if (board.b[origx][origy] != HUSS) return false;
-    //
-    //         int newx = origx - 1, lefty = origy - 1, righty = origy + 1;
-    //         if (newx >= 0){
-    //             if (lefty >= 0 && board.b[newx][lefty] == 0) humanMoves.insert(humanMoves.end(), {newx, lefty});
-    //             if (righty < board.b[newx].size() && board.b[newx][righty] == 0) humanMoves.insert(humanMoves.end(), {newx, righty});
-    //             if (humanMoves.size() > 0) return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-    //
-    // // if there is capture move
-    // // moves contains the possible target position for each (origx, origy)
-    // bool humanCapture(){
-    //     humanMoves.clear();
-    //     humanCapLoc.clear();
-    //
-    //     for (int i = 0; i < board.b.size(); i++){
-    //         for (int j = 0; j < board.b[i].size(); j++){
-    //             if (board.b[i][j] == HUSS){
-    //                 int newx = i - 2, lefty = j - 2, righty = j + 2;
-    //                 bool found = false;
-    //                 if (newx >= 0){
-    //                     if (lefty >= 0 && board.b[newx][lefty] == 0 && board.b[newx + 1][lefty + 1] == COMP){
-    //                         humanMoves.insert(humanMoves.end(), {newx, lefty});
-    //                         found = true;
-    //                     }
-    //                     if (righty < board.b[newx].size() && board.b[newx][righty] == 0 && board.b[newx + 1][righty - 1] == COMP){
-    //                         humanMoves.insert(humanMoves.end(), {newx, righty});
-    //                         found = true;
-    //                     }
-    //                     if (found) humanCapLoc.insert(humanCapLoc.end(), {i, j});
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     if (humanMoves.size() > 0) return true;
-    //     else return false;
-    // }
-
-    // // if there is no capture move
-    // void humanMove(int origx, int origy){
-    //     // check legal moves for origx and origy
-    //     // provide legal moves for human
-    //
-    //
-    //     // read in the move
-    //     // move a checker forom (origx, origy) to (x, y)
-    //     // display the result
-    // }
-
-
-    // NEED
-    // for all functions: if return false: should do a while until it returns true
-
-
     void humanTurn(){
-        cout << "Human turn" << endl;
-
-        cout << human;
-
-
-        // if (humanCapture()){
-        //     cout << "You should take a capture move fort his turn" << endl;
-        //     // displayMoves();
-        //
-        // }
-
-
-        // check if there is capture move
-        // provide avaliable capture moves
-
-        // if not: provide all avaliable slots that could be moved?
+        cout << "Human turn" << endl << human;
 
         cout << "Please indicate the checker to be moved in the format of \'x y\'" << endl;
         bool select = false;
@@ -226,6 +66,8 @@ public:
         }
 
         cout << board;
+
+        // remember to update moves for each turn
         human.updateMoves();
     }
 
