@@ -24,20 +24,15 @@ public:
     bool isCapture() const;
     bool isRegular() const;
 
-    bool select(int x, int y) const {
-        return (x == cur.x && y == cur.y);
-    }
+    bool select(int x, int y) const;
+    bool checkMove(int targx, int targy) const;
 
-    bool checkMove(int targx, int targy) const {
-        return ((left1.x == targx && left1.y == targy) ||
-            (left2.x == targx && left2.y == targy)     ||
-            (right1.x == targx && right1.y == targy)   ||
-            (right2.x == targx && right2.y == targy));
-    }
+    void updatePos(int x, int y);
 
     // both capture move & regular move
     void updateMove();
     void clearMove();
+
     explicit operator bool() const;
 private:
     const Board* board;

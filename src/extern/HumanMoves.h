@@ -16,7 +16,7 @@ public:
     void updateMoves();
 
     bool select(int x, int y);
-    bool checkMove(int targx, int targy) const;
+    bool checkMove(int targx, int targy);
 
     bool avaCapture() const;
     int avaMoves() const;

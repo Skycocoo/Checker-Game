@@ -14,13 +14,45 @@
 using namespace std;
 
 class ComputerMoves{
+    friend std::ostream& operator<<(std::ostream& os, const ComputerMoves& c){
+        return os;
+    }
+public:
+    ComputerMoves(const Board& board): type(COMP), board(&board) {
+        for (size_t i = 0; i < this->board->b.size(); i++){
+            for (size_t j = 0; j < this->board->b[i].size(); j++){
+                if (this->board->b[i][j] == type){
+                    moves.push_back(Move(i, j, board, type));
+                }
+            }
+        }
+        updateMoves();
+    }
 
+    void updateMoves(){
+        for (size_t i = 0; i < moves.size(); i++){
+            moves[i].updateMove();
+        }
+
+        // // only allow capture move for this checker
+        // if (avaCapture()){
+        //     for (size_t i = 0; i < moves.size(); i++){
+        //         if (!moves[i].isCapture()) moves[i].clearMove();
+        //     }
+        // }
+    }
+
+
+private:
+    int type;
+    const Board* board;
+    std::vector<Move> moves;
 };
 
 
 class Checker{
 public:
-    Checker(): board(), human(board){}
+    Checker(): board(), human(board), comp(board){}
 
     bool endState() const {
         // check if the game is ended
@@ -35,9 +67,13 @@ public:
         board.b[x][y] = 0;
 
         // if capture move
-        if (abs(targy - y) == 2 && type == HUSS){
-            if (y - targy > 0) board.b[x - 1][y - 1] = 0;
-            else board.b[x - 1][y + 1] = 0;
+        if (abs(targy - y) == 2){
+            if (type == HUSS){
+                if (y - targy > 0) board.b[x - 1][y - 1] = 0;
+                else board.b[x - 1][y + 1] = 0;
+            } else {
+                // this is moves for computer
+            }
 
             board.updateCount();
         }
@@ -103,29 +139,7 @@ public:
 private:
     Board board;
     HumanMoves human;
-
-    // vector<int> humanMoves;
-    // vector<int> humanCapLoc;
-    //
-    // void displayMoves() const {
-    //     cout << "You have a total of " << humanMoves.size() / 2 << " moves" << endl;
-    //     for (size_t i = 0; i < humanMoves.size() / 2; i++){
-    //         cout << "\tThe " << i+1 << " move: (" << humanMoves[2 * i] << ", " << humanMoves[2 * i + 1] << ")" << endl;
-    //     }
-    // }
-    //
-    // // keep each location for each location?
-    // void displayCap() const {
-    //
-    // }
-    //
-    // bool checkMove(int x, int y) const {
-    //     cout << x << " " << y << endl;
-    //     for (size_t i = 0; i < humanMoves.size() / 2; i++){
-    //         if (humanMoves[2 * i] == x && humanMoves[2 * i + 1] == y) return true;
-    //     }
-    //     return false;
-    // }
+    ComputerMoves comp;
 };
 
 

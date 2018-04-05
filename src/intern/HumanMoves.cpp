@@ -51,8 +51,10 @@ bool HumanMoves::select(int x, int y) {
     return false;
 }
 
-bool HumanMoves::checkMove(int targx, int targy) const {
-    return moves[cur].checkMove(targx, targy);
+bool HumanMoves::checkMove(int targx, int targy) {
+    bool result = moves[cur].checkMove(targx, targy);
+    if (result) moves[cur].updatePos(targx, targy);
+    return result;
 }
 
 

@@ -26,32 +26,50 @@ bool Move::isRegular() const {
     return (left1 || right1);
 }
 
+
+bool Move::select(int x, int y) const {
+    return (x == cur.x && y == cur.y);
+}
+
+bool Move::checkMove(int targx, int targy) const {
+    return ((left1.x == targx && left1.y == targy) ||
+        (left2.x == targx && left2.y == targy)     ||
+        (right1.x == targx && right1.y == targy)   ||
+        (right2.x == targx && right2.y == targy));
+}
+
+void Move::updatePos(int x, int y){
+    cur.x = x;
+    cur.y = y;
+}
+
+
 // both capture move & regular move?
 void Move::updateMove(){
     int x = cur.x, y = cur.y;
     clearMove();
 
-    if (isHuman){
-        int up1x = x - 1, up2x = x - 2,
-            left1y = y - 1, right1y = y + 1, left2y = y - 2, right2y = y + 2;
+    int left1y = y - 1, right1y = y + 1, left2y = y - 2, right2y = y + 2;
+    int new1x = x - 1, new2x = x - 2;
 
-        if (up2x >= 0){
-            if (left2y >= 0 && board->b[up1x][left1y] == COMP && board->b[up2x][left2y] == 0) left2.update(up2x, left2y);
-            if (right2y < board->b[up2x].size() && board->b[up1x][right1y] == COMP && board->b[up2x][right2y] == 0) right2.update(up2x, right2y);
+    if (!isHuman) new1x = x + 1, new2x = x + 2;
 
-            // only allow capture move for this checker
-            if (isCapture()) return;
+    if (new2x >= 0 && new2x < board->b.size()){
+        if (isHuman){
+            if (left2y >= 0 && board->b[new1x][left1y] == COMP && board->b[new2x][left2y] == 0) left2.update(new2x, left2y);
+            if (right2y < board->b[new2x].size() && board->b[new1x][right1y] == COMP && board->b[new2x][right2y] == 0) right2.update(new2x, right2y);
+        } else {
+            if (left2y >= 0 && board->b[new1x][left1y] == HUSS && board->b[new2x][left2y] == 0) left2.update(new2x, left2y);
+            if (right2y < board->b[new2x].size() && board->b[new1x][right1y] == HUSS && board->b[new2x][right2y] == 0) right2.update(new2x, right2y);
         }
-
-        if (up1x >= 0){
-            if (left1y >= 0 && board->b[up1x][left1y] == 0) left1.update(up1x, left1y);
-            if (right1y < board->b[up1x].size() && board->b[up1x][right1y] == 0) right1.update(up1x, right1y);
-        }
-
-    } else {
-        // this is moves for computer
+        // only allow capture move for this checker
+        if (isCapture()) return;
     }
 
+    if (new1x >= 0 && new1x < board->b.size()){
+        if (left1y >= 0 && board->b[new1x][left1y] == 0) left1.update(new1x, left1y);
+        if (right1y < board->b[new1x].size() && board->b[new1x][right1y] == 0) right1.update(new1x, right1y);
+    }
 }
 
 void Move::clearMove(){
