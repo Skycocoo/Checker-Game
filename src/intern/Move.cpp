@@ -1,4 +1,5 @@
 #include "../extern/Move.h"
+#include "../extern/Board.h"
 
 Point::Point(int x, int y): x(x), y(y){}
 
@@ -28,6 +29,7 @@ bool Move::isRegular() const {
 // both capture move & regular move?
 void Move::updateMove(){
     int x = cur.x, y = cur.y;
+    clearMove();
 
     if (isHuman){
         int up1x = x - 1, up2x = x - 2,
@@ -49,15 +51,31 @@ void Move::updateMove(){
 
 }
 
+void Move::clearMove(){
+    left1.update(-1, -1);
+    left2.update(-1, -1);
+    right1.update(-1, -1);
+    right2.update(-1, -1);
+}
+
+Move::operator bool() const{
+    return (isCapture() || isRegular());
+}
+
+
 std::ostream& operator<<(std::ostream& os, const Move& move){
-    os << "Checker (" << move.cur.x << ", " << move.cur.y << ")\n";
+    os << "\tChecker (" << move.cur.x << ", " << move.cur.y << ")\n";
+
     if (move.isCapture()){
-        os << "\tCapture move:";
+        os << "\t\tCapture move:";
         if (move.left2) os << " (" << move.left2.x << ", " << move.left2.y << ")";
         if (move.right2) os << " (" << move.right2.x << ", " << move.right2.y << ")";
         os << "\n";
-    } else if (move.isRegular()){
-        os << "\tRegular move:";
+        return os;
+    }
+
+    if (move.isRegular()){
+        os << "\t\tRegular move:";
         if (move.left1) os << " (" << move.left1.x << ", " << move.left1.y << ")";
         if (move.right1) os << " (" << move.right1.x << ", " << move.right1.y << ")";
         os << "\n";

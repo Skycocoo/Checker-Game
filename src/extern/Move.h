@@ -2,7 +2,9 @@
 #define MOVE_H
 
 #include <iostream>
-#include "Board.h"
+
+// avoid forward-backward includes
+class Board;
 
 struct Point{
     int x;
@@ -23,7 +25,8 @@ public:
 
     // both capture move & regular move
     void updateMove();
-
+    void clearMove();
+    explicit operator bool() const;
 private:
     const Board* board;
     bool isHuman;

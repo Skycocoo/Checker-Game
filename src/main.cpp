@@ -8,12 +8,55 @@
 
 #include <iostream>
 #include <vector>
-#include "extern/Board.h"
-#include "extern/Move.h"
+
+#include "includes.h"
 
 using namespace std;
 
+class HumanMoves{
+    friend ostream& operator<<(ostream& os, const HumanMoves& h){
+        os << h.avaMoves() << "Avaliable Human moves\n";
+        for (size_t i = 0; i < h.moves.size(); i++){
+            if (h.moves[i]) os << h.moves[i];
+        }
+        return os;
+    }
 
+public:
+    HumanMoves(const Board& board): type(HUSS), board(&board){
+        for (size_t i = 0; i < this->board->b.size(); i++){
+            for (size_t j = 0; j < this->board->b[i].size(); j++){
+                if (this->board->b[i][j] == type){
+                    moves.push_back(Move(i, j, board, type));
+                }
+            }
+        }
+        updateMoves();
+    }
+
+    void updateMoves(){
+        for (size_t i = 0; i < moves.size(); i++){
+            moves[i].updateMove();
+        }
+    }
+
+    int avaMoves() const {
+        int count = 0;
+        for (size_t i = 0; i < moves.size(); i++){
+            if (moves[i]) ++count;
+        }
+        return count;
+    }
+
+private:
+    int type;
+    const Board* board;
+    vector<Move> moves;
+};
+
+class ComputerMoves{
+
+};
 
 
 
@@ -122,19 +165,18 @@ public:
 
         // if not: provide all avaliable slots that could be moved?
 
-        cout << "Please indicate the checker to be moved in the format of \'x, y\'" << endl;
+        cout << "Please indicate the checker to be moved in the format of \'x y\'" << endl;
         bool select = false;
         int x = 0, y = 0;
-        char comma;
         while (!select){
-            cin >> x >> comma >> y;
+            cin >> x >> y;
             if ((select = humanRegular(x, y))){
                 displayMoves();
-                cout << "Please indicate where to move the checker in the format of \'x, y\'" << endl;
+                cout << "Please indicate where to move the checker in the format of \'x y\'" << endl;
                 bool target = false;
                 int targx = 0, targy = 0;
                 while (!target){
-                    cin >> targx >> comma >> targy;
+                    cin >> targx >> targy;
                     // make the move
                     if ((target = checkMove(targx, targy))) move(x, y, targx, targy, HUSS);
                     else cout << "Not a legal target location; please indicate again" << endl;
@@ -176,6 +218,11 @@ public:
 
 private:
     Board board;
+
+    // separation of human move and computer move?
+    // vector<Move>
+
+
     vector<int> humanMoves;
     vector<int> humanCapLoc;
 
