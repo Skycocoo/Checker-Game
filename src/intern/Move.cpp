@@ -38,6 +38,9 @@ void Move::updateMove(){
         if (up2x >= 0){
             if (left2y >= 0 && board->b[up1x][left1y] == COMP && board->b[up2x][left2y] == 0) left2.update(up2x, left2y);
             if (right2y < board->b[up2x].size() && board->b[up1x][right1y] == COMP && board->b[up2x][right2y] == 0) right2.update(up2x, right2y);
+
+            // only allow capture move for this checker
+            if (isCapture()) return;
         }
 
         if (up1x >= 0){
