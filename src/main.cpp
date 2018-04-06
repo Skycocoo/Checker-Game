@@ -33,6 +33,11 @@ struct Result{
     }
 };
 
+ostream& operator<<(ostream& os, const Result& r){
+    os << "\tFrom (" << r.x << ", " << r.y << ") to (" << r.targX << ", " << r.targY << ")\n";
+    return os;
+}
+
 
 class Search{
 public:
@@ -40,15 +45,8 @@ public:
     human(human), comp(comp), board(board){
         this->human.updateBoard(board);
         this->comp.updateBoard(board);
-
         // unnecessary?
         updateMoves();
-    }
-
-    void updateMoves(){
-        // remember to update moves for each turn
-        human.updateMoves();
-        comp.updateMoves();
     }
 
     void updateBoard(const Board& board){
@@ -60,6 +58,17 @@ public:
         updateMoves();
     }
 
+    void updateMoves(){
+        // remember to update moves for each turn
+        human.updateMoves();
+        comp.updateMoves();
+        board.updateCount();
+    }
+
+    void search(){
+        iterativeDeep();
+    }
+
     Result iterativeDeep(int maxDepth = 100){
         Result fmove (-1, -1, -1, -1); // result of alphabeta (first max)
         float util = -std::numeric_limits<float>::max();
@@ -68,6 +77,7 @@ public:
 
         Result cmove (-1, -1, -1, -1);
         for (int i = 1; i < maxDepth; i++){
+            // cout << "Depth: " << i << endl;
             float tempUtil = alphaBeta(cmove, i);
 
             // if the utility value for the returned move is larger
@@ -75,14 +85,17 @@ public:
             if (tempUtil > util) {
                 util = tempUtil;
                 fmove.update(cmove);
+                cout << "Updated utility: " << util << fmove;
             }
-            // if the duration >= 14
-            // need to satisfy the duration requirement (within 15 seconds)
 
-            // auto end = std::chrono::system_clock::now();
-            // std::chrono::duration<double> elapsed = end - start;
-            // if (elapsed.count() >= 14) break;
+            // if the duration >= 14: stop searching
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) break;
         }
+
+        cout << "Result of this search: (estimated) utility: " << util << fmove;
         return fmove;
     }
 
@@ -95,6 +108,8 @@ public:
 
     // maxVal: for COMP player
     float maxVal(float alpha, float beta, Result& fmove, int depth){
+        // cout << endl << "Max; Depth: " << depth << endl << board;
+        updateMoves();
 
         // edge cases
 
@@ -160,7 +175,11 @@ public:
 
     // minVal: for HUSS player
     float minVal(float alpha, float beta, Result& fmove, int depth){
+        // cout << endl << "Min; Depth: " << depth << endl << board;
+        updateMoves();
+
         // edge cases
+
         // parameters: alpha, beta, depth
         if (terminalState()) return utility();
 
@@ -283,15 +302,15 @@ public:
         if (type == COMP) fea4 = -board.numH;
 
         // linear weighted sum of features
-        return (fea1 + fea2 + fea3 + fea4) / 24 * 6;
+        float result = float(fea1 + fea2 + fea3 + fea4) / float(24) * 6;
+        // cout << result << " ";
+        return result;
     }
 
     // utility value for terminal state: range [-6, 6] = numC - numH
     float utility(){
         return board.numC - board.numH;
     }
-
-
 
     bool terminalState() const {
         return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
@@ -302,13 +321,13 @@ private:
     AvaMoves comp;
     Board board;
 
-     std::chrono::system_clock::time_point start;
+    std::chrono::system_clock::time_point start;
 };
 
 
 class Checker{
 public:
-    Checker(): board(), human(board, HUSS), comp(board, COMP){}
+    Checker(): board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
 
     bool terminalState() const {
         // check if the game is ended
@@ -366,9 +385,10 @@ public:
 
     void computerTurn(){
         cout << "Computer turn" << endl;
-        cout << comp;
-        cout << board;
-        updateMoves();
+        // cout << comp;
+        // cout << board;
+        // updateMoves();
+        search.search();
     }
 
     void updateMoves(){
@@ -391,14 +411,16 @@ public:
         cout << endl;
         cout << board;
 
+        computerTurn();
+
         // cout << "input 1 to take first move; 2 to take second move" << endl;
-        int flag = 1;
-        // cin >> flag;
-        if (flag == 2) computerTurn();
-        while (!terminalState()){
-            humanTurn();
-            computerTurn();
-        }
+        // int flag = 1;
+        // // cin >> flag;
+        // if (flag == 2) computerTurn();
+        // while (!terminalState()){
+        //     humanTurn();
+        //     computerTurn();
+        // }
 
 
     }
@@ -407,6 +429,8 @@ private:
     Board board;
     AvaMoves human;
     AvaMoves comp;
+
+    Search search;
 };
 
 
