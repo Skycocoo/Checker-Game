@@ -41,6 +41,10 @@ ostream& operator<<(ostream& os, const Result& r){
 
 class Search{
 public:
+    AvaMoves human;
+    AvaMoves comp;
+
+
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
     human(human), comp(comp), board(board){
         this->human.updateBoard(board);
@@ -55,8 +59,13 @@ public:
                 this->board.b[i][j] = board.b[i][j];
             }
         }
-        updateMoves();
+        // assume human & comp are updated by main play()
     }
+
+    // // loop through the human/comp to update their position?
+    // void updateSearch(){
+    //
+    // }
 
     void updateMoves(){
         // remember to update moves for each turn
@@ -65,11 +74,13 @@ public:
         board.updateCount();
     }
 
-    void search(){
-        iterativeDeep();
+    Result search(const Board& board){
+        updateBoard(board);
+        cout << "Start of searching for computer...\n" << board;
+        return iterativeDeep();
     }
 
-    Result iterativeDeep(int maxDepth = 100){
+    Result iterativeDeep(int maxDepth = 3){
         Result fmove (-1, -1, -1, -1); // result of alphabeta (first max)
         float util = -std::numeric_limits<float>::max();
 
@@ -77,22 +88,24 @@ public:
 
         Result cmove (-1, -1, -1, -1);
         for (int i = 1; i < maxDepth; i++){
-            // cout << "Depth: " << i << endl;
             float tempUtil = alphaBeta(cmove, i);
-
+            cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
             // change the current result to the returned move
             if (tempUtil > util) {
                 util = tempUtil;
                 fmove.update(cmove);
-                cout << "Updated utility: " << util << fmove;
+                cout << "\tUpdated utility: " << util << fmove;
             }
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
             auto end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) break;
+            if (elapsed.count() >= 14) {
+                cout << "This search goes to depth " << i << endl;
+                break;
+            }
         }
 
         cout << "Result of this search: (estimated) utility: " << util << fmove;
@@ -108,17 +121,15 @@ public:
 
     // maxVal: for COMP player
     float maxVal(float alpha, float beta, Result& fmove, int depth){
-        // cout << endl << "Max; Depth: " << depth << endl << board;
+        cout << endl << "Max; Depth: " << depth << endl << board;
         updateMoves();
 
         // edge cases
 
         // parameters: alpha, beta, depth
         if (terminalState()) return utility();
-
         // if depth == 0: return evaluated utility
         if (depth == 0) return eval(COMP);
-
         // if times up: evaluated utility
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
@@ -126,6 +137,8 @@ public:
 
 
         // main function
+
+        cout << comp;
 
         float v = -6, tempv;
         Result cmove (-1, -1, -1, -1); // result of min
@@ -139,9 +152,10 @@ public:
                     if (comp.moves[i].capture[j]){
                         int targX = comp.moves[i].capture[j].x, targY = comp.moves[i].capture[j].y;
                         move(posX, posY, targX, targY, COMP);
+                        // cout << "Move: " << endl << board;
                         tempv = minVal(alpha, beta, cmove, depth - 1);
                         reset(posX, posY, targX, targY, COMP);
-
+                        // cout << "Reset: " << endl << board;
                         if (tempv > v){
                             v = tempv;
                             fmove.update(posX, posY, targX, targY);
@@ -159,7 +173,6 @@ public:
                         move(posX, posY, targX, targY, COMP);
                         tempv = minVal(alpha, beta, cmove, depth - 1);
                         reset(posX, posY, targX, targY, COMP);
-
                         if (tempv > v){
                             v = tempv;
                             fmove.update(posX, posY, targX, targY);
@@ -175,17 +188,15 @@ public:
 
     // minVal: for HUSS player
     float minVal(float alpha, float beta, Result& fmove, int depth){
-        // cout << endl << "Min; Depth: " << depth << endl << board;
+        cout << endl << "Min; Depth: " << depth << endl << board;
         updateMoves();
 
         // edge cases
 
         // parameters: alpha, beta, depth
         if (terminalState()) return utility();
-
         // if depth == 0: return evaluated utility
         if (depth == 0) return eval(HUSS);
-
         // if times up: evaluated utility
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
@@ -206,8 +217,10 @@ public:
                     if (human.moves[i].capture[j]){
                         int targX = human.moves[i].capture[j].x, targY = human.moves[i].capture[j].y;
                         move(posX, posY, targX, targY, HUSS);
+                        // cout << "Move: " << endl << board;
                         tempv = maxVal(alpha, beta, cmove, depth - 1);
                         reset(posX, posY, targX, targY, HUSS);
+                        // cout << "Reset: " << endl << board;
 
                         if (tempv < v){
                             v = tempv;
@@ -241,6 +254,7 @@ public:
     }
 
     // move from (x, y) to (targx, targy)
+    // should also take care of the checkers
     void move(int x, int y, int targx, int targy, int type){
         // move a checker forom (x, y) to (targx, targy)
         board.b[x][y] = 0;
@@ -258,6 +272,16 @@ public:
             board.updateCount();
         }
         board.b[targx][targy] = type;
+
+        // update checkers
+        if (type == HUSS){
+            human.select(x, y, false);
+            human.checkMove(targx, targy);
+        } else {
+            comp.select(x, y, false);
+            comp.checkMove(targx, targy);
+        }
+
     }
 
     // reset the move from (x, y) to (targx, targy) back to original
@@ -276,6 +300,16 @@ public:
             board.updateCount();
         }
         board.b[x][y] = type;
+
+        // update checkers
+        if (type == HUSS){
+            human.select(targx, targy, false);
+            human.reset(x, y);
+        } else {
+            comp.select(targx, targy, false);
+            comp.reset(x, y);
+        }
+
     }
 
 
@@ -317,10 +351,7 @@ public:
     }
 
 private:
-    AvaMoves human;
-    AvaMoves comp;
     Board board;
-
     std::chrono::system_clock::time_point start;
 };
 
@@ -366,13 +397,18 @@ public:
         while (!select){
             cin >> x >> y;
             if ((select = human.select(x, y))){
+                // search.human.select(x, y);
                 cout << "Please choose the location to move in \'x y\' format" << endl;
                 bool target = false;
                 int targx = 0, targy = 0;
                 while (!target){
                     cin >> targx >> targy;
-                    // make the move
-                    if ((target = human.checkMove(targx, targy))) move(x, y, targx, targy, HUSS);
+                    // make the move & update the checker
+                    if ((target = human.checkMove(targx, targy))) {
+                        move(x, y, targx, targy, HUSS);
+                        // search.human.checkMove(targx, targy);
+                        search.move(x, y, targx, targy, HUSS);
+                    }
                     else cout << "Not a legal target location; please input correct locaion" << endl;
                 }
             } else cout << "Not a legal checker to be moved; please correct location" << endl;
@@ -385,10 +421,19 @@ public:
 
     void computerTurn(){
         cout << "Computer turn" << endl;
-        // cout << comp;
-        // cout << board;
-        // updateMoves();
-        search.search();
+        cout << comp;
+
+        Result result = search.search(board);
+        comp.select(result.x, result.y);
+        comp.checkMove(result.targX, result.targY);
+        move(result.x, result.y, result.targX, result.targY, COMP);
+
+        // search.comp.select(result.x, result.y);
+        // search.comp.checkMove(result.targX, result.targY);
+        search.move(result.x, result.y, result.targX, result.targY, COMP);
+
+        cout << board;
+        updateMoves();
     }
 
     void updateMoves(){
@@ -411,16 +456,14 @@ public:
         cout << endl;
         cout << board;
 
-        computerTurn();
-
         // cout << "input 1 to take first move; 2 to take second move" << endl;
-        // int flag = 1;
-        // // cin >> flag;
+        int flag = 1;
+        // cin >> flag;
         // if (flag == 2) computerTurn();
-        // while (!terminalState()){
-        //     humanTurn();
-        //     computerTurn();
-        // }
+        while (!terminalState()){
+            humanTurn();
+            computerTurn();
+        }
 
 
     }
