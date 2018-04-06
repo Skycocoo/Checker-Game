@@ -17,6 +17,7 @@ struct Point{
 };
 
 class Move{
+    friend class Search;
     friend std::ostream& operator<<(std::ostream& os, const Move& move);
 public:
     Point cur;
