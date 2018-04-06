@@ -159,22 +159,66 @@ public:
     }
 
     // minVal: for HUSS player
-    void minVal(){
+    float minVal(float alpha, float beta, Result& fmove, int depth){
+        // edge cases
         // parameters: alpha, beta, depth
+        if (terminalState()) return utility();
 
-        // if terminalState: return utility
-        // if depth == 0: return evaluated value
-        // if times up: return 0? (didnt finish searching for this level)
+        // if depth == 0: return evaluated utility
+        if (depth == 0) return eval(HUSS);
 
-        // initial v = 6
+        // if times up: evaluated utility
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        if (elapsed.count() >= 14) return eval(HUSS);
 
-        // for each avaliable moves for human:
-            // // need to remember the move & restore the board after iteration
-            // v = min(v, maxVal(updated board, alpha, beta))
-            // if v <= alpha: return v (pruned)
-            // beta = min(beta, v)
 
-        // return v?
+        // main function
+
+        float v = 6, tempv;
+        Result cmove (-1, -1, -1, -1); // result of min
+        bool capture = human.avaCapture();
+        for (size_t i = 0; i < human.moves.size(); i++){
+            int posX = human.moves[i].cur.x, posY = human.moves[i].cur.y;
+
+            // capture move
+            if (capture){
+                for (size_t j = 0; j < human.moves[i].capture.size(); j++){
+                    if (human.moves[i].capture[j]){
+                        int targX = human.moves[i].capture[j].x, targY = human.moves[i].capture[j].y;
+                        move(posX, posY, targX, targY, HUSS);
+                        tempv = maxVal(alpha, beta, cmove, depth - 1);
+                        reset(posX, posY, targX, targY, HUSS);
+
+                        if (tempv < v){
+                            v = tempv;
+                            fmove.update(posX, posY, targX, targY);
+                        }
+                        if (v <= alpha) return v;
+                        if (v < beta) beta = v;
+                    }
+                }
+
+            } else {
+                // regular move
+                for (size_t j = 0; j < human.moves[i].regular.size(); j++){
+                    if (human.moves[i].regular[j]){
+                        int targX = human.moves[i].regular[j].x, targY = human.moves[i].regular[j].y;
+                        move(posX, posY, targX, targY, HUSS);
+                        tempv = maxVal(alpha, beta, cmove, depth - 1);
+                        reset(posX, posY, targX, targY, HUSS);
+
+                        if (tempv < v){
+                            v = tempv;
+                            fmove.update(posX, posY, targX, targY);
+                        }
+                        if (v <= alpha) return v;
+                        if (v < beta) beta = v;
+                    }
+                }
+            }
+        }
+        return v;
     }
 
     // move from (x, y) to (targx, targy)
