@@ -28,8 +28,3 @@ Run the executable of this project:
 ```bash
 ./src/main
 ```
-
-
-## Notes
-
-the proximity to the other side; # of pieces could be captured by enemy; ...

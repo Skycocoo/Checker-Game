@@ -75,3 +75,12 @@ int AvaMoves::avaMoves() const {
     }
     return count;
 }
+
+int AvaMoves::proximity() const {
+    int count = 0;
+    for (size_t i = 0; i < moves.size(); i++){
+        if (type == HUSS) count += moves[i].cur.x - 1;
+        else count += (6 - moves[i].cur.x + 1);
+    }
+    return count;
+}

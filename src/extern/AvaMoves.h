@@ -8,6 +8,7 @@ class Board;
 class Move;
 
 class AvaMoves{
+    friend class Search;
     // provide all avaliable moves
     friend std::ostream& operator<<(std::ostream& os, const AvaMoves& h);
 public:
@@ -20,6 +21,9 @@ public:
 
     bool avaCapture() const;
     int avaMoves() const;
+
+    // for heuristics
+    int proximity() const;
 private:
     int type;
     int cur;

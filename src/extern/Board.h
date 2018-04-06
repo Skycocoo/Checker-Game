@@ -13,16 +13,18 @@ class Board{
 public:
     std::vector<std::vector<int>> b;
 
+    // black: human player
+    int numH;
+    // white: computer player
+    int numC;
+
     Board();
     void updateCount();
     bool terminalState() const;
 
 private:
     // int size = 6;
-    // black: human player
-    int numH;
-    // white: computer player
-    int numC;
+
 };
 
 #endif

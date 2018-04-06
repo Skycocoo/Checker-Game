@@ -14,129 +14,254 @@
 
 using namespace std;
 
-class Search{
-public:
-    Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
-    human(human), comp(comp), board(board){
-        human.updateBoard(board);
-        comp.updateBoard(board);
-
-        // unnecessary?
-        updateMoves();
-    }
-
-    void updateMoves(){
-        // remember to update moves for each turn
-        human.updateMoves();
-        comp.updateMoves();
-    }
-
-    void updateBoard(const Board& board){
-        for (size_t i = 0; i < this->board->b.size(); i++){
-            for (size_t j = 0; j < this->board->b[i].size(); j++){
-                this->board->b[i][j] = board.b[i][j];
-            }
-        }
-        updateMoves();
-    }
-
-    Move iterativeDeep(int maxDepth = 100){
-        Move result(-1, -1, board, COMP);
-
-        auto start = std::chrono::system_clock::now();
-        for (int i = 1; i < maxDepth; i++){
-
-            // alphaBeta();
-            // if the utility value for the returned move is larger
-            // change the current result to the returned move
-
-
-            // if the duration >= 14
-            // need to satisfy the duration requirement (within 15 seconds)
-            auto end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) break;
-        }
-    }
-
-    // return the action or the estimated value?
-    void alphaBeta(){
-        // parameters: depth
-        maxVal();
-    }
-
-    // maxVal: for COMP player
-    void maxVal(){
-        // parameters: alpha, beta, depth
-
-        // if terminalState: return utility
-        // if depth == 0: return evaluated value
-        // if times up: return 0? (didnt finish searching for this level)
-
-        // initial v = -6
-
-        // for each avaliable moves for computer:
-
-            // // need to remember the move & restore the board after iteration
-            // v = max(v, minVal(updated board, alpha, beta))
-            // if v >= beta: return v (pruned)
-            // alpha = max(alpha, v)
-
-        // return v?
-
-    }
-
-    // minVal: for HUSS player
-    void minVal(){
-        // parameters: alpha, beta, depth
-
-        // if terminalState: return utility
-        // if depth == 0: return evaluated value
-        // if times up: return 0? (didnt finish searching for this level)
-
-        // initial v = 6
-
-        // for each avaliable moves for human:
-            // // need to remember the move & restore the board after iteration
-            // v = min(v, maxVal(updated board, alpha, beta))
-            // if v <= alpha: return v (pruned)
-            // beta = min(beta, v)
-
-        // return v?
-    }
-
-    // heuristics to estimate the expected utility
-    void evaluation(){
-        // parameters: player type, (board)
-        // should be in range [-6, 6]
-
-        // features:
-        // number of avaliable checkers for current player
-        // for each avalible checker: proximity to the other end
-        // number of captured enemy
-
-        // negative: number of enemies
-        // negative: for each avalible checker of enemy: proximity to the other end
-
-        // linear weighted sum of features
-    }
-
-    // utility value for terminal state: range [-6, 6] = numC - numH
-    void utility(){
-        // numC - numH
-    }
-
-
-
-    void terminalState() const {
-        return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
-    }
-
-private:
-    AvaMoves human;
-    AvaMoves comp;
-    Board board;
-};
+// struct Result{
+//     int x, y, targX, targX;
+//
+//     Result(int x, int y, int targX, int targY): x(x), y(y), targX(targX), targY(targY){}
+//     void update(int x, int y, int targX, int targY){
+//         this->x = x;
+//         this->y = y;
+//         this->targX = targX;
+//         this->targY = targY;
+//     }
+// }
+//
+//
+// class Search{
+// public:
+//     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
+//     human(human), comp(comp), board(board){
+//         human.updateBoard(board);
+//         comp.updateBoard(board);
+//
+//         // unnecessary?
+//         updateMoves();
+//     }
+//
+//     void updateMoves(){
+//         // remember to update moves for each turn
+//         human.updateMoves();
+//         comp.updateMoves();
+//     }
+//
+//     void updateBoard(const Board& board){
+//         for (size_t i = 0; i < this->board->b.size(); i++){
+//             for (size_t j = 0; j < this->board->b[i].size(); j++){
+//                 this->board->b[i][j] = board.b[i][j];
+//             }
+//         }
+//         updateMoves();
+//     }
+//
+//     Move iterativeDeep(int maxDepth = 100){
+//         Result r (-1, -1, -1, -1); // result of alphabeta (first max)
+//         float util = -FLT_MAX;
+//
+//         start = std::chrono::system_clock::now();
+//
+//         for (int i = 1; i < maxDepth; i++){
+//             float tempUtil = alphaBeta(result, i)
+//
+//             // if the utility value for the returned move is larger
+//             // change the current result to the returned move
+//             if (util < ) util = tempUtil;
+//
+//             // if the duration >= 14
+//             // need to satisfy the duration requirement (within 15 seconds)
+//
+//             // auto end = std::chrono::system_clock::now();
+//             // std::chrono::duration<double> elapsed = end - start;
+//             // if (elapsed.count() >= 14) break;
+//         }
+//
+//         return result;
+//     }
+//
+//     // return the action or the estimated value?
+//     float alphaBeta(Result& result, int depth){
+//         // parameters: depth
+//         float alpha = -6, beta = 6;
+//         return maxVal(alpha, beta, result, depth);
+//     }
+//
+//     // maxVal: for COMP player
+//     float maxVal(float alpha, float beta, Result& result, int depth){
+//
+//         // edge cases
+//
+//         // parameters: alpha, beta, depth
+//         if (terminalState()) return utility();
+//
+//         // if depth == 0: return evaluated utility
+//         if (depth == 0) return eval(COMP);
+//
+//         // if times up: evaluated utility
+//         auto end = std::chrono::system_clock::now();
+//         std::chrono::duration<double> elapsed = end - start;
+//         if (elapsed.count() >= 14) return eval(COMP);
+//
+//
+//         // main function
+//
+//         float v = -6, tempv;
+//         Result result(-1, -1, -1, -1); // result of min
+//         bool capture = comp.avaCapture();
+//         for (size_t i = 0; i < comp.moves.size(); i++){
+//             int posX = comp.moves[i].cur.x, posY = comp.moves[i].cur.y;
+//
+//             // capture move
+//             if (capture){
+//                 if (comp.moves[i].left2){
+//                     int targX = comp.moves[i].left2.x, targY = comp.moves[i].left2y;
+//                     move(posX, posY, targX, targY, COMP);
+//                     tempv = minVal(alpha, beta, result, depth - 1);
+//                     reset(posX, posY, targX, targY, COMP);
+//
+//                     if (tempv > v){
+//                         v = tempv;
+//                         result.update(posX, posY, targX, targY);
+//                     }
+//                     if (v >= beta) return v;
+//                     if (v > alpha) alpha = v;
+//                 }
+//
+//                 if (comp.moves[i].right2){
+//                     int targX = comp.moves[i].right2.x, targY = comp.moves[i].right2.y;
+//                     move(posX, posY, targX, targY, COMP);
+//                     tempv = minVal(alpha, beta, result, depth - 1);
+//                     reset(posX, posY, targX, targY, COMP);
+//
+//                     if (tempv > v){
+//                         v = tempv;
+//                         result.update(posX, posY, targX, targY);
+//                     }
+//                     if (v >= beta) return v;
+//                     if (v > alpha) alpha = v;
+//                 }
+//
+//             } else {
+//                 // regular move
+//                 if (comp.moves[i].left1){
+//
+//                 }
+//
+//                 if (comp.moves[i].right1){
+//
+//                 }
+//             }
+//         }
+//         // for each avaliable moves for computer:
+//             // // need to remember the move & restore the board after iteration
+//             // v = max(v, minVal(updated board, alpha, beta))
+//             // if v >= beta: return v (pruned)
+//             // alpha = max(alpha, v)
+//
+//         // return v?
+//
+//     }
+//
+//     // minVal: for HUSS player
+//     void minVal(){
+//         // parameters: alpha, beta, depth
+//
+//         // if terminalState: return utility
+//         // if depth == 0: return evaluated value
+//         // if times up: return 0? (didnt finish searching for this level)
+//
+//         // initial v = 6
+//
+//         // for each avaliable moves for human:
+//             // // need to remember the move & restore the board after iteration
+//             // v = min(v, maxVal(updated board, alpha, beta))
+//             // if v <= alpha: return v (pruned)
+//             // beta = min(beta, v)
+//
+//         // return v?
+//     }
+//
+//     // move from (x, y) to (targx, targy)
+//     void move(int x, int y, int targx, int targy, int type){
+//         // move a checker forom (x, y) to (targx, targy)
+//         board.b[x][y] = 0;
+//
+//         // if capture move
+//         if (abs(targy - y) == 2){
+//             if (type == HUSS){
+//                 if (y - targy > 0) board.b[x - 1][y - 1] = 0;
+//                 else board.b[x - 1][y + 1] = 0;
+//             } else {
+//                 // this is moves for computer
+//                 if (y - targy > 0) board.b[x + 1][y - 1] = 0;
+//                 else board.b[x + 1][y + 1] = 0;
+//             }
+//             board.updateCount();
+//         }
+//         board.b[targx][targy] = type;
+//     }
+//
+//     // reset the move from (x, y) to (targx, targy) back to original
+//     void reset(int x, int y, int targx, int targy, int type){
+//         board.b[targx][targy] = 0;
+//         // if capture move
+//         if (abs(targy - y) == 2){
+//             if (type == HUSS){
+//                 if (y - targy > 0) board.b[x - 1][y - 1] = COMP;
+//                 else board.b[x - 1][y + 1] = COMP;
+//             } else {
+//                 // this is moves for computer
+//                 if (y - targy > 0) board.b[x + 1][y - 1] = HUSS;
+//                 else board.b[x + 1][y + 1] = HUSS;
+//             }
+//             board.updateCount();
+//         }
+//         board.b[x][y] = type;
+//     }
+//
+//
+//     // heuristics to estimate the expected utility
+//     float eval(int type = HUSS){
+//         // parameters: player type, (board)
+//         // should be in range [-6, 6]
+//
+//         // features:
+//         // [0, 6] number of avaliable checkers for current player
+//         int fea1 = human.avaMoves();
+//         if (type == COMP) fea1 = comp.avaMoves();
+//
+//         // [0, 18] for each avalible checker: proximity to the other end
+//         int fea2 = human.proximity();
+//         if (type == COMP) fea2 = comp.proximity();
+//
+//         // [-18, 0] negative: for each avalible checker of enemy: proximity to the other end
+//         int fea3 = -comp.proximity();
+//         if (type == COMP) fea4 = -human.proximity();
+//
+//         // [-6, 0] negative: number of enemy
+//         int fea4 = -board.numC;
+//         if (type == COMP) fea5 = -board.compH;
+//
+//         // linear weighted sum of features
+//         return (fea1 + fea2 + fea3 + fea4) / 24 * 6;
+//     }
+//
+//     // utility value for terminal state: range [-6, 6] = numC - numH
+//     float utility(){
+//         return board.numC - board.numH;
+//     }
+//
+//
+//
+//     bool terminalState() const {
+//         return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
+//     }
+//
+// private:
+//     AvaMoves human;
+//     AvaMoves comp;
+//     Board board;
+//
+//     std::chrono::time_point start;
+// };
 
 
 class Checker{
@@ -162,6 +287,8 @@ public:
                 else board.b[x - 1][y + 1] = 0;
             } else {
                 // this is moves for computer
+                if (y - targy > 0) board.b[x + 1][y - 1] = 0;
+                else board.b[x + 1][y + 1] = 0;
             }
 
             board.updateCount();
@@ -197,7 +324,7 @@ public:
 
     void computerTurn(){
         cout << "Computer turn" << endl;
-        // cout << comp;
+        cout << comp;
         cout << board;
         updateMoves();
     }
@@ -206,6 +333,7 @@ public:
         // remember to update moves for each turn
         human.updateMoves();
         comp.updateMoves();
+        board.updateCount();
     }
 
     void play(){
