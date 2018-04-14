@@ -5,7 +5,8 @@
 #include <vector>
 
 class Board;
-class Move;
+// class Move;
+#include "Move.h"
 
 class AvaMoves{
     friend class Search;

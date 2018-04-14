@@ -28,3 +28,7 @@ Run the executable of this project:
 ```bash
 ./src/main
 ```
+
+## Note
+
+If only one move available: then call alphabeta (otherwise just take the move)
