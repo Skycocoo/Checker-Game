@@ -5,12 +5,13 @@
 
 // provide all avaliable moves
 std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
-    if (a.type == HUSS) os << "Human ";
-    else os << "Computer ";
+    if (a.type == HUSS) os << "Human: ";
+    else os << "Computer: ";
 
     os << a.avaMoves() << " avaliable moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
-        if (a.moves[i]) os << a.moves[i];
+        // if (a.moves[i]) os << a.moves[i];
+        os << a.moves[i];
     }
     os << "\n";
     return os;
@@ -64,11 +65,31 @@ bool AvaMoves::select(int x, int y, bool output, bool reset) {
 bool AvaMoves::checkMove(int targx, int targy) {
     bool result = moves[cur].checkMove(targx, targy);
     if (result) moves[cur].updatePos(targx, targy);
+    // std::cout << moves[cur];
+    cur = -1;
     return result;
 }
 
 void AvaMoves::reset(int x, int y){
     moves[cur].updatePos(x, y);
+}
+
+void AvaMoves::captured(int x, int y){
+    for (size_t i = 0; i < moves.size(); i++){
+        if (moves[i].select(x, y)){
+            moves[i].updatePos(-1, -1);
+            return;
+        }
+    }
+}
+
+void AvaMoves::resetCaptured(int x, int y){
+    for (size_t i = 0; i < moves.size(); i++){
+        if (moves[i].select(-1, -1)){
+            moves[i].updatePos(x, y);
+            return;
+        }
+    }
 }
 
 

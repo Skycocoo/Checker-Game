@@ -38,8 +38,8 @@ void Search::updateMoves(){
 Result Search::search(const Board& board){
     updateBoard(board);
     updateMoves();
-    cout << human;
-    cout << comp;
+    // cout << human;
+    // cout << comp;
 
     cout << "Start of searching for computer...\n" << board;
     return iterativeDeep();
@@ -230,6 +230,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
 // move from (x, y) to (targx, targy)
 // should also take care of the checkers
 void Search::move(int x, int y, int targx, int targy, int type){
+    // cout << "from " << x << " " << y << " to " << targx << " " << targy << endl;
     bool fail = false;
 
     // update checkers
@@ -251,13 +252,20 @@ void Search::move(int x, int y, int targx, int targy, int type){
 
     // if capture move
     if (abs(targy - y) == 2){
+        int capY = y + 1;
+        if (y - targy > 0) capY = y - 1;
+
         if (type == HUSS){
-            if (y - targy > 0) board.b[x - 1][y - 1] = 0;
-            else board.b[x - 1][y + 1] = 0;
+            // if (y - targy > 0) board.b[x - 1][y - 1] = 0;
+            // else board.b[x - 1][y + 1] = 0;
+            board.b[x - 1][capY] = 0;
+            comp.captured(x - 1, capY);
         } else {
             // this is moves for computer
-            if (y - targy > 0) board.b[x + 1][y - 1] = 0;
-            else board.b[x + 1][y + 1] = 0;
+            // if (y - targy > 0) board.b[x + 1][y - 1] = 0;
+            // else board.b[x + 1][y + 1] = 0;
+            board.b[x + 1][capY] = 0;
+            human.captured(x + 1, capY);
         }
     }
     board.b[targx][targy] = type;
@@ -285,13 +293,21 @@ void Search::reset(int x, int y, int targx, int targy, int type){
     board.b[targx][targy] = 0;
     // if capture move
     if (abs(targy - y) == 2){
+
+        int capY = y + 1;
+        if (y - targy > 0) capY = y - 1;
+
         if (type == HUSS){
-            if (y - targy > 0) board.b[x - 1][y - 1] = COMP;
-            else board.b[x - 1][y + 1] = COMP;
+            board.b[x - 1][capY] = COMP;
+            comp.resetCaptured(x - 1, capY);
+            // if (y - targy > 0) board.b[x - 1][y - 1] = COMP;
+            // else board.b[x - 1][y + 1] = COMP;
         } else {
             // this is moves for computer
-            if (y - targy > 0) board.b[x + 1][y - 1] = HUSS;
-            else board.b[x + 1][y + 1] = HUSS;
+            // if (y - targy > 0) board.b[x + 1][y - 1] = HUSS;
+            // else board.b[x + 1][y + 1] = HUSS;
+            board.b[x + 1][capY] = HUSS;
+            human.resetCaptured(x + 1, capY);
         }
     }
     board.b[x][y] = type;

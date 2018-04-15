@@ -7,6 +7,7 @@ Checker::Checker():
 board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
 
 bool Checker::terminalState() const {
+    // cout << human.avaMoves() << " " << comp.avaMoves() << endl;
     return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
 }
 
@@ -16,13 +17,20 @@ void Checker::move(int x, int y, int targx, int targy, int type){
 
     // if capture move
     if (abs(targy - y) == 2){
+        int capY = y + 1;
+        if (y - targy > 0) capY = y - 1;
+
         if (type == HUSS){
-            if (y - targy > 0) board.b[x - 1][y - 1] = 0;
-            else board.b[x - 1][y + 1] = 0;
+            // if (y - targy > 0) board.b[x - 1][y - 1] = 0;
+            // else board.b[x - 1][y + 1] = 0;
+            board.b[x - 1][capY] = 0;
+            comp.captured(x - 1, capY);
         } else {
             // this is moves for computer
-            if (y - targy > 0) board.b[x + 1][y - 1] = 0;
-            else board.b[x + 1][y + 1] = 0;
+            // if (y - targy > 0) board.b[x + 1][y - 1] = 0;
+            // else board.b[x + 1][y + 1] = 0;
+            board.b[x + 1][capY] = 0;
+            human.captured(x + 1, capY);
         }
     }
     board.b[targx][targy] = type;
@@ -31,8 +39,15 @@ void Checker::move(int x, int y, int targx, int targy, int type){
 
 void Checker::humanTurn(){
     cout << "Human turn" << endl;
-    cout << human;
+    // cout << human << comp;
 
+    if (human.avaMoves() == 0){
+        cout << "Human does not have any available legal move" << endl;
+        return;
+    }
+
+    cout << human;
+    
     cout << "Please select the checker in \'x y\' format" << endl;
     bool select = false;
     int x = 0, y = 0;
@@ -64,6 +79,12 @@ void Checker::humanTurn(){
 
 void Checker::computerTurn(){
     cout << "Computer turn" << endl;
+
+    if (comp.avaMoves() == 0){
+        cout << "Computer does not have any available legal move" << endl;
+        return;
+    }
+
     cout << comp;
 
     Result result = search.search(board);

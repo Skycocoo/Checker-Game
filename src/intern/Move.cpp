@@ -49,7 +49,10 @@ void Move::updatePos(int x, int y){
 
 // both capture move & regular move?
 void Move::updateMove(){
+    if (!cur) return;
+
     int x = cur.x, y = cur.y;
+
     clearMove();
 
     int left1y = y - 1, right1y = y + 1, left2y = y - 2, right2y = y + 2;

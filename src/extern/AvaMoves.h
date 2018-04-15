@@ -21,6 +21,9 @@ public:
     bool checkMove(int targx, int targy);
     void reset(int x, int y);
 
+    void captured(int x, int y);
+    void resetCaptured(int x, int y);
+
     bool avaCapture() const;
     int avaMoves() const;
 
