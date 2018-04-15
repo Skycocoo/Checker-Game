@@ -32,7 +32,6 @@ void Checker::move(int x, int y, int targx, int targy, int type){
 void Checker::humanTurn(){
     cout << "Human turn" << endl;
     cout << human;
-    cout << comp;
 
     cout << "Please select the checker in \'x y\' format" << endl;
     bool select = false;
@@ -48,9 +47,10 @@ void Checker::humanTurn(){
                 // make the move & update the checker
                 if ((target = human.checkMove(targx, targy))) {
                     move(x, y, targx, targy, HUSS);
-                    // update moves for search?
-                    // search.human.checkMove(targx, targy);
-                    // search.move(x, y, targx, targy, HUSS);
+
+                    // update moves for search
+                    // search's move take care of the update of AvaMoves
+                    search.move(x, y, targx, targy, HUSS);
                 }
                 else cout << "Not a legal target location; please input correct locaion" << endl;
             }

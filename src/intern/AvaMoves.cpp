@@ -5,6 +5,9 @@
 
 // provide all avaliable moves
 std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
+    if (a.type == HUSS) os << "Human ";
+    else os << "Computer ";
+
     os << a.avaMoves() << " avaliable moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
         if (a.moves[i]) os << a.moves[i];
@@ -42,12 +45,12 @@ void AvaMoves::updateMoves(){
 }
 
 
-bool AvaMoves::select(int x, int y, bool flag) {
+bool AvaMoves::select(int x, int y, bool output, bool reset) {
     cur = -1;
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i].select(x, y) && moves[i]){
+        if (moves[i].select(x, y) && (reset || moves[i])){
             cur = i;
-            if (flag) std::cout << "You selected " << moves[cur];
+            if (output) std::cout << "You selected " << moves[cur];
             return true;
         }
     }
