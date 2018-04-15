@@ -101,7 +101,7 @@ std::ostream& operator<<(std::ostream& os, const Move& move){
     if (move.isRegular()){
         os << "\t\tRegular move:";
         for (size_t i = 0; i < move.regular.size(); i++) {
-            if (move.capture[i]) os << " (" << move.regular[i].x << ", " << move.regular[i].y << ")";
+            if (move.regular[i]) os << " (" << move.regular[i].x << ", " << move.regular[i].y << ")";
         }
         os << "\n";
     }

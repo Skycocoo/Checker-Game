@@ -32,6 +32,7 @@ void Checker::move(int x, int y, int targx, int targy, int type){
 void Checker::humanTurn(){
     cout << "Human turn" << endl;
     cout << human;
+    cout << comp;
 
     cout << "Please select the checker in \'x y\' format" << endl;
     bool select = false;
