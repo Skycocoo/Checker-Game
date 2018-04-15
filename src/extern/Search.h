@@ -15,7 +15,6 @@ public:
 
     void updateBoard(const Board& board);
 
-
     void updateMoves();
     Result search(const Board& board);
 

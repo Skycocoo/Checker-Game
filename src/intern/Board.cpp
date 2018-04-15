@@ -26,6 +26,7 @@ bool Board::terminalState() const {
 
 
 std::ostream& operator<<(std::ostream& os, const Board& b){
+    os << "Board: \n";
     for (size_t i = 0; i < b.b.size()+1; i++){
         for (size_t j = 0; j < b.b[0].size()+1; j++){
             if (i == 0 || j == 0){
@@ -38,7 +39,12 @@ std::ostream& operator<<(std::ostream& os, const Board& b){
                 else os << "| ";
             }
         }
-        os << "|" << std::endl;
+        os << "|\n";
     }
+
+    os << "Number of human: " << b.numH;
+    os << "\nNumber of computer: " << b.numC;
+    os << "\n\n";
+
     return os;
 };

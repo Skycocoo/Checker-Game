@@ -7,8 +7,10 @@ Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
     this->human.updateBoard(board);
     this->comp.updateBoard(board);
+    cout << human;
+    cout << comp;
     // unnecessary?
-    updateMoves();
+    // updateMoves();
 }
 
 void Search::updateBoard(const Board& board){
@@ -34,6 +36,9 @@ void Search::updateMoves(){
 
 Result Search::search(const Board& board){
     updateBoard(board);
+    cout << human;
+    cout << comp;
+
     cout << "Start of searching for computer...\n" << board;
     return iterativeDeep();
 }

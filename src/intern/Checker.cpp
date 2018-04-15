@@ -3,14 +3,11 @@
 // need to change this later
 using namespace std;
 
-Checker::Checker(): board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
+Checker::Checker():
+board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
 
 bool Checker::terminalState() const {
-    // check if the game is ended
-
-    // NEED: whether there is any legal move for both players
     return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
-
 }
 
 void Checker::move(int x, int y, int targx, int targy, int type){
@@ -27,14 +24,14 @@ void Checker::move(int x, int y, int targx, int targy, int type){
             if (y - targy > 0) board.b[x + 1][y - 1] = 0;
             else board.b[x + 1][y + 1] = 0;
         }
-
-        board.updateCount();
     }
     board.b[targx][targy] = type;
+    board.updateCount();
 }
 
 void Checker::humanTurn(){
-    cout << "Human turn" << endl << human;
+    cout << "Human turn" << endl;
+    cout << human;
 
     cout << "Please select the checker in \'x y\' format" << endl;
     bool select = false;
@@ -42,7 +39,6 @@ void Checker::humanTurn(){
     while (!select){
         cin >> x >> y;
         if ((select = human.select(x, y))){
-            // search.human.select(x, y);
             cout << "Please choose the location to move in \'x y\' format" << endl;
             bool target = false;
             int targx = 0, targy = 0;
@@ -51,8 +47,9 @@ void Checker::humanTurn(){
                 // make the move & update the checker
                 if ((target = human.checkMove(targx, targy))) {
                     move(x, y, targx, targy, HUSS);
+                    // update moves for search?
                     // search.human.checkMove(targx, targy);
-                    search.move(x, y, targx, targy, HUSS);
+                    // search.move(x, y, targx, targy, HUSS);
                 }
                 else cout << "Not a legal target location; please input correct locaion" << endl;
             }
@@ -69,13 +66,17 @@ void Checker::computerTurn(){
     cout << comp;
 
     Result result = search.search(board);
-    comp.select(result.x, result.y);
-    comp.checkMove(result.targX, result.targY);
-    move(result.x, result.y, result.targX, result.targY, COMP);
+    int x = result.x, y = result.y;
+    int targx = result.targX, targy = result.targY;
 
+    comp.select(x, y);
+    comp.checkMove(targx, targy);
+    move(x, y, targx, targy, COMP);
+
+    // update moves for search?
     // search.comp.select(result.x, result.y);
     // search.comp.checkMove(result.targX, result.targY);
-    search.move(result.x, result.y, result.targX, result.targY, COMP);
+    // search.move(result.x, result.y, result.targX, result.targY, COMP);
 
     cout << board;
     updateMoves();
@@ -105,10 +106,11 @@ void Checker::play(){
     int flag = 1;
     // cin >> flag;
     // if (flag == 2) computerTurn();
-    while (!terminalState()){
+    while (true){
         humanTurn();
+        if (terminalState()) break;
         computerTurn();
+        if (terminalState()) break;
     }
-
-
+    cout << "End of Game" << endl;
 }

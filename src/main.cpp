@@ -14,12 +14,6 @@
 
 using namespace std;
 
-
-
-
-
-
-
 int main() {
     Checker c;
     c.play();
