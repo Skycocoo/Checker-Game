@@ -23,6 +23,8 @@ public:
     Point cur;
     Move(int x, int y, const Board& board, int type);
 
+    void updateBoard(const Board* board);
+
     bool isCapture() const;
     bool isRegular() const;
 

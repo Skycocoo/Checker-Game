@@ -81,6 +81,11 @@ void Move::clearMove(){
     for (size_t i = 0; i < regular.size(); i++) regular[i].update(-1, -1);
 }
 
+void Move::updateBoard(const Board* board){
+    this->board = board;
+}
+
+
 Move::operator bool() const{
     return (isCapture() || isRegular());
 }

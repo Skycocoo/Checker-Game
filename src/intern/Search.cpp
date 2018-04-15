@@ -5,8 +5,8 @@ using namespace std;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
-    this->human.updateBoard(board);
-    this->comp.updateBoard(board);
+    this->human.updateBoard(this->board);
+    this->comp.updateBoard(this->board);
     // cout << human;
     // cout << comp;
 
@@ -52,26 +52,28 @@ Result Search::iterativeDeep(int maxDepth){
     start = std::chrono::system_clock::now();
 
     Result cmove (-1, -1, -1, -1); // result of each iteration
-    for (int i = 1; i < maxDepth; i++){
-        float tempUtil = alphaBeta(cmove, i);
-        cout << "Depth: " << i << " utility: " << tempUtil << endl;
-        // if the utility value for the returned move is larger
-        // change the current result to the returned move
-        if (tempUtil > util) {
-            util = tempUtil;
-            fmove.update(cmove);
-            cout << "\tUpdated utility: " << util << fmove;
-        }
-
-        // if the duration >= 14: stop searching
-        // need to satisfy the duration requirement (within 15 seconds)
-        auto end = std::chrono::system_clock::now();
-        std::chrono::duration<double> elapsed = end - start;
-        if (elapsed.count() >= 14) {
-            cout << "This search goes to depth " << i << endl;
-            break;
-        }
-    }
+    util = alphaBeta(cmove, 2);
+    fmove.update(cmove);
+    // for (int i = 1; i < maxDepth; i++){
+    //     float tempUtil = alphaBeta(cmove, i);
+    //     cout << "Depth: " << i << " utility: " << tempUtil << endl;
+    //     // if the utility value for the returned move is larger
+    //     // change the current result to the returned move
+    //     if (tempUtil > util) {
+    //         util = tempUtil;
+    //         fmove.update(cmove);
+    //         cout << "\tUpdated utility: " << util << fmove;
+    //     }
+    //
+    //     // if the duration >= 14: stop searching
+    //     // need to satisfy the duration requirement (within 15 seconds)
+    //     auto end = std::chrono::system_clock::now();
+    //     std::chrono::duration<double> elapsed = end - start;
+    //     if (elapsed.count() >= 14) {
+    //         cout << "This search goes to depth " << i << endl;
+    //         break;
+    //     }
+    // }
 
     cout << "Result of this search: (estimated) utility: " << util << fmove;
     return fmove;
@@ -118,7 +120,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
                 if (comp.moves[i].capture[j]){
                     int targX = comp.moves[i].capture[j].x, targY = comp.moves[i].capture[j].y;
                     move(posX, posY, targX, targY, COMP);
-                    cout << "Move: " << endl << board;
+                    cout << "Move: " << endl << board << comp << human;
                     tempv = minVal(alpha, beta, cmove, depth - 1);
                     reset(posX, posY, targX, targY, COMP);
                     cout << "Reset: " << endl << board << comp << human;
@@ -179,6 +181,8 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     Result cmove (-1, -1, -1, -1); // result of min
     bool capture = human.avaCapture();
     for (size_t i = 0; i < human.moves.size(); i++){
+        if (!human.moves[i]) continue;
+
         int posX = human.moves[i].cur.x, posY = human.moves[i].cur.y;
 
         // capture move
@@ -226,6 +230,22 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
 // move from (x, y) to (targx, targy)
 // should also take care of the checkers
 void Search::move(int x, int y, int targx, int targy, int type){
+    bool fail = false;
+
+    // update checkers
+    if (type == HUSS){
+        if (human.select(x, y, false)) human.checkMove(targx, targy);
+        else fail = true;
+    } else {
+        if (comp.select(x, y, true)) comp.checkMove(targx, targy);
+        else fail = true;
+    }
+
+    if (fail){
+        cout << "Fail to move" << endl;
+        return;
+    }
+
     // move a checker forom (x, y) to (targx, targy)
     board.b[x][y] = 0;
 
@@ -242,20 +262,26 @@ void Search::move(int x, int y, int targx, int targy, int type){
     }
     board.b[targx][targy] = type;
     board.updateCount();
-
-    // update checkers
-    if (type == HUSS){
-        human.select(x, y, false);
-        human.checkMove(targx, targy);
-    } else {
-        comp.select(x, y, false);
-        comp.checkMove(targx, targy);
-    }
-
+    updateMoves();
 }
 
 // reset the move from (x, y) to (targx, targy) back to original
 void Search::reset(int x, int y, int targx, int targy, int type){
+    bool fail = false;
+    // update checkers
+    if (type == HUSS){
+        if (human.select(targx, targy, false, true)) human.reset(x, y);
+        else fail = true;
+    } else {
+        if (comp.select(targx, targy, false, true)) comp.reset(x, y);
+        else fail = true;
+    }
+
+    if (fail){
+        cout << "Fail to reset" << endl;
+        return;
+    }
+
     board.b[targx][targy] = 0;
     // if capture move
     if (abs(targy - y) == 2){
@@ -271,15 +297,7 @@ void Search::reset(int x, int y, int targx, int targy, int type){
     board.b[x][y] = type;
     // board.updateCount();
 
-    // update checkers
-    if (type == HUSS){
-        if (human.select(targx, targy, false, true)) human.reset(x, y);
-        updateMoves();
-    } else {
-        if (comp.select(targx, targy, false, true)) comp.reset(x, y);
-        updateMoves();
-    }
-
+    updateMoves();
 }
 
 
