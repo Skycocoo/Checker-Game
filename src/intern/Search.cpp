@@ -52,28 +52,30 @@ Result Search::iterativeDeep(int maxDepth){
     start = std::chrono::system_clock::now();
 
     Result cmove (-1, -1, -1, -1); // result of each iteration
-    util = alphaBeta(cmove, 2);
-    fmove.update(cmove);
-    // for (int i = 1; i < maxDepth; i++){
-    //     float tempUtil = alphaBeta(cmove, i);
-    //     cout << "Depth: " << i << " utility: " << tempUtil << endl;
-    //     // if the utility value for the returned move is larger
-    //     // change the current result to the returned move
-    //     if (tempUtil > util) {
-    //         util = tempUtil;
-    //         fmove.update(cmove);
-    //         cout << "\tUpdated utility: " << util << fmove;
-    //     }
-    //
-    //     // if the duration >= 14: stop searching
-    //     // need to satisfy the duration requirement (within 15 seconds)
-    //     auto end = std::chrono::system_clock::now();
-    //     std::chrono::duration<double> elapsed = end - start;
-    //     if (elapsed.count() >= 14) {
-    //         cout << "This search goes to depth " << i << endl;
-    //         break;
-    //     }
-    // }
+
+    // util = alphaBeta(cmove, 2);
+    // fmove.update(cmove);
+
+    for (int i = 1; i < maxDepth; i++){
+        float tempUtil = alphaBeta(cmove, i);
+        cout << "Depth: " << i << " utility: " << tempUtil << endl;
+        // if the utility value for the returned move is larger
+        // change the current result to the returned move
+        if (tempUtil > util) {
+            util = tempUtil;
+            fmove.update(cmove);
+            cout << "\tUpdated utility: " << util << fmove;
+        }
+
+        // if the duration >= 14: stop searching
+        // need to satisfy the duration requirement (within 15 seconds)
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        if (elapsed.count() >= 14) {
+            cout << "This search goes to depth " << i << endl;
+            break;
+        }
+    }
 
     cout << "Result of this search: (estimated) utility: " << util << fmove;
     return fmove;
@@ -83,12 +85,14 @@ Result Search::iterativeDeep(int maxDepth){
 float Search::alphaBeta(Result& fmove, int depth){
     // parameters: depth
     float alpha = -6, beta = 6;
+    // cout << human;
+    // cout << comp;
     return maxVal(alpha, beta, fmove, depth);
 }
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
-    cout << endl << "Max; Depth: " << depth << endl << board;
+    // cout << endl << "Max; Depth: " << depth << endl << board;
     updateMoves();
 
     // edge cases
@@ -96,7 +100,11 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
     // parameters: alpha, beta, depth
     if (terminalState()) return utility();
     // if depth == 0: return evaluated utility
-    if (depth == 0) return eval(COMP);
+    if (depth == 0) {
+        float v = eval(COMP);
+        cout << "Max; Depth: " << depth << " utility: " << v << endl;
+        return v;
+    }
     // if times up: evaluated utility
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
@@ -104,7 +112,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 
     // main function
-    cout << comp;
+    // cout << comp;
 
     float v = -6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
@@ -120,10 +128,10 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
                 if (comp.moves[i].capture[j]){
                     int targX = comp.moves[i].capture[j].x, targY = comp.moves[i].capture[j].y;
                     move(posX, posY, targX, targY, COMP);
-                    cout << "Move: " << endl << board << comp << human;
+                    // cout << "Move: " << endl << board << comp << human;
                     tempv = minVal(alpha, beta, cmove, depth - 1);
                     reset(posX, posY, targX, targY, COMP);
-                    cout << "Reset: " << endl << board << comp << human;
+                    // cout << "Reset: " << endl << board << comp << human;
                     if (tempv > v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
@@ -151,12 +159,13 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
             }
         }
     }
+    cout << "Max; Depth: " << depth << " utility: " << v << endl;
     return v;
 }
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int depth){
-    cout << endl << "Min; Depth: " << depth << endl << board;
+    // cout << endl << "Min; Depth: " << depth << endl << board;
     updateMoves();
 
     // edge cases
@@ -164,7 +173,11 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     // parameters: alpha, beta, depth
     if (terminalState()) return utility();
     // if depth == 0: return evaluated utility
-    if (depth == 0) return eval(HUSS);
+    if (depth == 0) {
+        float v = eval(HUSS);
+        cout << "Min; Depth: " << depth << " utility: " << v << endl;
+        return v;
+    }
     // if times up: evaluated utility
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
@@ -174,8 +187,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     // main function
     // need to update AvaMoves as well
 
-    cout << human;
-    cout << comp;
+    // cout << human;
 
     float v = 6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
@@ -195,7 +207,6 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
                     tempv = maxVal(alpha, beta, cmove, depth - 1);
                     reset(posX, posY, targX, targY, HUSS);
                     // cout << "Reset: " << endl << board;
-
                     if (tempv < v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
@@ -224,6 +235,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
             }
         }
     }
+    cout << "Min; Depth: " << depth << " utility: " << v << endl;
     return v;
 }
 
@@ -238,7 +250,7 @@ void Search::move(int x, int y, int targx, int targy, int type){
         if (human.select(x, y, false)) human.checkMove(targx, targy);
         else fail = true;
     } else {
-        if (comp.select(x, y, true)) comp.checkMove(targx, targy);
+        if (comp.select(x, y, false)) comp.checkMove(targx, targy);
         else fail = true;
     }
 
@@ -270,7 +282,7 @@ void Search::move(int x, int y, int targx, int targy, int type){
     }
     board.b[targx][targy] = type;
     board.updateCount();
-    updateMoves();
+    // updateMoves();
 }
 
 // reset the move from (x, y) to (targx, targy) back to original
@@ -300,19 +312,13 @@ void Search::reset(int x, int y, int targx, int targy, int type){
         if (type == HUSS){
             board.b[x - 1][capY] = COMP;
             comp.resetCaptured(x - 1, capY);
-            // if (y - targy > 0) board.b[x - 1][y - 1] = COMP;
-            // else board.b[x - 1][y + 1] = COMP;
         } else {
             // this is moves for computer
-            // if (y - targy > 0) board.b[x + 1][y - 1] = HUSS;
-            // else board.b[x + 1][y + 1] = HUSS;
             board.b[x + 1][capY] = HUSS;
             human.resetCaptured(x + 1, capY);
         }
     }
     board.b[x][y] = type;
-    // board.updateCount();
-
     updateMoves();
 }
 
@@ -323,15 +329,15 @@ float Search::eval(int type) const {
     // should be in range [-6, 6]
 
     // features:
-    // [0, 6] number of avaliable checkers for current player
-    int fea1 = human.avaMoves();
-    if (type == COMP) fea1 = comp.avaMoves();
+    // [0, 6] number of current player
+    int fea1 = board.numH;
+    if (type == COMP) fea1 = board.numC;
 
-    // [0, 18] for each avalible checker: proximity to the other end
+    // [0, 30] for each available checker: proximity to the other end
     int fea2 = human.proximity();
     if (type == COMP) fea2 = comp.proximity();
 
-    // [-18, 0] negative: for each avalible checker of enemy: proximity to the other end
+    // [-30, 0] negative: for each available checker of enemy: proximity to the other end
     int fea3 = -comp.proximity();
     if (type == COMP) fea3 = -human.proximity();
 
@@ -340,8 +346,8 @@ float Search::eval(int type) const {
     if (type == COMP) fea4 = -board.numH;
 
     // linear weighted sum of features
-    float result = float(fea1 + fea2 + fea3 + fea4) / float(24) * 6;
-    // cout << result << " ";
+    float result = float(fea1 + fea2 + fea3 + fea4) / float(36) * 6;
+    // cout << "utility: " << result << endl;
     return result;
 }
 

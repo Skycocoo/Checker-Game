@@ -10,8 +10,8 @@ std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
 
     os << a.avaMoves() << " avaliable moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
-        // if (a.moves[i]) os << a.moves[i];
-        os << a.moves[i];
+        if (a.moves[i]) os << a.moves[i];
+        // os << a.moves[i];
     }
     os << "\n";
     return os;
@@ -111,8 +111,8 @@ int AvaMoves::avaMoves() const {
 int AvaMoves::proximity() const {
     int count = 0;
     for (size_t i = 0; i < moves.size(); i++){
-        if (type == HUSS) count += moves[i].cur.x - 1;
-        else count += (6 - moves[i].cur.x + 1);
+        if (type == HUSS) count += moves[i].cur.x;
+        else count += (6 - moves[i].cur.x - 1);
     }
     return count;
 }
