@@ -112,11 +112,11 @@ int AvaMoves::distance() const {
     int count = 0;
     for (size_t i = 0; i < moves.size(); i++){
         if (moves[i].cur.x == -1) continue;
-        
+
         if (type == HUSS) count += moves[i].cur.x;
         else count += (6 - moves[i].cur.x - 1);
-        std::cout << moves[i].cur.x << " ";
+        // std::cout << moves[i].cur.x << " ";
     }
-    std::cout << " eval: " << count << std::endl;
+    // std::cout << " eval: " << count << std::endl;
     return count;
 }

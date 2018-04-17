@@ -37,7 +37,7 @@ public:
 
 
     // heuristics to estimate the expected utility
-    float eval(int type = HUSS) const ;
+    float eval() const ;
     // utility value for terminal state: range [-6, 6] = numC - numH
     float utility() const;
     bool terminalState() const;

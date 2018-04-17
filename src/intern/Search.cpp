@@ -3,6 +3,8 @@
 // need to change this later
 using namespace std;
 
+bool debug = true;
+
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
     this->human.updateBoard(this->board);
@@ -38,10 +40,8 @@ void Search::updateMoves(){
 Result Search::search(const Board& board){
     updateBoard(board);
     updateMoves();
-    // cout << human;
-    // cout << comp;
 
-    cout << "Start of searching for computer...\n" << board;
+    cout << "Start of searching for computer...\n" << board << human << comp;
     return iterativeDeep();
 }
 
@@ -53,29 +53,53 @@ Result Search::iterativeDeep(int maxDepth){
 
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
-    util = alphaBeta(cmove, 2);
-    fmove.update(cmove);
+    if (debug){
+        for (int i = 4; i < maxDepth; i++){
+            float tempUtil = alphaBeta(cmove, i);
+            cout << "Depth: " << i << " utility: " << tempUtil << endl;
+            // if the utility value for the returned move is larger
+            // change the current result to the returned move
+            if (tempUtil > util) {
+                util = tempUtil;
+                fmove.update(cmove);
+                cout << "\tUpdated utility: " << util << fmove;
+            }
 
-    // for (int i = 1; i < maxDepth; i++){
-    //     float tempUtil = alphaBeta(cmove, i);
-    //     cout << "Depth: " << i << " utility: " << tempUtil << endl;
-    //     // if the utility value for the returned move is larger
-    //     // change the current result to the returned move
-    //     if (tempUtil > util) {
-    //         util = tempUtil;
-    //         fmove.update(cmove);
-    //         cout << "\tUpdated utility: " << util << fmove;
-    //     }
-    //
-    //     // if the duration >= 14: stop searching
-    //     // need to satisfy the duration requirement (within 15 seconds)
-    //     auto end = std::chrono::system_clock::now();
-    //     std::chrono::duration<double> elapsed = end - start;
-    //     if (elapsed.count() >= 14) {
-    //         cout << "This search goes to depth " << i << endl;
-    //         break;
-    //     }
-    // }
+            // cout << "after reset: " << board << human << comp << endl;
+
+            // if the duration >= 14: stop searching
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) {
+                cout << "This search goes to depth " << i << endl;
+                break;
+            }
+        }
+    } else {
+        for (int i = 1; i < maxDepth; i++){
+            float tempUtil = alphaBeta(cmove, i);
+            cout << "Depth: " << i << " utility: " << tempUtil << endl;
+            // if the utility value for the returned move is larger
+            // change the current result to the returned move
+            if (tempUtil > util) {
+                util = tempUtil;
+                fmove.update(cmove);
+                cout << "\tUpdated utility: " << util << fmove;
+            }
+
+            // cout << "after reset: " << board << human << comp << endl;
+
+            // if the duration >= 14: stop searching
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) {
+                cout << "This search goes to depth " << i << endl;
+                break;
+            }
+        }
+    }
 
     cout << "Result of this search: (estimated) utility: " << util << fmove;
     return fmove;
@@ -92,7 +116,7 @@ float Search::alphaBeta(Result& fmove, int depth){
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
-    cout << endl << "Max; Depth: " << depth << endl << board;
+    if (debug) cout << endl << "Max; Depth: " << depth << endl << board;
     updateMoves();
 
     // edge cases
@@ -101,14 +125,14 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
     if (terminalState()) return utility();
     // if depth == 0: return evaluated utility
     if (depth == 0) {
-        float v = eval(COMP);
+        float v = eval();
         cout << "Max; Depth: " << depth << " utility: " << v << endl;
         return v;
     }
     // if times up: evaluated utility
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    if (elapsed.count() >= 14) return eval(COMP);
+    if (elapsed.count() >= 14) return eval();
 
 
     // main function
@@ -165,7 +189,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int depth){
-    cout << endl << "Min; Depth: " << depth << endl << board;
+    if (debug) cout << endl << "Min; Depth: " << depth << endl << board;
     updateMoves();
 
     // edge cases
@@ -174,14 +198,14 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     if (terminalState()) return utility();
     // if depth == 0: return evaluated utility
     if (depth == 0) {
-        float v = eval(HUSS);
+        float v = eval();
         cout << "Min; Depth: " << depth << " utility: " << v << endl;
         return v;
     }
     // if times up: evaluated utility
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    if (elapsed.count() >= 14) return eval(HUSS);
+    if (elapsed.count() >= 14) return eval();
 
 
     // main function
@@ -242,16 +266,15 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
 // move from (x, y) to (targx, targy)
 // should also take care of the checkers
 void Search::move(int x, int y, int targx, int targy, int type){
-    // cout << "from " << x << " " << y << " to " << targx << " " << targy << endl;
+    cout << "from " << x << " " << y << " to " << targx << " " << targy << endl;
     bool fail = false;
 
     // update checkers
-    if (type == HUSS){
-        if (human.select(x, y, true)) human.checkMove(targx, targy);
-        else fail = true;
-    } else {
-        if (comp.select(x, y, true)) comp.checkMove(targx, targy);
-        else fail = true;
+    if (type == HUSS) {
+        if (!(human.select(x, y, debug) && human.checkMove(targx, targy))) fail = true;
+    }
+    else {
+        if (!(comp.select(x, y, debug) && comp.checkMove(targx, targy))) fail = true;
     }
 
     if (fail){
@@ -325,31 +348,24 @@ void Search::reset(int x, int y, int targx, int targy, int type){
 
 
 // heuristics to estimate the expected utility
-float Search::eval(int type) const {
+// only for computer
+float Search::eval() const {
     // parameters: player type, (board)
     // should be in range [-6, 6]
 
     // features:
     // [0, 6] number of current player
-    int fea1 = board.numH;
-    if (type == COMP) fea1 = board.numC;
-
+    int fea1 = fea1 = board.numC,
     // [-30, 0] for each available checker: distance to the other end
-    int fea2 = -human.distance();
-    if (type == COMP) fea2 = -comp.distance();
-
+        fea2 = -comp.distance(),
     // [0, 30] negative: for each available checker of enemy: distance to the other end
-    int fea3 = comp.distance();
-    if (type == COMP) fea3 = human.distance();
-
+        fea3 = human.distance(),
     // [-6, 0] negative: number of enemy
-    int fea4 = -board.numC;
-    if (type == COMP) fea4 = -board.numH;
+        fea4 = -board.numH;
 
-    cout << "Evaluation: " << fea1 << " " << fea2 << " " << fea3 << " " << fea4 << endl;
     // linear weighted sum of features
+    // cout << "Evaluation: " << fea1 << " " << fea2 << " " << fea3 << " " << fea4 << endl;
     float result = float(fea1 + fea2 + fea3 + fea4) / float(36) * 6;
-    // cout << "utility: " << result << endl;
     return result;
 }
 

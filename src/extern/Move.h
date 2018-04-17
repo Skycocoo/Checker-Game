@@ -27,6 +27,7 @@ public:
 
     bool isCapture() const;
     bool isRegular() const;
+    explicit operator bool() const;
 
     bool select(int x, int y) const;
     bool checkMove(int targx, int targy) const;
@@ -37,7 +38,6 @@ public:
     void updateMove();
     void clearMove();
 
-    explicit operator bool() const;
 private:
     const Board* board;
     bool isHuman;

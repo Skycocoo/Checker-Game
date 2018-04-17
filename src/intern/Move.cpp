@@ -29,6 +29,10 @@ bool Move::isRegular() const {
     return (regular[0] || regular[1]);
 }
 
+Move::operator bool() const{
+    return (cur && (isCapture() || isRegular()));
+}
+
 
 bool Move::select(int x, int y) const {
     return (x == cur.x && y == cur.y);
@@ -89,9 +93,7 @@ void Move::updateBoard(const Board* board){
 }
 
 
-Move::operator bool() const{
-    return (isCapture() || isRegular());
-}
+
 
 
 std::ostream& operator<<(std::ostream& os, const Move& move){
