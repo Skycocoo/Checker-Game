@@ -77,7 +77,8 @@ void AvaMoves::reset(int x, int y){
 void AvaMoves::captured(int x, int y){
     for (size_t i = 0; i < moves.size(); i++){
         if (moves[i].select(x, y)){
-            moves[i].updatePos(-1, -1);
+            moves[i].captured();
+            // moves[i].updatePos(-1, -1);
             return;
         }
     }
@@ -85,10 +86,13 @@ void AvaMoves::captured(int x, int y){
 
 void AvaMoves::resetCaptured(int x, int y){
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i].select(-1, -1)){
-            moves[i].updatePos(x, y);
-            return;
+        if (!moves[i] && moves[i].select(x, y)){
+            moves[i].uncaptured();
         }
+        // if (moves[i].select(-1, -1)){
+        //     moves[i].updatePos(x, y);
+        //     return;
+        // }
     }
 }
 

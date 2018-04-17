@@ -3,7 +3,7 @@
 // need to change this later
 using namespace std;
 
-bool debug = true;
+bool debug = false;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
@@ -77,7 +77,7 @@ Result Search::iterativeDeep(int maxDepth){
             }
         }
     } else {
-        for (int i = 1; i < maxDepth; i++){
+        for (int i = 1; i < 3; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
@@ -88,7 +88,7 @@ Result Search::iterativeDeep(int maxDepth){
                 cout << "\tUpdated utility: " << util << fmove;
             }
 
-            // cout << "after reset: " << board << human << comp << endl;
+            cout << "after reset: " << board << human << comp << endl;
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
@@ -116,7 +116,7 @@ float Search::alphaBeta(Result& fmove, int depth){
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
-    if (debug) cout << endl << "Max; Depth: " << depth << endl << board;
+    // if (debug) cout << endl << "Max; Depth: " << depth << endl << board;
     updateMoves();
 
     // edge cases
@@ -136,7 +136,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 
     // main function
-    // cout << "Max; Depth: " << depth << " " << comp;
+    if (debug) cout << "Max; Depth: " << depth << " " << comp;
 
     float v = -6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
@@ -169,6 +169,8 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
             // regular move
             for (size_t j = 0; j < comp.moves[i].regular.size(); j++){
                 if (comp.moves[i].regular[j]){
+                    if (debug) cout << comp.moves[i] << endl;
+
                     int targX = comp.moves[i].regular[j].x, targY = comp.moves[i].regular[j].y;
                     move(posX, posY, targX, targY, COMP);
                     tempv = minVal(alpha, beta, cmove, depth - 1);
@@ -189,7 +191,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int depth){
-    if (debug) cout << endl << "Min; Depth: " << depth << endl << board;
+    // if (debug) cout << endl << "Min; Depth: " << depth << endl << board;
     updateMoves();
 
     // edge cases
@@ -211,14 +213,13 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     // main function
     // need to update AvaMoves as well
 
-    // cout << "Min; Depth: " << depth << " " << human;
+    if (debug) cout << "Min; Depth: " << depth << " " << human;
 
     float v = 6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
     bool capture = human.avaCapture();
     for (size_t i = 0; i < human.moves.size(); i++){
         if (!human.moves[i]) continue;
-
         int posX = human.moves[i].cur.x, posY = human.moves[i].cur.y;
 
         // capture move
@@ -244,8 +245,9 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
             // regular move
             for (size_t j = 0; j < human.moves[i].regular.size(); j++){
                 if (human.moves[i].regular[j]){
+                    if (debug) cout << human.moves[i] << endl;
+
                     int targX = human.moves[i].regular[j].x, targY = human.moves[i].regular[j].y;
-                    cout << human.moves[i] << " " << targX << " " << targY << endl;
                     move(posX, posY, targX, targY, HUSS);
                     tempv = maxVal(alpha, beta, cmove, depth - 1);
                     reset(posX, posY, targX, targY, HUSS);
@@ -267,7 +269,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
 // move from (x, y) to (targx, targy)
 // should also take care of the checkers
 void Search::move(int x, int y, int targx, int targy, int type){
-    cout << "from " << x << " " << y << " to " << targx << " " << targy << endl;
+    if (debug) cout << "from " << x << " " << y << " to " << targx << " " << targy << endl;
     bool fail = false;
 
     // update checkers

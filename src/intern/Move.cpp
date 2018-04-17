@@ -13,7 +13,7 @@ Point::operator bool() const {
 }
 
 
-Move::Move(int x, int y, const Board& board, int type): board(&board), isHuman(type == HUSS), cur(x, y){
+Move::Move(int x, int y, const Board& board, int type): cur(x, y), board(&board), isHuman(type == HUSS), isCaptured(false){
     capture.push_back(Point(-1, -1));
     capture.push_back(Point(-1, -1));
     regular.push_back(Point(-1, -1));
@@ -29,8 +29,16 @@ bool Move::isRegular() const {
     return (regular[0] || regular[1]);
 }
 
-Move::operator bool() const{
-    return (cur && (isCapture() || isRegular()));
+void Move::captured(){
+    isCaptured = true;
+}
+
+void Move::uncaptured(){
+    isCaptured = false;
+}
+
+Move::operator bool() const {
+    return (!isCaptured && (isCapture() || isRegular()));
 }
 
 

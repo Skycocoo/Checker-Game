@@ -27,6 +27,10 @@ public:
 
     bool isCapture() const;
     bool isRegular() const;
+
+    void captured();
+    void uncaptured();
+
     explicit operator bool() const;
 
     bool select(int x, int y) const;
@@ -41,6 +45,8 @@ public:
 private:
     const Board* board;
     bool isHuman;
+    bool isCaptured;
+
     Point left1, right1, left2, right2;
 
     // index 0: left, index 1: right
