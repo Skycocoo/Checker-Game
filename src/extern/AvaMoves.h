@@ -28,7 +28,7 @@ public:
     int avaMoves() const;
 
     // for heuristics
-    int proximity() const;
+    int distance() const;
 private:
     int type;
     int cur;
