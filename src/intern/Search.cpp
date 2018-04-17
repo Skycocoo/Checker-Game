@@ -245,6 +245,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
             for (size_t j = 0; j < human.moves[i].regular.size(); j++){
                 if (human.moves[i].regular[j]){
                     int targX = human.moves[i].regular[j].x, targY = human.moves[i].regular[j].y;
+                    cout << human.moves[i] << " " << targX << " " << targY << endl;
                     move(posX, posY, targX, targY, HUSS);
                     tempv = maxVal(alpha, beta, cmove, depth - 1);
                     reset(posX, posY, targX, targY, HUSS);
@@ -310,6 +311,8 @@ void Search::move(int x, int y, int targx, int targy, int type){
 
 // reset the move from (x, y) to (targx, targy) back to original
 void Search::reset(int x, int y, int targx, int targy, int type){
+    // cout << "Reset: ";
+
     bool fail = false;
     // update checkers
     if (type == HUSS){
@@ -344,6 +347,7 @@ void Search::reset(int x, int y, int targx, int targy, int type){
     }
     board.b[x][y] = type;
     updateMoves();
+    // cout << "after: " << human << comp;
 }
 
 

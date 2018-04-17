@@ -32,3 +32,7 @@ Run the executable of this project:
 ## Note
 
 If only one move available: then call alphabeta (otherwise just take the move)
+
+Reset: need to find the exact location to be resumed (because loop is based on index)
+
+> solution: change the structure of Move: mark as dead instead of setting the index directly to -1 -1 (so in reset we could compare the original indices)
