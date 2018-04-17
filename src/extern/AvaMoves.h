@@ -18,11 +18,12 @@ public:
     void updateMoves();
 
     bool select(int x, int y, bool output = true, bool reset = false);
-    bool checkMove(int targx, int targy);
-    void reset(int x, int y);
-
+    bool checkMove(int targX, int targY);
     void captured(int x, int y);
-    void resetCaptured(int x, int y);
+
+    bool superMove(int index, int targX, int targY);
+    void reset(int index, int x, int y);
+    void resetCaptured(int index, int x, int y);
 
     bool avaCapture() const;
     int avaMoves() const;

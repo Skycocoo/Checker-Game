@@ -3,7 +3,7 @@
 // need to change this later
 using namespace std;
 
-bool debug = false;
+bool debug = true;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
@@ -54,30 +54,7 @@ Result Search::iterativeDeep(int maxDepth){
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
     if (debug){
-        for (int i = 4; i < maxDepth; i++){
-            float tempUtil = alphaBeta(cmove, i);
-            cout << "Depth: " << i << " utility: " << tempUtil << endl;
-            // if the utility value for the returned move is larger
-            // change the current result to the returned move
-            if (tempUtil > util) {
-                util = tempUtil;
-                fmove.update(cmove);
-                cout << "\tUpdated utility: " << util << fmove;
-            }
-
-            // cout << "after reset: " << board << human << comp << endl;
-
-            // if the duration >= 14: stop searching
-            // need to satisfy the duration requirement (within 15 seconds)
-            auto end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) {
-                cout << "This search goes to depth " << i << endl;
-                break;
-            }
-        }
-    } else {
-        for (int i = 1; i < 3; i++){
+        for (int i = 2; i < 3; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
@@ -89,6 +66,29 @@ Result Search::iterativeDeep(int maxDepth){
             }
 
             cout << "after reset: " << board << human << comp << endl;
+
+            // if the duration >= 14: stop searching
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) {
+                cout << "This search goes to depth " << i << endl;
+                break;
+            }
+        }
+    } else {
+        for (int i = 1; i < maxDepth; i++){
+            float tempUtil = alphaBeta(cmove, i);
+            cout << "Depth: " << i << " utility: " << tempUtil << endl;
+            // if the utility value for the returned move is larger
+            // change the current result to the returned move
+            if (tempUtil > util) {
+                util = tempUtil;
+                fmove.update(cmove);
+                cout << "\tUpdated utility: " << util << fmove;
+            }
+
+            // cout << "after reset: " << board << human << comp << endl;
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
@@ -116,7 +116,7 @@ float Search::alphaBeta(Result& fmove, int depth){
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
-    // if (debug) cout << endl << "Max; Depth: " << depth << endl << board;
+    if (debug) cout << endl << "Max; Depth: " << depth << endl << board << comp;
     updateMoves();
 
     // edge cases
@@ -136,7 +136,6 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 
     // main function
-    if (debug) cout << "Max; Depth: " << depth << " " << comp;
 
     float v = -6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
@@ -151,10 +150,10 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
             for (size_t j = 0; j < comp.moves[i].capture.size(); j++){
                 if (comp.moves[i].capture[j]){
                     int targX = comp.moves[i].capture[j].x, targY = comp.moves[i].capture[j].y;
-                    move(posX, posY, targX, targY, COMP);
+                    move(i, posX, posY, targX, targY, COMP);
                     // cout << "Move: " << endl << board << comp << human;
                     tempv = minVal(alpha, beta, cmove, depth - 1);
-                    reset(posX, posY, targX, targY, COMP);
+                    reset(i, posX, posY, targX, targY, COMP);
                     // cout << "Reset: " << endl << board << comp << human;
                     if (tempv > v){
                         v = tempv;
@@ -172,9 +171,9 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
                     if (debug) cout << comp.moves[i] << endl;
 
                     int targX = comp.moves[i].regular[j].x, targY = comp.moves[i].regular[j].y;
-                    move(posX, posY, targX, targY, COMP);
+                    move(i, posX, posY, targX, targY, COMP);
                     tempv = minVal(alpha, beta, cmove, depth - 1);
-                    reset(posX, posY, targX, targY, COMP);
+                    reset(i, posX, posY, targX, targY, COMP);
                     if (tempv > v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
@@ -191,7 +190,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int depth){
-    // if (debug) cout << endl << "Min; Depth: " << depth << endl << board;
+    if (debug) cout << endl << "Min; Depth: " << depth << endl << board << human;
     updateMoves();
 
     // edge cases
@@ -213,8 +212,6 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     // main function
     // need to update AvaMoves as well
 
-    if (debug) cout << "Min; Depth: " << depth << " " << human;
-
     float v = 6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
     bool capture = human.avaCapture();
@@ -227,10 +224,10 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
             for (size_t j = 0; j < human.moves[i].capture.size(); j++){
                 if (human.moves[i].capture[j]){
                     int targX = human.moves[i].capture[j].x, targY = human.moves[i].capture[j].y;
-                    move(posX, posY, targX, targY, HUSS);
+                    move(i, posX, posY, targX, targY, HUSS);
                     // cout << "Move: " << endl << board;
                     tempv = maxVal(alpha, beta, cmove, depth - 1);
-                    reset(posX, posY, targX, targY, HUSS);
+                    reset(i, posX, posY, targX, targY, HUSS);
                     // cout << "Reset: " << endl << board;
                     if (tempv < v){
                         v = tempv;
@@ -248,9 +245,9 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
                     if (debug) cout << human.moves[i] << endl;
 
                     int targX = human.moves[i].regular[j].x, targY = human.moves[i].regular[j].y;
-                    move(posX, posY, targX, targY, HUSS);
+                    move(i, posX, posY, targX, targY, HUSS);
                     tempv = maxVal(alpha, beta, cmove, depth - 1);
-                    reset(posX, posY, targX, targY, HUSS);
+                    reset(i, posX, posY, targX, targY, HUSS);
 
                     if (tempv < v){
                         v = tempv;
@@ -266,18 +263,59 @@ float Search::minVal(float alpha, float beta, Result& fmove, int depth){
     return v;
 }
 
-// move from (x, y) to (targx, targy)
+// move from (x, y) to (targX, targY)
 // should also take care of the checkers
-void Search::move(int x, int y, int targx, int targy, int type){
-    if (debug) cout << "from " << x << " " << y << " to " << targx << " " << targy << endl;
+void Search::update(int x, int y, int targX, int targY, int type){
+    // update checkers
+    if (type == HUSS) {
+        human.select(x, y, debug);
+        human.checkMove(targX, targY);
+    }
+    else {
+        comp.select(x, y, debug);
+        comp.checkMove(targX, targY);
+    }
+
+    // move a checker forom (x, y) to (targX, targY)
+    board.b[x][y] = 0;
+
+    // if capture move
+    if (abs(targY - y) == 2){
+        int capY = y + 1;
+        if (y - targY > 0) capY = y - 1;
+
+        if (type == HUSS){
+            // if (y - targY > 0) board.b[x - 1][y - 1] = 0;
+            // else board.b[x - 1][y + 1] = 0;
+            board.b[x - 1][capY] = 0;
+            comp.captured(x - 1, capY);
+        } else {
+            // this is moves for computer
+            // if (y - targY > 0) board.b[x + 1][y - 1] = 0;
+            // else board.b[x + 1][y + 1] = 0;
+            board.b[x + 1][capY] = 0;
+            human.captured(x + 1, capY);
+        }
+    }
+    board.b[targX][targY] = type;
+    board.updateCount();
+    // updateMoves();
+}
+
+// move from (x, y) to (targX, targY)
+// should also take care of the checkers
+void Search::move(int index, int x, int y, int targX, int targY, int type){
+    if (debug) cout << "from " << x << " " << y << " to " << targX << " " << targY << endl;
     bool fail = false;
 
     // update checkers
     if (type == HUSS) {
-        if (!(human.select(x, y, debug) && human.checkMove(targx, targy))) fail = true;
+        human.superMove(index, targX, targY);
+        // if (!(human.select(x, y, debug) && human.checkMove(targX, targY))) fail = true;
     }
     else {
-        if (!(comp.select(x, y, debug) && comp.checkMove(targx, targy))) fail = true;
+        comp.superMove(index, targX, targY);
+        // if (!(comp.select(x, y, debug) && comp.checkMove(targX, targY))) fail = true;
     }
 
     if (fail){
@@ -285,66 +323,69 @@ void Search::move(int x, int y, int targx, int targy, int type){
         return;
     }
 
-    // move a checker forom (x, y) to (targx, targy)
+    // move a checker forom (x, y) to (targX, targY)
     board.b[x][y] = 0;
 
     // if capture move
-    if (abs(targy - y) == 2){
+    if (abs(targY - y) == 2){
         int capY = y + 1;
-        if (y - targy > 0) capY = y - 1;
+        if (y - targY > 0) capY = y - 1;
 
         if (type == HUSS){
-            // if (y - targy > 0) board.b[x - 1][y - 1] = 0;
+            // if (y - targY > 0) board.b[x - 1][y - 1] = 0;
             // else board.b[x - 1][y + 1] = 0;
             board.b[x - 1][capY] = 0;
             comp.captured(x - 1, capY);
         } else {
             // this is moves for computer
-            // if (y - targy > 0) board.b[x + 1][y - 1] = 0;
+            // if (y - targY > 0) board.b[x + 1][y - 1] = 0;
             // else board.b[x + 1][y + 1] = 0;
             board.b[x + 1][capY] = 0;
             human.captured(x + 1, capY);
         }
     }
-    board.b[targx][targy] = type;
+    board.b[targX][targY] = type;
     board.updateCount();
     // updateMoves();
 }
 
-// reset the move from (x, y) to (targx, targy) back to original
-void Search::reset(int x, int y, int targx, int targy, int type){
+// reset the move from (x, y) to (targX, targY) back to original
+void Search::reset(int index, int x, int y, int targX, int targY, int type){
     // cout << "Reset: ";
 
-    bool fail = false;
-    // update checkers
-    if (type == HUSS){
-        if (human.select(targx, targy, false, true)) human.reset(x, y);
-        else fail = true;
-    } else {
-        if (comp.select(targx, targy, false, true)) comp.reset(x, y);
-        else fail = true;
-    }
+    // bool fail = false;
+    // // update checkers
+    // if (type == HUSS){
+    //     if (human.select(targX, targY, false, true)) human.reset(x, y);
+    //     else fail = true;
+    // } else {
+    //     if (comp.select(targX, targY, false, true)) comp.reset(x, y);
+    //     else fail = true;
+    // }
+    // if (fail){
+    //     cout << "Fail to reset" << endl;
+    //     cout << "orig: " << x << " " << y << " targ: " << targX << " " << targY << endl;
+    //     return;
+    // }
 
-    if (fail){
-        cout << "Fail to reset" << endl;
-        cout << "orig: " << x << " " << y << " targ: " << targx << " " << targy << endl;
-        return;
-    }
+    if (type == HUSS) human.reset(index, x, y);
+    else comp.reset(index, x, y);
 
-    board.b[targx][targy] = 0;
+
+    board.b[targX][targY] = 0;
     // if capture move
-    if (abs(targy - y) == 2){
+    if (abs(targY - y) == 2){
 
         int capY = y + 1;
-        if (y - targy > 0) capY = y - 1;
+        if (y - targY > 0) capY = y - 1;
 
         if (type == HUSS){
             board.b[x - 1][capY] = COMP;
-            comp.resetCaptured(x - 1, capY);
+            comp.resetCaptured(index, x - 1, capY);
         } else {
             // this is moves for computer
             board.b[x + 1][capY] = HUSS;
-            human.resetCaptured(x + 1, capY);
+            human.resetCaptured(index, x + 1, capY);
         }
     }
     board.b[x][y] = type;

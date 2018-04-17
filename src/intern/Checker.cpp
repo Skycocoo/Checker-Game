@@ -51,7 +51,7 @@ void Checker::humanTurn(){
     human.select(4, 1);
     human.checkMove(2, 3);
     move(4, 1, 2, 3, HUSS);
-    search.move(4, 1, 2, 3, HUSS);
+    search.update(4, 1, 2, 3, HUSS);
 
     // cout << "Please select the checker in \'x y\' format" << endl;
     // bool select = false;
@@ -70,7 +70,7 @@ void Checker::humanTurn(){
     //
     //                 // update moves for search
     //                 // search's move take care of the update of AvaMoves
-    //                 search.move(x, y, targx, targy, HUSS);
+    //                 search.update(x, y, targx, targy, HUSS);
     //             }
     //             else cout << "Not a legal target location; please input correct locaion" << endl;
     //         }
@@ -103,7 +103,7 @@ void Checker::computerTurn(){
     // update moves for search?
     // search.comp.select(result.x, result.y);
     // search.comp.checkMove(result.targX, result.targY);
-    // search.move(result.x, result.y, result.targX, result.targY, COMP);
+    // search.update(result.x, result.y, result.targX, result.targY, COMP);
 
     cout << board;
     updateMoves();

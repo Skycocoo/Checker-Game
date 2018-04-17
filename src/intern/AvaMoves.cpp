@@ -10,8 +10,8 @@ std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
 
     os << a.avaMoves() << " avaliable moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
-        if (a.moves[i]) os << a.moves[i];
-        // os << a.moves[i];
+        // if (a.moves[i]) os << a.moves[i];
+        os << a.moves[i];
     }
     os << "\n";
     return os;
@@ -62,16 +62,12 @@ bool AvaMoves::select(int x, int y, bool output, bool reset) {
     return false;
 }
 
-bool AvaMoves::checkMove(int targx, int targy) {
-    bool result = moves[cur].checkMove(targx, targy);
-    if (result) moves[cur].updatePos(targx, targy);
-    // std::cout << moves[cur];
-    cur = -1;
-    return result;
-}
-
-void AvaMoves::reset(int x, int y){
-    moves[cur].updatePos(x, y);
+bool AvaMoves::checkMove(int targX, int targY) {
+    if (moves[cur].checkMove(targX, targY)) {
+        moves[cur].updatePos(targX, targY);
+        return true;
+    }
+    return false;
 }
 
 void AvaMoves::captured(int x, int y){
@@ -84,16 +80,22 @@ void AvaMoves::captured(int x, int y){
     }
 }
 
-void AvaMoves::resetCaptured(int x, int y){
-    for (size_t i = 0; i < moves.size(); i++){
-        if (!moves[i] && moves[i].select(x, y)){
-            moves[i].uncaptured();
-        }
-        // if (moves[i].select(-1, -1)){
-        //     moves[i].updatePos(x, y);
-        //     return;
-        // }
+
+bool AvaMoves::superMove(int index, int targX, int targY){
+    if (moves[index].checkMove(targX, targY)) {
+        moves[index].updatePos(targX, targY);
+        return true;
     }
+    return false;
+}
+
+void AvaMoves::reset(int index, int x, int y){
+    moves[index].updatePos(x, y);
+}
+
+void AvaMoves::resetCaptured(int index, int x, int y){
+    moves[index].uncaptured();
+    std::cout << "Resetting: " << moves[index] << std::endl;
 }
 
 

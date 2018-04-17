@@ -27,13 +27,14 @@ public:
     // minVal: for HUSS player
     float minVal(float alpha, float beta, Result& fmove, int depth);
 
+    void update(int x, int y, int targX, int targY, int type);
 
     // move from (x, y) to (targx, targy)
     // should also take care of the checkers
-    void move(int x, int y, int targx, int targy, int type);
+    void move(int index, int x, int y, int targX, int targY, int type);
 
     // reset the move from (x, y) to (targx, targy) back to original
-    void reset(int x, int y, int targx, int targy, int type);
+    void reset(int index, int x, int y, int targX, int targY, int type);
 
 
     // heuristics to estimate the expected utility

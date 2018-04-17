@@ -105,7 +105,7 @@ void Move::updateBoard(const Board* board){
 
 
 std::ostream& operator<<(std::ostream& os, const Move& move){
-    os << "\tChecker (" << move.cur.x << ", " << move.cur.y << ")\n";
+    os << "\tChecker (" << move.cur.x << ", " << move.cur.y << ") " << std::boolalpha << move.isCaptured << " \n";
 
     if (move.isCapture()){
         os << "\t\tCapture move:";
