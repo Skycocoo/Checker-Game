@@ -3,7 +3,7 @@
 // need to change this later
 using namespace std;
 
-bool debug = false;
+bool debug = true;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
@@ -55,7 +55,7 @@ Result Search::iterativeDeep(int maxDepth){
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
     if (debug){
-        for (int i = 2; i < 3; i++){
+        for (int i = 1; i < 2; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
@@ -66,7 +66,7 @@ Result Search::iterativeDeep(int maxDepth){
                 cout << "\tUpdated utility: " << util << fmove;
             }
 
-            cout << "after reset: " << board << human << comp << endl;
+            // cout << "after reset: " << board << human << comp << endl;
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
@@ -89,7 +89,7 @@ Result Search::iterativeDeep(int maxDepth){
                 cout << "\tUpdated utility: " << util << fmove;
             }
 
-            cout << "after reset: " << board << human << comp << endl;
+            // cout << "after reset: " << board << human << comp << endl;
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
@@ -118,7 +118,7 @@ float Search::alphaBeta(Result& fmove, int depth){
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth){
-    if (debug) cout << endl << "Max; Depth: " << curDepth << endl << board << human << comp;
+    if (debug) cout << endl << "Max; Depth: " << curDepth << endl << board << comp;
     updateMoves();
 
     // edge cases
@@ -186,13 +186,14 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
             }
         }
     }
-    cout << "Max; Depth: " << depth << " utility: " << v << endl;
+    cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
+    if (debug && (v == -6 || v == 6)) cout << "utility zero? " << comp.avaMoves() << board << endl;
     return v;
 }
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int depth){
-    if (debug) cout << endl << "Min; Depth: " << curDepth << endl << board << human << comp;
+    if (debug) cout << endl << "Min; Depth: " << curDepth << endl << board << human;
     updateMoves();
 
     // edge cases
@@ -261,7 +262,8 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
             }
         }
     }
-    cout << "Min; Depth: " << depth << " utility: " << v << endl;
+    cout << "Min; Depth: " << curDepth << " utility: " << v << endl;
+    if (debug && (v == -6 || v == 6)) cout << human.avaMoves() << endl;
     return v;
 }
 

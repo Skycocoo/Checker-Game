@@ -116,6 +116,7 @@ int AvaMoves::avaMoves() const {
     int count = 0;
     for (size_t i = 0; i < moves.size(); i++){
         if (moves[i]) count += moves[i].getMoves();
+        // if (moves[i]) count++;
     }
     return count;
 }

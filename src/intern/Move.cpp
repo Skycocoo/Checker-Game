@@ -57,9 +57,11 @@ int Move::getMoves() const {
     if (isCapture()){
         if (capture[0]) ++count;
         if (capture[1]) ++count;
+        return count;
     } else {
         if (regular[0]) ++count;
         if (regular[1]) ++count;
+        return count;
     }
     return count;
 }
