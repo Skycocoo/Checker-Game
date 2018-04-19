@@ -17,7 +17,7 @@ public:
     void updateBoard(const Board& board);
     void updateMoves();
 
-    bool select(int x, int y, bool output = true, bool reset = false);
+    bool select(int x, int y, bool output = true);
     bool checkMove(int targX, int targY);
     void captured(int x, int y);
 

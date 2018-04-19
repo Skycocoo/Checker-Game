@@ -7,6 +7,7 @@
 std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
     if (a.type == HUSS) os << "Human: ";
     else os << "Computer: ";
+    // std::cout << *a.board;
 
     os << a.avaMoves() << " avaliable moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
@@ -36,7 +37,7 @@ void AvaMoves::updateBoard(const Board& board){
 }
 
 void AvaMoves::updateMoves(){
-    // std::cout << *this->board;
+    // all of the moves needed to update
     for (size_t i = 0; i < moves.size(); i++){
         moves[i].updateMove();
     }
@@ -50,10 +51,10 @@ void AvaMoves::updateMoves(){
 }
 
 
-bool AvaMoves::select(int x, int y, bool output, bool reset) {
+bool AvaMoves::select(int x, int y, bool output) {
     cur = -1;
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i].select(x, y) && (reset || moves[i])){
+        if (moves[i] && moves[i].select(x, y)){
             cur = i;
             if (output) std::cout << "You selected " << moves[cur];
             return true;
@@ -79,7 +80,6 @@ void AvaMoves::captured(int x, int y){
         }
     }
 }
-
 
 bool AvaMoves::superMove(int index, int targX, int targY){
     if (moves[index].checkMove(targX, targY)) {
@@ -107,7 +107,7 @@ void AvaMoves::resetCaptured(int x, int y){
 
 bool AvaMoves::avaCapture() const {
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i].isCapture()) return true;
+        if (moves[i] && moves[i].isCapture()) return true;
     }
     return false;
 }
@@ -124,7 +124,7 @@ int AvaMoves::avaMoves() const {
 int AvaMoves::distance() const {
     int count = 0;
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i].cur.x == -1) continue;
+        if (!moves[i]) continue;
 
         if (type == HUSS) count += moves[i].cur.x;
         else count += (6 - moves[i].cur.x - 1);

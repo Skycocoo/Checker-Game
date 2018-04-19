@@ -16,6 +16,8 @@ struct Point{
     explicit operator bool() const;
 };
 
+std::ostream& operator<<(std::ostream& os, const Point& p);
+
 class Move{
     friend class Search;
     friend std::ostream& operator<<(std::ostream& os, const Move& move);

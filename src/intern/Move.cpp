@@ -12,23 +12,28 @@ Point::operator bool() const {
     return (x != -1 && y != -1);
 }
 
+std::ostream& operator<<(std::ostream& os, const Point& p){
+    os << "(" << p.x << ", " << p.y << ") ";
+    return os;
+}
 
 std::ostream& operator<<(std::ostream& os, const Move& move){
-    os << "\tChecker (" << move.cur.x << ", " << move.cur.y << ") " << std::boolalpha << move.isCaptured << " \n";
+    os << "\tChecker " << move.cur << std::boolalpha << move.isCaptured << " \n";
+    // os << *move.board;
 
     if (move.isCapture()){
-        os << "\t\tCapture move:";
+        os << "\t\tCapture move: ";
         for (size_t i = 0; i < move.capture.size(); i++) {
-            if (move.capture[i]) os << " (" << move.capture[i].x << ", " << move.capture[i].y << ")";
+            if (move.capture[i]) os << move.capture[i] << " ";
         }
         os << "\n";
         return os;
     }
 
     if (move.isRegular()){
-        os << "\t\tRegular move:";
+        os << "\t\tRegular move: ";
         for (size_t i = 0; i < move.regular.size(); i++) {
-            if (move.regular[i]) os << " (" << move.regular[i].x << ", " << move.regular[i].y << ")";
+            if (move.regular[i]) os << move.regular[i] << " ";
         }
         os << "\n";
     }
@@ -101,7 +106,6 @@ void Move::updateMove(){
     if (!cur) return;
 
     int x = cur.x, y = cur.y;
-
     clearMove();
 
     int left1y = y - 1, right1y = y + 1, left2y = y - 2, right2y = y + 2;
@@ -109,6 +113,8 @@ void Move::updateMove(){
 
     // if the move is for enemy
     if (!isHuman) new1x = x + 1, new2x = x + 2;
+
+    // std::cout << cur << " " << std::boolalpha << isHuman << " " << left1y << " " << right1y << std::endl;
 
     if (new2x >= 0 && new2x < board->b.size()){
         if (isHuman){
@@ -126,6 +132,7 @@ void Move::updateMove(){
         if (left1y >= 0 && board->b[new1x][left1y] == 0) regular[0].update(new1x, left1y);
         if (right1y < board->b[new1x].size() && board->b[new1x][right1y] == 0) regular[1].update(new1x, right1y);
     }
+    // std::cout << *this;
 }
 
 void Move::clearMove(){

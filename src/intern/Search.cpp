@@ -44,6 +44,7 @@ Result Search::search(const Board& board){
 
     cout << "Start of searching for computer...\n" << board << human << comp;
     return iterativeDeep();
+    // return Result(-1, -1, -1, -1);
 }
 
 Result Search::iterativeDeep(int maxDepth){
@@ -55,7 +56,7 @@ Result Search::iterativeDeep(int maxDepth){
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
     if (debug){
-        for (int i = 1; i < 2; i++){
+        for (int i = 3; i < 4; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
@@ -118,8 +119,8 @@ float Search::alphaBeta(Result& fmove, int depth){
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth){
-    if (debug) cout << endl << "Max; Depth: " << curDepth << endl << board << comp;
     updateMoves();
+    if (debug) cout << endl << "Max; Depth: " << curDepth << endl << board << comp;
 
     // edge cases
 
@@ -187,14 +188,14 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
         }
     }
     cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
-    if (debug && (v == -6 || v == 6)) cout << "utility zero? " << comp.avaMoves() << board << endl;
+    // if (debug && (v == -6 || v == 6)) cout << "moves zero? " << comp.avaMoves() << board << endl;
     return v;
 }
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int depth){
-    if (debug) cout << endl << "Min; Depth: " << curDepth << endl << board << human;
     updateMoves();
+    if (debug) cout << endl << "Min; Depth: " << curDepth << endl << board << human << comp;
 
     // edge cases
 
@@ -263,7 +264,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
         }
     }
     cout << "Min; Depth: " << curDepth << " utility: " << v << endl;
-    if (debug && (v == -6 || v == 6)) cout << human.avaMoves() << endl;
+    // if (debug && (v == -6 || v == 6)) cout << human.avaMoves() << endl;
     return v;
 }
 
