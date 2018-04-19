@@ -13,6 +13,29 @@ Point::operator bool() const {
 }
 
 
+std::ostream& operator<<(std::ostream& os, const Move& move){
+    os << "\tChecker (" << move.cur.x << ", " << move.cur.y << ") " << std::boolalpha << move.isCaptured << " \n";
+
+    if (move.isCapture()){
+        os << "\t\tCapture move:";
+        for (size_t i = 0; i < move.capture.size(); i++) {
+            if (move.capture[i]) os << " (" << move.capture[i].x << ", " << move.capture[i].y << ")";
+        }
+        os << "\n";
+        return os;
+    }
+
+    if (move.isRegular()){
+        os << "\t\tRegular move:";
+        for (size_t i = 0; i < move.regular.size(); i++) {
+            if (move.regular[i]) os << " (" << move.regular[i].x << ", " << move.regular[i].y << ")";
+        }
+        os << "\n";
+    }
+    return os;
+}
+
+
 Move::Move(int x, int y, const Board& board, int type): cur(x, y), board(&board), isHuman(type == HUSS), isCaptured(false){
     capture.push_back(Point(-1, -1));
     capture.push_back(Point(-1, -1));
@@ -27,6 +50,18 @@ bool Move::isCapture() const {
 
 bool Move::isRegular() const {
     return (regular[0] || regular[1]);
+}
+
+int Move::getMoves() const {
+    int count = 0;
+    if (isCapture()){
+        if (capture[0]) ++count;
+        if (capture[1]) ++count;
+    } else {
+        if (regular[0]) ++count;
+        if (regular[1]) ++count;
+    }
+    return count;
 }
 
 void Move::captured(){
@@ -98,30 +133,4 @@ void Move::clearMove(){
 
 void Move::updateBoard(const Board* board){
     this->board = board;
-}
-
-
-
-
-
-std::ostream& operator<<(std::ostream& os, const Move& move){
-    os << "\tChecker (" << move.cur.x << ", " << move.cur.y << ") " << std::boolalpha << move.isCaptured << " \n";
-
-    if (move.isCapture()){
-        os << "\t\tCapture move:";
-        for (size_t i = 0; i < move.capture.size(); i++) {
-            if (move.capture[i]) os << " (" << move.capture[i].x << ", " << move.capture[i].y << ")";
-        }
-        os << "\n";
-        return os;
-    }
-
-    if (move.isRegular()){
-        os << "\t\tRegular move:";
-        for (size_t i = 0; i < move.regular.size(); i++) {
-            if (move.regular[i]) os << " (" << move.regular[i].x << ", " << move.regular[i].y << ")";
-        }
-        os << "\n";
-    }
-    return os;
 }

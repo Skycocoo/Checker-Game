@@ -27,6 +27,7 @@ public:
 
     bool isCapture() const;
     bool isRegular() const;
+    int getMoves() const;
 
     void captured();
     void uncaptured();

@@ -23,9 +23,9 @@ public:
     float alphaBeta(Result& fmove, int depth);
 
     // maxVal: for COMP player
-    float maxVal(float alpha, float beta, Result& fmove, int depth);
+    float maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth);
     // minVal: for HUSS player
-    float minVal(float alpha, float beta, Result& fmove, int depth);
+    float minVal(float alpha, float beta, Result& fmove, int curDepth, int depth);
 
     void update(int x, int y, int targX, int targY, int type);
 

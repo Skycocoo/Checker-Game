@@ -96,13 +96,9 @@ void AvaMoves::reset(int index, int x, int y){
 // shouldn't by index; resetting captured checker by enemy
 // don't have to keep the order
 void AvaMoves::resetCaptured(int x, int y){
-
     for (size_t i = 0; i < moves.size(); i++){
         if (!moves[i] && moves[i].select(x, y)){
             moves[i].uncaptured();
-            std::cout << "Resetting: " << moves[i] << std::endl;
-            // moves[i].captured();
-            // moves[i].updatePos(-1, -1);
             return;
         }
     }
@@ -119,7 +115,7 @@ bool AvaMoves::avaCapture() const {
 int AvaMoves::avaMoves() const {
     int count = 0;
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i]) ++count;
+        if (moves[i]) count += moves[i].getMoves();
     }
     return count;
 }
