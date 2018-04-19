@@ -77,7 +77,7 @@ bool Move::getCap() const {
 
 void Move::captured(){
     isCaptured = true;
-    std::cout << "captured " << cur << std::endl;
+    // std::cout << "captured " << cur << std::endl;
     clearMove();
 }
 
