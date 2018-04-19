@@ -29,13 +29,6 @@ AvaMoves::AvaMoves(const Board& board, int type): type(type), cur(-1), board(&bo
     updateMoves();
 }
 
-void AvaMoves::updateBoard(const Board& board){
-    this->board = &board;
-    for (size_t i = 0; i < moves.size(); i++){
-        moves[i].updateBoard(this->board);
-    }
-}
-
 void AvaMoves::updateMoves(){
     // all of the moves needed to update
     for (size_t i = 0; i < moves.size(); i++){
@@ -50,11 +43,18 @@ void AvaMoves::updateMoves(){
     }
 }
 
+void AvaMoves::updateBoard(const Board& board){
+    this->board = &board;
+    for (size_t i = 0; i < moves.size(); i++){
+        moves[i].updateBoard(this->board);
+    }
+}
+
 
 bool AvaMoves::select(int x, int y, bool output) {
     cur = -1;
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i] && moves[i].select(x, y)){
+        if (!moves[i].getCap() && moves[i].select(x, y)){
             cur = i;
             if (output) std::cout << "You selected " << moves[cur];
             return true;
@@ -71,14 +71,15 @@ bool AvaMoves::checkMove(int targX, int targY) {
     return false;
 }
 
-void AvaMoves::captured(int x, int y){
+int AvaMoves::captured(int x, int y){
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i].select(x, y)){
+        if (!moves[i].getCap() && moves[i].select(x, y)){
             moves[i].captured();
             // moves[i].updatePos(-1, -1);
-            return;
+            return i;
         }
     }
+    return -1;
 }
 
 bool AvaMoves::superMove(int index, int targX, int targY){
@@ -95,19 +96,22 @@ void AvaMoves::reset(int index, int x, int y){
 
 // shouldn't by index; resetting captured checker by enemy
 // don't have to keep the order
-void AvaMoves::resetCaptured(int x, int y){
-    for (size_t i = 0; i < moves.size(); i++){
-        if (!moves[i] && moves[i].select(x, y)){
-            moves[i].uncaptured();
-            return;
-        }
-    }
+// -> it should by index because enemy uses iteration for recursion
+void AvaMoves::resetCaptured(int index){
+    moves[index].uncaptured();
+    // for (size_t i = 0; i < moves.size(); i++){
+    //     if (moves[i].getCap() && moves[i].select(x, y)){
+    //         moves[i].uncaptured();
+    //         std::cout << "reset captured " << moves[i] << std::endl;
+    //         return;
+    //     }
+    // }
 }
 
 
 bool AvaMoves::avaCapture() const {
     for (size_t i = 0; i < moves.size(); i++){
-        if (moves[i] && moves[i].isCapture()) return true;
+        if (!moves[i].getCap() && moves[i].isCapture()) return true;
     }
     return false;
 }

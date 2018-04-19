@@ -19,11 +19,11 @@ public:
 
     bool select(int x, int y, bool output = true);
     bool checkMove(int targX, int targY);
-    void captured(int x, int y);
+    int captured(int x, int y);
 
     bool superMove(int index, int targX, int targY);
     void reset(int index, int x, int y);
-    void resetCaptured(int x, int y);
+    void resetCaptured(int index);
 
     bool avaCapture() const;
     int avaMoves() const;

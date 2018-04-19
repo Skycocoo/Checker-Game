@@ -41,3 +41,6 @@ Reset: need to find the exact location to be resumed (because loop is based on i
 
 
 Iterative Deepening Search: need too much space; need to save previous calculation (or change a method to match 15 sec req)
+
+
+Reset Captured should also keep the index

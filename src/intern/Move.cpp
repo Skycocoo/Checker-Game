@@ -77,6 +77,8 @@ bool Move::getCap() const {
 
 void Move::captured(){
     isCaptured = true;
+    std::cout << "captured " << cur << std::endl;
+    clearMove();
 }
 
 void Move::uncaptured(){
@@ -107,7 +109,7 @@ void Move::updatePos(int x, int y){
 
 // both capture move & regular move?
 void Move::updateMove(){
-    if (!cur) return;
+    if (isCaptured) return;
 
     int x = cur.x, y = cur.y;
     clearMove();

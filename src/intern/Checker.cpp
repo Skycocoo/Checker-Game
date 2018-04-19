@@ -48,34 +48,33 @@ void Checker::humanTurn(){
 
     cout << human;
 
-    // human.select(4, 1);
-    // human.checkMove(2, 3);
-    // move(4, 1, 2, 3, HUSS);
-    // search.update(4, 1, 2, 3, HUSS);
+    human.select(4, 1);
+    human.checkMove(2, 3);
+    move(4, 1, 2, 3, HUSS);
+    search.update(4, 1, 2, 3, HUSS);
 
-    cout << "Please select the checker in \'x y\' format" << endl;
-    bool select = false;
-    int x = 0, y = 0;
-    while (!select){
-        cin >> x >> y;
-        if ((select = human.select(x, y))){
-            cout << "Please choose the location to move in \'x y\' format" << endl;
-            bool target = false;
-            int targx = 0, targy = 0;
-            while (!target){
-                cin >> targx >> targy;
-                // make the move & update the checker
-                if ((target = human.checkMove(targx, targy))) {
-                    move(x, y, targx, targy, HUSS);
-
-                    // update moves for search
-                    // search's move take care of the update of AvaMoves
-                    search.update(x, y, targx, targy, HUSS);
-                }
-                else cout << "Not a legal target location; please input correct locaion" << endl;
-            }
-        } else cout << "Not a legal checker to be moved; please correct location" << endl;
-    }
+    // cout << "Please select the checker in \'x y\' format" << endl;
+    // bool select = false;
+    // int x = 0, y = 0;
+    // while (!select){
+    //     cin >> x >> y;
+    //     if ((select = human.select(x, y))){
+    //         cout << "Please choose the location to move in \'x y\' format" << endl;
+    //         bool target = false;
+    //         int targx = 0, targy = 0;
+    //         while (!target){
+    //             cin >> targx >> targy;
+    //             // make the move & update the checker
+    //             if ((target = human.checkMove(targx, targy))) {
+    //                 move(x, y, targx, targy, HUSS);
+    //                 // update moves for search
+    //                 // search's move take care of the update of AvaMoves
+    //                 search.update(x, y, targx, targy, HUSS);
+    //             }
+    //             else cout << "Not a legal target location; please input correct locaion" << endl;
+    //         }
+    //     } else cout << "Not a legal checker to be moved; please correct location" << endl;
+    // }
 
     cout << board;
     updateMoves();
@@ -99,6 +98,7 @@ void Checker::computerTurn(){
     comp.select(x, y);
     comp.checkMove(targx, targy);
     move(x, y, targx, targy, COMP);
+    search.update(x, y, targx, targy, COMP);
 
     // update moves for search?
     // search.comp.select(result.x, result.y);
@@ -138,7 +138,7 @@ void Checker::play(){
         if (terminalState()) break;
         computerTurn();
         if (terminalState()) break;
-        // break;
+        break;
     }
     cout << "End of Game" << endl;
 }

@@ -31,10 +31,10 @@ public:
 
     // move from (x, y) to (targx, targy)
     // should also take care of the checkers
-    void move(int index, int x, int y, int targX, int targY, int type);
+    int move(int index, int x, int y, int targX, int targY, int type);
 
     // reset the move from (x, y) to (targx, targy) back to original
-    void reset(int index, int x, int y, int targX, int targY, int type);
+    void reset(int index, int indexCap, int x, int y, int targX, int targY, int type);
 
 
     // heuristics to estimate the expected utility
