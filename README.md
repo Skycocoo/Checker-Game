@@ -31,7 +31,7 @@ Run the executable of this project:
 
 ## Note
 
-If only one move available: then call alphabeta (otherwise just take the move)
+If only one move available: just take the move?
 
 Reset: need to find the exact location to be resumed (because loop is based on index)
 
@@ -44,3 +44,9 @@ Iterative Deepening Search: need too much space; need to save previous calculati
 
 
 Reset Captured should also keep the index
+
+## Todo
+
+1. If all actions lead to failure: choose random one
+
+2. If only one move available before alphabeta search: just take the move

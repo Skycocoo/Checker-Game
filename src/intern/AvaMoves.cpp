@@ -3,13 +3,13 @@
 #include "../extern/Move.h"
 
 
-// provide all avaliable moves
+// provide all available moves
 std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
     if (a.type == HUSS) os << "Human: ";
     else os << "Computer: ";
     // std::cout << *a.board;
 
-    os << a.avaMoves() << " avaliable moves\n";
+    os << a.avaMoves() << " available moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
         // if (a.moves[i]) os << a.moves[i];
         os << a.moves[i];
@@ -131,7 +131,7 @@ int AvaMoves::distance() const {
         if (moves[i].getCap()) continue;
 
         if (type == HUSS) count += moves[i].cur.x;
-        else count += (6 - moves[i].cur.x - 1);
+        else count += (board->b.size() - moves[i].cur.x - 1);
         // std::cout << moves[i].cur.x << " ";
     }
     // std::cout << " eval: " << count << std::endl;

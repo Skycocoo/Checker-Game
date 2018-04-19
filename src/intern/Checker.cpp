@@ -3,6 +3,8 @@
 // need to change this later
 using namespace std;
 
+int counter = 0;
+
 Checker::Checker():
 board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
 
@@ -48,10 +50,24 @@ void Checker::humanTurn(){
 
     cout << human;
 
-    human.select(4, 1);
-    human.checkMove(2, 3);
-    move(4, 1, 2, 3, HUSS);
-    search.update(4, 1, 2, 3, HUSS);
+    if (counter == 0){
+        human.select(4, 1);
+        human.checkMove(2, 3);
+        move(4, 1, 2, 3, HUSS);
+        search.update(4, 1, 2, 3, HUSS);
+    } else if (counter == 1){
+        human.select(4, 3);
+        human.checkMove(2, 5);
+        move(4, 3, 2, 5, HUSS);
+        search.update(4, 3, 2, 5, HUSS);
+    } else if (counter == 2){
+        human.select(5, 0);
+        human.checkMove(4, 1);
+        move(5, 0, 4, 1, HUSS);
+        search.update(5, 0, 4, 1, HUSS);
+    }
+
+    ++counter;
 
     // cout << "Please select the checker in \'x y\' format" << endl;
     // bool select = false;
@@ -138,7 +154,9 @@ void Checker::play(){
         if (terminalState()) break;
         computerTurn();
         if (terminalState()) break;
-        break;
+        // break;
+
+        if (counter >= 3) break;
     }
     cout << "End of Game" << endl;
 }

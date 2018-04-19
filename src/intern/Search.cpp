@@ -4,6 +4,7 @@
 using namespace std;
 
 bool debug = false;
+extern int counter;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
@@ -42,6 +43,8 @@ Result Search::search(const Board& board){
     updateBoard(board);
     updateMoves();
 
+    // if (counter == 2) debug = true;
+
     cout << "Start of searching for computer...\n" << board << human << comp;
     return iterativeDeep();
     // return Result(-1, -1, -1, -1);
@@ -56,7 +59,7 @@ Result Search::iterativeDeep(int maxDepth){
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
     if (debug){
-        for (int i = 4; i < 5; i++){
+        for (int i = 17; i < 18; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
@@ -79,7 +82,7 @@ Result Search::iterativeDeep(int maxDepth){
             }
         }
     } else {
-        for (int i = 11; i < 12; i++){
+        for (int i = 15; i < 20; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
@@ -90,7 +93,7 @@ Result Search::iterativeDeep(int maxDepth){
                 cout << "\tUpdated utility: " << util << fmove;
             }
 
-            cout << "after reset: " << board << human << comp << endl;
+            // cout << "after reset: " << board << human << comp << endl;
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
@@ -103,7 +106,7 @@ Result Search::iterativeDeep(int maxDepth){
         }
     }
 
-    cout << "Result of this search: (estimated) utility: " << util << fmove;
+    cout << "Result of this search: utility: " << util << fmove;
     return fmove;
 }
 
@@ -187,6 +190,8 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
             }
         }
     }
+
+    if (counter == 3 && curDepth < 3) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     if (debug) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     // if (debug && (v == -6 || v == 6)) cout << "moves zero? " << comp.avaMoves() << board << endl;
     return v;
@@ -422,9 +427,19 @@ float Search::eval() const {
     return result;
 }
 
-// utility value for terminal state: range [-6, 6] = numC - numH
+// utility value for terminal state: range [-6, 6]: -6: comp loses, 6: comp wins
 float Search::utility() const {
-    return board.numC - board.numH;
+    // if one of them wins
+    if (board.terminalState()){
+        if (board.numC > 0) return 6;
+        else return -6;
+    } else {
+        // if there is no legal move available for both of them
+        return board.numC - board.numH;
+    }
+    // cout << "terminal? " << boolalpha << board.terminalState() << board << endl;
+
+    // return board.numC - board.numH;
 }
 
 bool Search::terminalState() const {
