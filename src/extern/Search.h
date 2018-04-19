@@ -18,7 +18,7 @@ public:
     void updateMoves();
     Result search(const Board& board);
 
-    Result iterativeDeep(int maxDepth = 6);
+    Result iterativeDeep(int maxDepth = 30);
     // return the action or the estimated value?
     float alphaBeta(Result& fmove, int depth);
 

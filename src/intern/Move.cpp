@@ -71,6 +71,10 @@ int Move::getMoves() const {
     return count;
 }
 
+bool Move::getCap() const {
+    return isCaptured;
+}
+
 void Move::captured(){
     isCaptured = true;
 }

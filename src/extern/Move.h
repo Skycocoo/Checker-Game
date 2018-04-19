@@ -30,6 +30,7 @@ public:
     bool isCapture() const;
     bool isRegular() const;
     int getMoves() const;
+    bool getCap() const;
 
     void captured();
     void uncaptured();

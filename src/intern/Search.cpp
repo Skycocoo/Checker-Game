@@ -3,7 +3,7 @@
 // need to change this later
 using namespace std;
 
-bool debug = true;
+bool debug = false;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
@@ -129,7 +129,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
     // if depth == 0: return evaluated utility
     if (curDepth == depth) {
         float v = eval();
-        cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
+        if (debug) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
         return v;
     }
     // if times up: evaluated utility
@@ -187,7 +187,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
             }
         }
     }
-    cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
+    if (debug) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     // if (debug && (v == -6 || v == 6)) cout << "moves zero? " << comp.avaMoves() << board << endl;
     return v;
 }
@@ -204,7 +204,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
     // if depth == 0: return evaluated utility
     if (curDepth == depth) {
         float v = eval();
-        cout << "Min; Depth: " << curDepth << " utility: " << v << endl;
+        if (debug) cout << "Min; Depth: " << curDepth << " utility: " << v << endl;
         return v;
     }
     // if times up: evaluated utility
@@ -263,7 +263,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
             }
         }
     }
-    cout << "Min; Depth: " << curDepth << " utility: " << v << endl;
+    if (debug) cout << "Min; Depth: " << curDepth << " utility: " << v << endl;
     // if (debug && (v == -6 || v == 6)) cout << human.avaMoves() << endl;
     return v;
 }
