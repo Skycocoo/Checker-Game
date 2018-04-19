@@ -79,7 +79,7 @@ Result Search::iterativeDeep(int maxDepth){
             }
         }
     } else {
-        for (int i = 1; i < maxDepth; i++){
+        for (int i = 20; i < 21; i++){
             float tempUtil = alphaBeta(cmove, i);
             cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
