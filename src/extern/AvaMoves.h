@@ -23,7 +23,7 @@ public:
 
     bool superMove(int index, int targX, int targY);
     void reset(int index, int x, int y);
-    void resetCaptured(int index, int x, int y);
+    void resetCaptured(int x, int y);
 
     bool avaCapture() const;
     int avaMoves() const;

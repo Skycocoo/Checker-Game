@@ -116,7 +116,7 @@ float Search::alphaBeta(Result& fmove, int depth){
 
 // maxVal: for COMP player
 float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
-    if (debug) cout << endl << "Max; Depth: " << depth << endl << board << comp;
+    if (debug) cout << endl << "Max; Depth: " << depth << endl << board << human << comp;
     updateMoves();
 
     // edge cases
@@ -190,7 +190,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int depth){
 
 // minVal: for HUSS player
 float Search::minVal(float alpha, float beta, Result& fmove, int depth){
-    if (debug) cout << endl << "Min; Depth: " << depth << endl << board << human;
+    if (debug) cout << endl << "Min; Depth: " << depth << endl << board << human << comp;
     updateMoves();
 
     // edge cases
@@ -381,11 +381,11 @@ void Search::reset(int index, int x, int y, int targX, int targY, int type){
 
         if (type == HUSS){
             board.b[x - 1][capY] = COMP;
-            comp.resetCaptured(index, x - 1, capY);
+            comp.resetCaptured(x - 1, capY);
         } else {
             // this is moves for computer
             board.b[x + 1][capY] = HUSS;
-            human.resetCaptured(index, x + 1, capY);
+            human.resetCaptured(x + 1, capY);
         }
     }
     board.b[x][y] = type;
