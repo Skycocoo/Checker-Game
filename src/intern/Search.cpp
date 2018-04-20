@@ -71,7 +71,7 @@ Result Search::getMove() const {
             }
         }
     }
-    cout << "only one move availavle for computer" << cmove;
+    // cout << "only one move availavle for computer" << cmove;
     return cmove;
 }
 
@@ -99,10 +99,10 @@ Result Search::iterativeDeep(int maxDepth){
             // if the utility value for the returned move is larger
             // change the current result to the returned move
 
-            if (util != -6){
+            if (tempUtil > -6){
                 util = tempUtil;
                 fmove.update(cmove);
-                cout << fmove << "Depth: " << i << " utility: " << tempUtil << endl;
+                cout << "Depth: " << i << " utility: " << tempUtil << fmove;
             }
 
             // cout << "\tUpdated utility: " << util << fmove;
@@ -124,11 +124,11 @@ Result Search::iterativeDeep(int maxDepth){
             // if the utility value for the returned move is larger
             // change the current result to the returned move
 
-            // if not a doomed failure: choose the optimal move 
-            if (util != -6){
+            // if not a doomed failure: choose the optimal move
+            if (tempUtil > -6 && util != 6){
                 util = tempUtil;
                 fmove.update(cmove);
-                cout << fmove << "Depth: " << i << " utility: " << tempUtil << endl;
+                cout << "Depth: " << i << " utility: " << tempUtil << fmove;
             }
 
             // cout << "\tUpdated utility: " << util << fmove;
@@ -145,6 +145,7 @@ Result Search::iterativeDeep(int maxDepth){
             }
         }
     }
+
     cout << "Result of this search: utility: " << util << fmove;
 
     // if comp is doomed to fail

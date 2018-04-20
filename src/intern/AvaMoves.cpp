@@ -54,7 +54,7 @@ void AvaMoves::updateBoard(const Board& board){
 bool AvaMoves::select(int x, int y, bool output) {
     cur = -1;
     for (size_t i = 0; i < moves.size(); i++){
-        if (!moves[i].getCap() && moves[i].select(x, y)){
+        if (moves[i] && moves[i].select(x, y)){
             cur = i;
             if (output) std::cout << "You selected " << moves[cur];
             return true;
