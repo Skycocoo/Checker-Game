@@ -14,11 +14,13 @@ public:
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board);
 
     void updateBoard(const Board& board);
-
     void updateMoves();
-    Result search(const Board& board);
 
-    Result iterativeDeep(int maxDepth = 30);
+    Result getMove() const;
+
+    Result search(const Board& board);
+    Result iterativeDeep(int maxDepth = 50);
+
     // return the action or the estimated value?
     float alphaBeta(Result& fmove, int depth);
 

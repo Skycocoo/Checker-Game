@@ -50,47 +50,46 @@ void Checker::humanTurn(){
 
     cout << human;
 
-    if (counter == 0){
-        human.select(4, 1);
-        human.checkMove(2, 3);
-        move(4, 1, 2, 3, HUSS);
-        search.update(4, 1, 2, 3, HUSS);
-    } else if (counter == 1){
-        human.select(4, 3);
-        human.checkMove(2, 5);
-        move(4, 3, 2, 5, HUSS);
-        search.update(4, 3, 2, 5, HUSS);
-    } else if (counter == 2){
-        human.select(5, 0);
-        human.checkMove(4, 1);
-        move(5, 0, 4, 1, HUSS);
-        search.update(5, 0, 4, 1, HUSS);
-    }
-
-    ++counter;
-
-    // cout << "Please select the checker in \'x y\' format" << endl;
-    // bool select = false;
-    // int x = 0, y = 0;
-    // while (!select){
-    //     cin >> x >> y;
-    //     if ((select = human.select(x, y))){
-    //         cout << "Please choose the location to move in \'x y\' format" << endl;
-    //         bool target = false;
-    //         int targx = 0, targy = 0;
-    //         while (!target){
-    //             cin >> targx >> targy;
-    //             // make the move & update the checker
-    //             if ((target = human.checkMove(targx, targy))) {
-    //                 move(x, y, targx, targy, HUSS);
-    //                 // update moves for search
-    //                 // search's move take care of the update of AvaMoves
-    //                 search.update(x, y, targx, targy, HUSS);
-    //             }
-    //             else cout << "Not a legal target location; please input correct locaion" << endl;
-    //         }
-    //     } else cout << "Not a legal checker to be moved; please correct location" << endl;
+    // if (counter == 0){
+    //     human.select(4, 1);
+    //     human.checkMove(2, 3);
+    //     move(4, 1, 2, 3, HUSS);
+    //     search.update(4, 1, 2, 3, HUSS);
+    // } else if (counter == 1){
+    //     human.select(4, 3);
+    //     human.checkMove(2, 5);
+    //     move(4, 3, 2, 5, HUSS);
+    //     search.update(4, 3, 2, 5, HUSS);
+    // } else if (counter == 2){
+    //     human.select(5, 0);
+    //     human.checkMove(4, 1);
+    //     move(5, 0, 4, 1, HUSS);
+    //     search.update(5, 0, 4, 1, HUSS);
     // }
+    // ++counter;
+
+    cout << "Please select the checker in \'x y\' format" << endl;
+    bool select = false;
+    int x = 0, y = 0;
+    while (!select){
+        cin >> x >> y;
+        if ((select = human.select(x, y))){
+            cout << "Please choose the location to move in \'x y\' format" << endl;
+            bool target = false;
+            int targx = 0, targy = 0;
+            while (!target){
+                cin >> targx >> targy;
+                // make the move & update the checker
+                if ((target = human.checkMove(targx, targy))) {
+                    move(x, y, targx, targy, HUSS);
+                    // update moves for search
+                    // search's move take care of the update of AvaMoves
+                    search.update(x, y, targx, targy, HUSS);
+                }
+                else cout << "Not a legal target location; please input correct locaion" << endl;
+            }
+        } else cout << "Not a legal checker to be moved; please correct location" << endl;
+    }
 
     cout << board;
     updateMoves();
@@ -111,7 +110,7 @@ void Checker::computerTurn(){
     int x = result.x, y = result.y;
     int targx = result.targX, targy = result.targY;
 
-    comp.select(x, y);
+    comp.select(x, y, false);
     comp.checkMove(targx, targy);
     move(x, y, targx, targy, COMP);
     search.update(x, y, targx, targy, COMP);
@@ -155,8 +154,7 @@ void Checker::play(){
         computerTurn();
         if (terminalState()) break;
         // break;
-
-        if (counter >= 3) break;
+        // if (counter >= 3) break;
     }
     cout << "End of Game" << endl;
 }

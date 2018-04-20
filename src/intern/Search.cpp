@@ -39,15 +39,50 @@ void Search::updateMoves(){
     board.updateCount();
 }
 
+
+// get the only move from comp
+Result Search::getMove() const {
+    Result cmove (-1, -1, -1, -1); // result of min
+
+    bool capture = comp.avaCapture();
+    for (size_t i = 0; i < comp.moves.size(); i++){
+        if (!comp.moves[i]) continue;
+
+        int posX = comp.moves[i].cur.x, posY = comp.moves[i].cur.y;
+
+        // capture move
+        if (capture){
+            for (size_t j = 0; j < comp.moves[i].capture.size(); j++){
+                if (comp.moves[i].capture[j]){
+                    int targX = comp.moves[i].capture[j].x, targY = comp.moves[i].capture[j].y;
+                    cmove.update(posX, posY, targX, targY);
+                    break;
+                }
+            }
+
+        } else {
+            // regular move
+            for (size_t j = 0; j < comp.moves[i].regular.size(); j++){
+                if (comp.moves[i].regular[j]){
+                    int targX = comp.moves[i].regular[j].x, targY = comp.moves[i].regular[j].y;
+                    cmove.update(posX, posY, targX, targY);
+                    break;
+                }
+            }
+        }
+    }
+    cout << "only one move availavle for computer" << cmove;
+    return cmove;
+}
+
+
 Result Search::search(const Board& board){
     updateBoard(board);
     updateMoves();
 
-    // if (counter == 2) debug = true;
-
     cout << "Start of searching for computer...\n" << board << human << comp;
-    return iterativeDeep();
-    // return Result(-1, -1, -1, -1);
+    if (comp.avaMoves() > 1) return iterativeDeep();
+    else return getMove();
 }
 
 Result Search::iterativeDeep(int maxDepth){
@@ -61,16 +96,18 @@ Result Search::iterativeDeep(int maxDepth){
     if (debug){
         for (int i = 17; i < 18; i++){
             float tempUtil = alphaBeta(cmove, i);
-            cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
             // change the current result to the returned move
-            if (tempUtil > util) {
+
+            if (util != -6){
                 util = tempUtil;
                 fmove.update(cmove);
-                cout << "\tUpdated utility: " << util << fmove;
+                cout << fmove << "Depth: " << i << " utility: " << tempUtil << endl;
             }
 
-            cout << "after reset: " << board << human << comp << endl;
+            // cout << "\tUpdated utility: " << util << fmove;
+
+            // cout << "after reset: " << board << human << comp << endl;
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
@@ -82,16 +119,19 @@ Result Search::iterativeDeep(int maxDepth){
             }
         }
     } else {
-        for (int i = 15; i < 20; i++){
+        for (int i = 1; i < maxDepth; i++){
             float tempUtil = alphaBeta(cmove, i);
-            cout << "Depth: " << i << " utility: " << tempUtil << endl;
             // if the utility value for the returned move is larger
             // change the current result to the returned move
-            if (tempUtil > util) {
+
+            // if not a doomed failure: choose the optimal move 
+            if (util != -6){
                 util = tempUtil;
                 fmove.update(cmove);
-                cout << "\tUpdated utility: " << util << fmove;
+                cout << fmove << "Depth: " << i << " utility: " << tempUtil << endl;
             }
+
+            // cout << "\tUpdated utility: " << util << fmove;
 
             // cout << "after reset: " << board << human << comp << endl;
 
@@ -105,9 +145,11 @@ Result Search::iterativeDeep(int maxDepth){
             }
         }
     }
-
     cout << "Result of this search: utility: " << util << fmove;
-    return fmove;
+
+    // if comp is doomed to fail
+    if (util == -6) return getMove();
+    else return fmove;
 }
 
 // return the action or the estimated value?
@@ -191,7 +233,7 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
         }
     }
 
-    if (counter == 3 && curDepth < 3) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
+    // if (counter == 3 && curDepth < 3) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     if (debug) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     // if (debug && (v == -6 || v == 6)) cout << "moves zero? " << comp.avaMoves() << board << endl;
     return v;
