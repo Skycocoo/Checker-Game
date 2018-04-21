@@ -1,5 +1,8 @@
 # CS4613-AI
+
 Homework for CS4613; Spring 2018
+
+[Checker Game 6 * 6](https://github.com/Skycocoo/CS4613-Artificial-Intelligence/blob/master/req/rule.png)
 
 ## Installation with cmake
 
@@ -258,9 +261,17 @@ Board:
 Number of human: 5
 Number of computer: 6
 
+------------Human turn------------
+Human: 2 available moves
+	Checker (5, 2)  
+		Capture move: (3, 4)  
+	Checker (5, 4)  
+		Capture move: (3, 2)  
+
+Please select the checker in 'x y' format
 [...]
 ```
 
-### Checker game rules
+<!-- ### Checker game rules
 
-![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/req/rule.png?token=AVi1i2_xmQ5NbJzwQiruIj_xGn8viu-oks5a5P-hwA%3D%3D)
+![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/req/rule.png?token=AVi1i2_xmQ5NbJzwQiruIj_xGn8viu-oks5a5P-hwA%3D%3D) -->
