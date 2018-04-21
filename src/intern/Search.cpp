@@ -3,7 +3,7 @@
 // need to change this later
 using namespace std;
 
-bool debug = false;
+bool debug = true;
 extern int counter;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
@@ -107,7 +107,6 @@ Result Search::iterativeDeep(int maxDepth){
                 cout << "This search goes to depth " << i-1 << endl;
                 break;
             }
-
 
             if (tempUtil > -6){
                 util = tempUtil;

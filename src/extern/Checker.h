@@ -18,6 +18,7 @@ public:
 
     void play();
     bool terminalState() const;
+    void determineWinnder() const;
 
 private:
     Board board;

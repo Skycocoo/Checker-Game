@@ -13,6 +13,13 @@ bool Checker::terminalState() const {
     return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
 }
 
+void Checker::determineWinnder() const{
+    if (board.numH > board.numC) cout << "Winner is Human" << endl;
+    else if (board.numH == board.numC) cout << "There is a draw" << endl;
+    else cout << "Winner is Computer" << endl;
+}
+
+
 void Checker::move(int x, int y, int targx, int targy, int type){
     // move a checker forom (x, y) to (targx, targy)
     board.b[x][y] = 0;
@@ -154,8 +161,10 @@ void Checker::play(){
         if (terminalState()) break;
         computerTurn();
         if (terminalState()) break;
-        // break;
+        break;
         // if (counter >= 3) break;
     }
+
+    determineWinnder();
     cout << "End of Game" << endl;
 }
