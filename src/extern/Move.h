@@ -11,9 +11,9 @@ struct Point{
     int x;
     int y;
     Point(int x = -1, int y = -1);
+    explicit operator bool() const;
 
     void update(int x, int y);
-    explicit operator bool() const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
@@ -24,27 +24,24 @@ class Move{
 public:
     Point cur;
     Move(int x, int y, const Board& board, int type);
+    explicit operator bool() const;
 
+    bool select(int x, int y) const;
+    bool checkMove(int targx, int targy) const;
+    void clearMove();
+
+    void updateMove();
+    void updatePos(int x, int y);
     void updateBoard(const Board* board);
 
     bool isCapture() const;
     bool isRegular() const;
+
     int getMoves() const;
     bool getCap() const;
 
     void captured();
     void uncaptured();
-
-    explicit operator bool() const;
-
-    bool select(int x, int y) const;
-    bool checkMove(int targx, int targy) const;
-
-    void updatePos(int x, int y);
-
-    // both capture move & regular move
-    void updateMove();
-    void clearMove();
 
 private:
     const Board* board;

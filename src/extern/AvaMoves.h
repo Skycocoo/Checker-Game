@@ -5,12 +5,10 @@
 #include <vector>
 
 class Board;
-// class Move;
 #include "Move.h"
 
 class AvaMoves{
     friend class Search;
-    // provide all avaliable moves
     friend std::ostream& operator<<(std::ostream& os, const AvaMoves& h);
 public:
     AvaMoves(const Board& board, int type);

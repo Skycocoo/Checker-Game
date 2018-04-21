@@ -7,12 +7,10 @@
 std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
     if (a.type == HUSS) os << "Human: ";
     else os << "Computer: ";
-    // std::cout << *a.board;
 
     os << a.avaMoves() << " available moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
         if (a.moves[i]) os << a.moves[i];
-        // os << a.moves[i];
     }
     os << "\n";
     return os;
@@ -75,13 +73,13 @@ int AvaMoves::captured(int x, int y){
     for (size_t i = 0; i < moves.size(); i++){
         if (!moves[i].getCap() && moves[i].select(x, y)){
             moves[i].captured();
-            // moves[i].updatePos(-1, -1);
             return i;
         }
     }
     return -1;
 }
 
+// use correct indexing for search
 bool AvaMoves::superMove(int index, int targX, int targY){
     if (moves[index].checkMove(targX, targY)) {
         moves[index].updatePos(targX, targY);
@@ -94,18 +92,8 @@ void AvaMoves::reset(int index, int x, int y){
     moves[index].updatePos(x, y);
 }
 
-// shouldn't by index; resetting captured checker by enemy
-// don't have to keep the order
-// -> it should by index because enemy uses iteration for recursion
 void AvaMoves::resetCaptured(int index){
     moves[index].uncaptured();
-    // for (size_t i = 0; i < moves.size(); i++){
-    //     if (moves[i].getCap() && moves[i].select(x, y)){
-    //         moves[i].uncaptured();
-    //         std::cout << "reset captured " << moves[i] << std::endl;
-    //         return;
-    //     }
-    // }
 }
 
 
@@ -120,7 +108,6 @@ int AvaMoves::avaMoves() const {
     int count = 0;
     for (size_t i = 0; i < moves.size(); i++){
         if (moves[i]) count += moves[i].getMoves();
-        // if (moves[i]) count++;
     }
     return count;
 }
@@ -132,8 +119,6 @@ int AvaMoves::distance() const {
 
         if (type == HUSS) count += moves[i].cur.x;
         else count += (board->b.size() - moves[i].cur.x - 1);
-        // std::cout << moves[i].cur.x << " ";
     }
-    // std::cout << " eval: " << count << std::endl;
     return count;
 }
