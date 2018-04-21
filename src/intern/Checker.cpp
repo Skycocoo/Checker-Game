@@ -101,14 +101,14 @@ void Checker::move(int x, int y, int targx, int targy, int type){
         int capY = y + 1;
         if (y - targy > 0) capY = y - 1;
 
-        // capture move for human
+        // move for human
         if (type == HUSS){
             board.b[x - 1][capY] = 0;
             // capture one computer checker
             comp.captured(x - 1, capY);
             board.numC -= 1;
         } else {
-            // capture move for computer
+            // move for computer
             board.b[x + 1][capY] = 0;
             // capture one human checker
             human.captured(x + 1, capY);
@@ -117,17 +117,17 @@ void Checker::move(int x, int y, int targx, int targy, int type){
     }
     // update target position for current player
     board.b[targx][targy] = type;
-    // board.updateCount();
 }
 
+// play the game
 void Checker::play(){
-    // determine the first / second one to make the move for each turn
-
+    // intro to checker game
     std::cout << "\nChecker Game, 6 * 6 board" << std::endl;
     std::cout << "The Board is Row-Major; \ne.g. the bottom-left W checker's position is (5 0)" << std::endl;
     std::cout << std::endl;
     std::cout << board;
 
+    // determine the first / second one to make the move for each turn
     std::cout << "\nYou can choose to move first or second" << std::endl;
     std::cout << "Input 1 to take first move; 2 to take second move" << std::endl;
     int flag = 1;
@@ -139,6 +139,7 @@ void Checker::play(){
     std::string move = (flag == 1) ? "first " : "second ";
     std::cout << "You choose to take " << move << "move" << std::endl;
 
+    // determine the difficulty of the game
     std::cout << "\nYou can choose the difficulty of the game" << std::endl;
     std::cout << "The difficulty ranges from 1 (easiest) to 3 (hardest)" << std::endl;
     std::cout << "Input desired difficulty: 1, 2, or 3" << std::endl;
@@ -151,7 +152,10 @@ void Checker::play(){
 
     std::cout << "\n------------Start of the game------------\n" << std::endl;
 
+    // if computer move first
     if (flag == 2) computerTurn();
+
+    // game
     while (true){
         humanTurn();
         if (terminalState()) break;
@@ -159,15 +163,20 @@ void Checker::play(){
         if (terminalState()) break;
     }
 
-    determineWinnder();
+    determineWinner();
     std::cout << "------------End of Game------------" << std::endl;
 }
 
+// check the terminal state for the game
+// terminal if one player does not have any checker
+// or there is no legal move for both player
+// return: bool
 bool Checker::terminalState() const {
     return board.terminalState() || (human.avaMoves() == 0 && comp.avaMoves() == 0);
 }
 
-void Checker::determineWinnder() const{
+// determine the winner of the game
+void Checker::determineWinner() const{
     if (board.numH > board.numC) std::cout << "Winner is Human" << std::endl;
     else if (board.numH == board.numC) std::cout << "There is a draw" << std::endl;
     else std::cout << "Winner is Computer" << std::endl;

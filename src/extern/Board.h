@@ -12,7 +12,8 @@
 // represent computer as 1
 #define COMP 1
 
-// class Board: an abstraction of checker board
+// class Board:
+// an abstraction of checker board
 class Board{
     // standard output for Board
     friend std::ostream& operator<<(std::ostream& os, const Board& b);

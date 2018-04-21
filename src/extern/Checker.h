@@ -8,7 +8,8 @@
 #include "AvaMoves.h"
 #include "Search.h"
 
-// class Checker: an abstraction of the game
+// class Checker:
+// an abstraction of the game
 class Checker{
 public:
     // constructor
@@ -25,9 +26,12 @@ public:
     // move checker for board
     void move(int x, int y, int targx, int targy, int type);
 
+    // play the game
     void play();
+    // check the terminal state for the game
     bool terminalState() const;
-    void determineWinnder() const;
+    // determine the winner of the game
+    void determineWinner() const;
 
 private:
     Board board;

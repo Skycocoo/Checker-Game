@@ -9,22 +9,28 @@
 #include "Board.h"
 #include "Result.h"
 
+// class Search:
+// an abstraction of search algorithm for Checker Game
+// utilize Alpha-beta Pruning algorithm under Min-max search
 class Search{
 public:
     AvaMoves human;
     AvaMoves comp;
 
+    // constructor
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board);
 
-    // void updateBoard(const Board& board);
+    // update availability for both human and computer
     void updateMoves();
-
+    // get the only move for computer
     Result getMove() const;
 
+    // start the search for this turn
     Result search(const Board& board);
+    // use iterative deepening search to set timed cutoff
     Result iterativeDeep(int maxDepth = 80);
 
-    // return the action or the estimated value?
+    // alpha-beta search based on cutoff depth
     float alphaBeta(Result& fmove, int depth, int& numMax, int& numMin, int& numNode);
 
     // maxVal: for COMP player
@@ -32,12 +38,11 @@ public:
     // minVal: for HUSS player
     float minVal(float alpha, float beta, Result& fmove, int curDepth, int depth, int& numMax, int& numMin, int& numNode);
 
+    // update moves from the actual game
     void update(int x, int y, int targX, int targY, int type);
 
     // move from (x, y) to (targx, targy)
-    // should also take care of the checkers
     int move(int index, int x, int y, int targX, int targY, int type);
-
     // reset the move from (x, y) to (targx, targy) back to original
     void reset(int index, int indexCap, int x, int y, int targX, int targY, int type);
 
@@ -46,6 +51,8 @@ public:
     float eval() const ;
     // utility value for terminal state: range [-6, 6] = numC - numH
     float utility() const;
+
+    // check terminal state for the game
     bool terminalState() const;
 
 private:

@@ -36,9 +36,9 @@ std::ostream& operator<<(std::ostream& os, const Board& b){
 // constructor
 Board::Board(): numH(6), numC(6) {
     b.push_back(std::vector<int> {0, 1, 0, 1, 0, 1});
-    b.push_back(std::vector<int> {0, 0, 1, 0, 1, 0});
+    b.push_back(std::vector<int> {1, 0, 1, 0, 1, 0});
     b.push_back(std::vector<int> {0, 0, 0, 0, 0, 0});
-    b.push_back(std::vector<int> {0, 0, 1, 0, 0, 0});
+    b.push_back(std::vector<int> {0, 0, 0, 0, 0, 0});
     b.push_back(std::vector<int> {0, 2, 0, 2, 0, 2});
     b.push_back(std::vector<int> {2, 0, 2, 0, 2, 0});
 }
@@ -47,6 +47,6 @@ Board::Board(): numH(6), numC(6) {
 // check terminal state for board
 // return: bool: terminal state or not
 bool Board::terminalState() const {
-    // if one of the player do not have available checker
+    // if one of the player does not have any checker
     return (numH == 0 || numC == 0);
 }

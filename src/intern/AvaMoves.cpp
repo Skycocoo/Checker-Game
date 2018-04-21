@@ -36,7 +36,7 @@ AvaMoves::AvaMoves(const Board& board, int type): type(type), cur(-1), board(&bo
 }
 
 // update checker board for human / computer
-// return: void
+
 void AvaMoves::updateBoard(const Board& board){
     this->board = &board;
     // update board for each moves
@@ -46,7 +46,7 @@ void AvaMoves::updateBoard(const Board& board){
 }
 
 // update each move for availability
-// return: void
+
 void AvaMoves::updateMoves(){
     // all of the moves needed to update
     for (size_t i = 0; i < moves.size(); i++){

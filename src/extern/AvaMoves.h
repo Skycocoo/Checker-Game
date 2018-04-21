@@ -10,7 +10,8 @@
 class Board;
 #include "Move.h"
 
-// class AvaMoves: an abstraction of available moves for human / computer
+// class AvaMoves:
+// an abstraction of available moves for human / computer
 class AvaMoves{
     friend class Search;
     // standard output for AvaMoves
