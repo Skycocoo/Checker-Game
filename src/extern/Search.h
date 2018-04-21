@@ -16,7 +16,7 @@ public:
 
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board);
 
-    void updateBoard(const Board& board);
+    // void updateBoard(const Board& board);
     void updateMoves();
 
     Result getMove() const;

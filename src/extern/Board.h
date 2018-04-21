@@ -7,26 +7,28 @@
 #include <iostream>
 #include <vector>
 
+// represent human as 2
 #define HUSS 2
+// represent computer as 1
 #define COMP 1
 
-
+// class Board: an abstraction of checker board
 class Board{
+    // standard output for Board
     friend std::ostream& operator<<(std::ostream& os, const Board& b);
 public:
+    // Board: 2D vector
     std::vector<std::vector<int>> b;
-
-    // black: human player
+    // number of human
     int numH;
-    // white: computer player
+    // number of computer
     int numC;
 
+    // constructor
     Board();
-    void updateCount();
-    bool terminalState() const;
 
-private:
-    // int size = 6;
+    // check terminal state for board
+    bool terminalState() const;
 
 };
 

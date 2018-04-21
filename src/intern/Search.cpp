@@ -11,20 +11,10 @@ human(human), comp(comp), board(board){
     this->comp.updateBoard(this->board);
 }
 
-void Search::updateBoard(const Board& board){
-    for (size_t i = 0; i < this->board.b.size(); i++){
-        for (size_t j = 0; j < this->board.b[i].size(); j++){
-            this->board.b[i][j] = board.b[i][j];
-        }
-    }
-    // assume human & comp are updated by main play()
-}
-
 void Search::updateMoves(){
     // remember to update moves for each turn
     human.updateMoves();
     comp.updateMoves();
-    board.updateCount();
 }
 
 
@@ -65,7 +55,7 @@ Result Search::getMove() const {
 
 
 Result Search::search(const Board& board){
-    updateBoard(board);
+    // updateBoard(board);
     updateMoves();
 
     std::cout << "Start of searching for computer...\n" << board << human << comp;
@@ -107,6 +97,7 @@ Result Search::iterativeDeep(int maxDepth){
             util = tempUtil;
             fmove.update(cmove);
             max = numMax, min = numMin, node = numNode;
+            // std::cout << "Depth: " << i << " utility: " << tempUtil << fmove;
         }
     }
 
@@ -301,9 +292,11 @@ void Search::update(int x, int y, int targX, int targY, int type){
         if (type == HUSS){
             board.b[x - 1][capY] = 0;
             comp.captured(x - 1, capY);
+            board.numC -= 1;
         } else {
             board.b[x + 1][capY] = 0;
             human.captured(x + 1, capY);
+            board.numH -= 1;
         }
     }
     board.b[targX][targY] = type;
@@ -329,13 +322,15 @@ int Search::move(int index, int x, int y, int targX, int targY, int type){
         if (type == HUSS){
             board.b[x - 1][capY] = 0;
             cap = comp.captured(x - 1, capY);
+            board.numC -= 1;
         } else {
             board.b[x + 1][capY] = 0;
             cap = human.captured(x + 1, capY);
+            board.numH -= 1;
         }
     }
     board.b[targX][targY] = type;
-    board.updateCount();
+    // board.updateCount();
 
     return cap;
 }
@@ -355,9 +350,11 @@ void Search::reset(int index, int indexCap, int x, int y, int targX, int targY, 
         if (type == HUSS){
             board.b[x - 1][capY] = COMP;
             comp.resetCaptured(indexCap);
+            board.numC += 1;
         } else {
             board.b[x + 1][capY] = HUSS;
             human.resetCaptured(indexCap);
+            board.numH += 1;
         }
     }
     board.b[x][y] = type;

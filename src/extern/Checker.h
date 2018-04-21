@@ -8,16 +8,22 @@
 #include "AvaMoves.h"
 #include "Search.h"
 
-
+// class Checker: an abstraction of the game
 class Checker{
 public:
+    // constructor
     Checker();
 
-    void move(int x, int y, int targx, int targy, int type);
-
+    // human turn
     void humanTurn();
+    // computer turn
     void computerTurn();
+
+    // update availability for both human and computer (and board)
     void updateMoves();
+
+    // move checker for board
+    void move(int x, int y, int targx, int targy, int type);
 
     void play();
     bool terminalState() const;

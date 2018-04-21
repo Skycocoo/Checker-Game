@@ -3,31 +3,9 @@
 
 #include "../extern/Board.h"
 
-
-Board::Board(): numH(6), numC(6) {
-    b.push_back(std::vector<int> {0, 1, 0, 1, 0, 1});
-    b.push_back(std::vector<int> {1, 0, 1, 0, 1, 0});
-    b.push_back(std::vector<int> {0, 0, 0, 0, 0, 0});
-    b.push_back(std::vector<int> {0, 0, 0, 0, 0, 0});
-    b.push_back(std::vector<int> {0, 2, 0, 2, 0, 2});
-    b.push_back(std::vector<int> {2, 0, 2, 0, 2, 0});
-}
-
-void Board::updateCount(){
-    numH = 0, numC = 0;
-    for (size_t i = 0; i < b.size(); i++){
-        for (size_t j = 0; j < b[i].size(); j++){
-            if (b[i][j] == HUSS) ++numH;
-            if (b[i][j] == COMP) ++numC;
-        }
-    }
-}
-
-bool Board::terminalState() const {
-    return (numH == 0 || numC == 0);
-}
-
-
+// standard output for Board
+// print out the checker board
+// return: std::ostream&
 std::ostream& operator<<(std::ostream& os, const Board& b){
     os << "Board: \n";
     for (size_t i = 0; i < b.b.size()+1; i++){
@@ -37,7 +15,9 @@ std::ostream& operator<<(std::ostream& os, const Board& b){
                 else if (i == 0) os << "|" << j-1;
                 else if (j == 0) os << "|" << i-1;
             } else {
+                // B: black: human
                 if (b.b[i-1][j-1] == HUSS) os << "|B";
+                // W: white: computer
                 else if (b.b[i-1][j-1] == COMP) os << "|W";
                 else os << "| ";
             }
@@ -51,3 +31,22 @@ std::ostream& operator<<(std::ostream& os, const Board& b){
 
     return os;
 };
+
+
+// constructor
+Board::Board(): numH(6), numC(6) {
+    b.push_back(std::vector<int> {0, 1, 0, 1, 0, 1});
+    b.push_back(std::vector<int> {0, 0, 1, 0, 1, 0});
+    b.push_back(std::vector<int> {0, 0, 0, 0, 0, 0});
+    b.push_back(std::vector<int> {0, 0, 1, 0, 0, 0});
+    b.push_back(std::vector<int> {0, 2, 0, 2, 0, 2});
+    b.push_back(std::vector<int> {2, 0, 2, 0, 2, 0});
+}
+
+
+// check terminal state for board
+// return: bool: terminal state or not
+bool Board::terminalState() const {
+    // if one of the player do not have available checker
+    return (numH == 0 || numC == 0);
+}
