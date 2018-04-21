@@ -50,3 +50,5 @@ Reset Captured should also keep the index
 1. If all actions lead to failure: choose random one
 
 2. If only one move available before alphabeta search: just take the move
+
+3. If no move for current player & its no terminal state: call recursion for the opponent

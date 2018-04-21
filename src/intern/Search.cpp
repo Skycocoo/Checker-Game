@@ -94,10 +94,20 @@ Result Search::iterativeDeep(int maxDepth){
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
     if (debug){
-        for (int i = 17; i < 18; i++){
+        for (int i = 2; i < 3; i++){
             float tempUtil = alphaBeta(cmove, i);
             // if the utility value for the returned move is larger
             // change the current result to the returned move
+
+            // if the duration >= 14: stop searching
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) {
+                cout << "This search goes to depth " << i-1 << endl;
+                break;
+            }
+
 
             if (tempUtil > -6){
                 util = tempUtil;
@@ -109,20 +119,23 @@ Result Search::iterativeDeep(int maxDepth){
 
             // cout << "after reset: " << board << human << comp << endl;
 
-            // if the duration >= 14: stop searching
-            // need to satisfy the duration requirement (within 15 seconds)
-            auto end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) {
-                cout << "This search goes to depth " << i << endl;
-                break;
-            }
         }
     } else {
         for (int i = 1; i < maxDepth; i++){
             float tempUtil = alphaBeta(cmove, i);
             // if the utility value for the returned move is larger
             // change the current result to the returned move
+
+
+            // if the duration >= 14: stop searching
+            // need to satisfy the duration requirement (within 15 seconds)
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            if (elapsed.count() >= 14) {
+                cout << "This search goes to depth " << i-1 << endl;
+                break;
+            }
+
 
             // if not a doomed failure: choose the optimal move
             if (tempUtil > -6 && util != 6){
@@ -135,14 +148,7 @@ Result Search::iterativeDeep(int maxDepth){
 
             // cout << "after reset: " << board << human << comp << endl;
 
-            // if the duration >= 14: stop searching
-            // need to satisfy the duration requirement (within 15 seconds)
-            auto end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) {
-                cout << "This search goes to depth " << i << endl;
-                break;
-            }
+
         }
     }
 
@@ -183,11 +189,13 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
     std::chrono::duration<double> elapsed = end - start;
     if (elapsed.count() >= 14) return eval();
 
-
     // main function
 
     float v = -6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
+
+    if (comp.avaMoves() == 0) return minVal(alpha, beta, cmove, curDepth + 1, depth);
+
     bool capture = comp.avaCapture();
     for (size_t i = 0; i < comp.moves.size(); i++){
         if (!comp.moves[i]) continue;
@@ -266,6 +274,9 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
 
     float v = 6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
+
+    if (human.avaMoves() == 0) return maxVal(alpha, beta, cmove, curDepth + 1, depth);
+
     bool capture = human.avaCapture();
     for (size_t i = 0; i < human.moves.size(); i++){
         if (!human.moves[i]) continue;

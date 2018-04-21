@@ -145,9 +145,10 @@ void Checker::play(){
     cout << board;
 
     // cout << "input 1 to take first move; 2 to take second move" << endl;
-    int flag = 1;
+    // int flag = 1;
     // cin >> flag;
     // if (flag == 2) computerTurn();
+
     while (true){
         humanTurn();
         if (terminalState()) break;
