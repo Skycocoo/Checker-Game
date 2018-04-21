@@ -55,7 +55,8 @@ Result Search::search(const Board& board){
     // update availability for both human and computer
     updateMoves();
 
-    std::cout << "Start of searching for computer...\n" << board << human << comp;
+    // std::cout << "Start of searching for computer...\n" << board << human << comp;
+    std::cout << "Start of searching for computer...\n" << board;
     // if more than one move is available
     if (comp.avaMoves() > 1) return iterativeDeep();
     else {
@@ -421,7 +422,7 @@ float Search::eval() const {
     // should be in range [-6, 6]
 
     // features:
-    // [0, 6] number of current player
+    // [0, 6] number of computer player
     int fea1 = fea1 = board.numC,
     // [-30, 0] for each available checker: distance to the other end
         fea2 = -comp.distance(),
