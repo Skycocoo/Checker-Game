@@ -1,6 +1,4 @@
 # Created by Yuxi Luo, April 3 2018
-# Referencing CMakeFiles: https://github.com/Liby99/Rotamina/blob/master/CMakeLists.txt
-
 
 cmake_minimum_required(VERSION 3.6)
 project(Checker)
@@ -17,16 +15,6 @@ file(GLOB checker_sources src/intern/*.cpp src/extern/*.h)
 set(checker ${checker_sources})
 add_library(checker ${checker})
 
-# compile all the test files
-file(GLOB test_sources src/main.cpp)
-
-foreach(test_source ${test_sources})
-    string(REPLACE ".cpp" "" temp_path ${test_source})
-    string(REPLACE "${CMAKE_CURRENT_LIST_DIR}/" "" temp_path ${temp_path})
-    get_filename_component(temp_dir ${temp_path} DIRECTORY)
-    get_filename_component(temp_name ${temp_path} NAME)
-    add_executable(${temp_name} ${test_source})
-    set_target_properties(${temp_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${temp_dir})
-    target_link_libraries(${temp_name} checker)
-    include("${temp_dir}/CMakeLists.txt" OPTIONAL)
-endforeach(test_source ${test_sources})
+add_executable(main src/main.cpp)
+target_link_libraries(main checker)
+set_target_properties(main PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./)

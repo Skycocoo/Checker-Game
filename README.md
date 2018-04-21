@@ -26,7 +26,7 @@ cmake ..
 Run the executable of this project:
 
 ```bash
-./src/main
+./main
 ```
 
 ## Note

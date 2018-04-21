@@ -1,8 +1,5 @@
 #include "../extern/Search.h"
 
-// need to change this later
-using namespace std;
-
 extern int difficulty;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
@@ -68,10 +65,10 @@ Result Search::search(const Board& board){
     updateBoard(board);
     updateMoves();
 
-    cout << "Start of searching for computer...\n" << board << human << comp;
+    std::cout << "Start of searching for computer...\n" << board << human << comp;
     if (comp.avaMoves() > 1) return iterativeDeep();
     else {
-        cout << "Only one move available for computer" << endl;
+        std::cout << "Only one move available for computer" << std::endl;
         return getMove();
     }
 }
@@ -99,7 +96,7 @@ Result Search::iterativeDeep(int maxDepth){
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
         if (elapsed.count() >= 15) {
-            cout << "This search goes to depth " << i-1 << endl;
+            std::cout << "This search goes to depth " << i-1 << std::endl;
             break;
         }
 
@@ -107,11 +104,10 @@ Result Search::iterativeDeep(int maxDepth){
             util = tempUtil;
             fmove.update(cmove);
             max = numMax, min = numMin, node = numNode;
-            // cout << "Depth: " << i << " utility: " << tempUtil << fmove;
         }
     }
 
-    cout << "Result of this search:\n\tutility: " << util << " number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << endl << fmove;
+    std::cout << "Result of this search:\n\tutility: " << util << " number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << std::endl << fmove;
 
     // if comp is doomed to fail
     if (util == -6) return getMove();
