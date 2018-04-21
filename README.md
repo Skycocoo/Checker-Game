@@ -14,7 +14,7 @@ Make build directory for cmake:
 
 ```bash
 mkdir build
-cd ./build
+cd ./build/
 ```
 
 Run cmake:

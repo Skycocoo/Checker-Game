@@ -1,3 +1,6 @@
+// Created by Yuxi Luo, April 2018
+// For CS4613 Artificial Intelligence; Checker Game project
+
 #include "../extern/Board.h"
 
 

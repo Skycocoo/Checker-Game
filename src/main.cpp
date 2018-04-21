@@ -1,10 +1,5 @@
-//
-//  main.cpp
-//  CS4613 Checker
-//
-//  Created by Yuxi Luo on 03/04/2018.
-//  Copyright © 2018 Yuxi Luo. All rights reserved.
-//
+// Created by Yuxi Luo, April 2018
+// For CS4613 Artificial Intelligence; Checker Game project
 
 #include <iostream>
 #include <vector>
