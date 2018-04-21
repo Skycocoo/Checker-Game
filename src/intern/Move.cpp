@@ -18,7 +18,7 @@ std::ostream& operator<<(std::ostream& os, const Point& p){
 }
 
 std::ostream& operator<<(std::ostream& os, const Move& move){
-    os << "\tChecker " << move.cur << std::boolalpha << move.isCaptured << " \n";
+    os << "\tChecker " << move.cur << " \n";
     // os << *move.board;
 
     if (move.isCapture()){

@@ -11,8 +11,8 @@ std::ostream& operator<<(std::ostream& os, const AvaMoves& a){
 
     os << a.avaMoves() << " available moves\n";
     for (size_t i = 0; i < a.moves.size(); i++){
-        // if (a.moves[i]) os << a.moves[i];
-        os << a.moves[i];
+        if (a.moves[i]) os << a.moves[i];
+        // os << a.moves[i];
     }
     os << "\n";
     return os;

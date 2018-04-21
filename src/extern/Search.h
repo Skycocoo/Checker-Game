@@ -19,15 +19,15 @@ public:
     Result getMove() const;
 
     Result search(const Board& board);
-    Result iterativeDeep(int maxDepth = 50);
+    Result iterativeDeep(int maxDepth = 80);
 
     // return the action or the estimated value?
-    float alphaBeta(Result& fmove, int depth);
+    float alphaBeta(Result& fmove, int depth, int& numMax, int& numMin, int& numNode);
 
     // maxVal: for COMP player
-    float maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth);
+    float maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth, int& numMax, int& numMin, int& numNode);
     // minVal: for HUSS player
-    float minVal(float alpha, float beta, Result& fmove, int curDepth, int depth);
+    float minVal(float alpha, float beta, Result& fmove, int curDepth, int depth, int& numMax, int& numMin, int& numNode);
 
     void update(int x, int y, int targX, int targY, int type);
 

@@ -3,7 +3,7 @@
 // need to change this later
 using namespace std;
 
-int counter = 0;
+int difficulty = 1;
 
 Checker::Checker():
 board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
@@ -47,7 +47,7 @@ void Checker::move(int x, int y, int targx, int targy, int type){
 }
 
 void Checker::humanTurn(){
-    cout << "Human turn" << endl;
+    cout << "------------Human turn------------" << endl;
     // cout << human << comp;
 
     if (human.avaMoves() == 0){
@@ -104,7 +104,7 @@ void Checker::humanTurn(){
 }
 
 void Checker::computerTurn(){
-    cout << "Computer turn" << endl;
+    cout << "------------Computer turn------------" << endl;
 
     if (comp.avaMoves() == 0){
         cout << "Computer does not have any available legal move" << endl;
@@ -147,24 +147,47 @@ void Checker::play(){
     // determine the winner / draw
 
     cout << "\nChecker Game, 6 * 6 board" << endl;
-    cout << "The Board is Row-Major; \ne.g. the bottom-left W checker's position is (5, 0)" << endl;
+    cout << "The Board is Row-Major; \ne.g. the bottom-left W checker's position is (5 0)" << endl;
     cout << endl;
     cout << board;
 
-    // cout << "input 1 to take first move; 2 to take second move" << endl;
-    // int flag = 1;
-    // cin >> flag;
-    // if (flag == 2) computerTurn();
+    cout << "\nYou can choose to move first or second" << endl;
+    cout << "Input 1 to take first move; 2 to take second move" << endl;
+    int flag = 1;
+    cin >> flag;
+    while ((flag != 1) && (flag != 2)) {
+        cout << "Please input correct number: 1, or 2" << endl;
+        cin >> flag;
+    }
+
+    string move = (flag == 1) ? "first " : "second ";
+    cout << "You choose to take " << move << "move" << endl;
+
+    cout << "\nYou can choose the difficulty of the game" << endl;
+    cout << "The difficulty ranges from 1 (easiest) to 3 (hardest)" << endl;
+    cout << "Input desired difficulty: 1, 2, or 3" << endl;
+    cin >> difficulty;
+    while (difficulty > 3 || difficulty < 1) {
+        cout << "Please input correct number: 1, 2, or 3" << endl;
+        cin >> difficulty;
+    }
+
+    cout << "You choose difficulty " << difficulty << endl;
+
+
+    cout << "\n------------Start of the game------------\n" << endl;
+
+    if (flag == 2) computerTurn();
 
     while (true){
         humanTurn();
         if (terminalState()) break;
         computerTurn();
         if (terminalState()) break;
-        break;
+        // break;
         // if (counter >= 3) break;
     }
 
     determineWinnder();
-    cout << "End of Game" << endl;
+    cout << "------------End of Game------------" << endl;
 }

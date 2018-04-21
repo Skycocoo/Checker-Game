@@ -3,8 +3,8 @@
 // need to change this later
 using namespace std;
 
-bool debug = true;
-extern int counter;
+bool debug = false;
+extern int difficulty;
 
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
 human(human), comp(comp), board(board){
@@ -82,20 +82,29 @@ Result Search::search(const Board& board){
 
     cout << "Start of searching for computer...\n" << board << human << comp;
     if (comp.avaMoves() > 1) return iterativeDeep();
-    else return getMove();
+    else {
+        cout << "Only one move available for computer" << endl;
+        return getMove();
+    }
 }
 
 Result Search::iterativeDeep(int maxDepth){
+    int depth = maxDepth;
+    if (difficulty == 1) depth = 5;
+    else if (difficulty == 2) depth = 15;
+
     Result fmove (-1, -1, -1, -1); // result of alphabeta (first max)
     float util = -std::numeric_limits<float>::max();
+    int max = 0, min = 0, node = 0;
 
     start = std::chrono::system_clock::now();
 
     Result cmove (-1, -1, -1, -1); // result of each iteration
 
     if (debug){
-        for (int i = 2; i < 3; i++){
-            float tempUtil = alphaBeta(cmove, i);
+        for (int i = 3; i < 4; i++){
+            int numMax = 0, numMin = 0, numNode = 0;
+            float tempUtil = alphaBeta(cmove, i, numMax, numMin, numNode);
             // if the utility value for the returned move is larger
             // change the current result to the returned move
 
@@ -103,7 +112,7 @@ Result Search::iterativeDeep(int maxDepth){
             // need to satisfy the duration requirement (within 15 seconds)
             auto end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) {
+            if (elapsed.count() >= 15) {
                 cout << "This search goes to depth " << i-1 << endl;
                 break;
             }
@@ -111,47 +120,47 @@ Result Search::iterativeDeep(int maxDepth){
             if (tempUtil > -6){
                 util = tempUtil;
                 fmove.update(cmove);
+                max = numMax, min = numMin, node = numNode;
                 cout << "Depth: " << i << " utility: " << tempUtil << fmove;
+                // cout << "number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << endl;
             }
 
             // cout << "\tUpdated utility: " << util << fmove;
-
             // cout << "after reset: " << board << human << comp << endl;
 
         }
     } else {
-        for (int i = 1; i < maxDepth; i++){
-            float tempUtil = alphaBeta(cmove, i);
+        for (int i = 1; i < depth; i++){
+            int numMax = 0, numMin = 0, numNode = 0;
+            float tempUtil = alphaBeta(cmove, i, numMax, numMin, numNode);
             // if the utility value for the returned move is larger
             // change the current result to the returned move
-
 
             // if the duration >= 14: stop searching
             // need to satisfy the duration requirement (within 15 seconds)
             auto end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed = end - start;
-            if (elapsed.count() >= 14) {
+            if (elapsed.count() >= 15) {
                 cout << "This search goes to depth " << i-1 << endl;
                 break;
             }
 
-
-            // if not a doomed failure: choose the optimal move
-            if (tempUtil > -6 && util != 6){
+            if (tempUtil > -6){
                 util = tempUtil;
                 fmove.update(cmove);
+                max = numMax, min = numMin, node = numNode;
                 cout << "Depth: " << i << " utility: " << tempUtil << fmove;
+                // cout << "number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << endl;
             }
 
             // cout << "\tUpdated utility: " << util << fmove;
-
             // cout << "after reset: " << board << human << comp << endl;
 
 
         }
     }
 
-    cout << "Result of this search: utility: " << util << fmove;
+    cout << "\nResult of this search: utility: " << util << "\n\tnumber of max pruning: " << max << " min pruning: " << min << " nodes: " << node << endl << fmove;
 
     // if comp is doomed to fail
     if (util == -6) return getMove();
@@ -159,19 +168,21 @@ Result Search::iterativeDeep(int maxDepth){
 }
 
 // return the action or the estimated value?
-float Search::alphaBeta(Result& fmove, int depth){
+float Search::alphaBeta(Result& fmove, int depth, int& numMax, int& numMin, int& numNode){
     // parameters: depth
     float alpha = -6, beta = 6;
     int curDepth = 0;
     // cout << human;
     // cout << comp;
-    return maxVal(alpha, beta, fmove, curDepth, depth);
+    return maxVal(alpha, beta, fmove, curDepth, depth, numMax, numMin, numNode);
 }
 
 // maxVal: for COMP player
-float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth){
+float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int depth, int& numMax, int& numMin, int& numNode){
     updateMoves();
     if (debug) cout << endl << "Max; Depth: " << curDepth << endl << board << comp << human;
+
+    ++numNode;
 
     // edge cases
 
@@ -186,14 +197,14 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
     // if times up: evaluated utility
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    if (elapsed.count() >= 14) return eval();
+    if (elapsed.count() >= 15) return eval();
 
     // main function
 
     float v = -6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
 
-    if (comp.avaMoves() == 0) return minVal(alpha, beta, cmove, curDepth + 1, depth);
+    if (comp.avaMoves() == 0) return minVal(alpha, beta, cmove, curDepth + 1, depth, numMax, numMin, numNode);
 
     bool capture = comp.avaCapture();
     for (size_t i = 0; i < comp.moves.size(); i++){
@@ -208,14 +219,17 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
                     int targX = comp.moves[i].capture[j].x, targY = comp.moves[i].capture[j].y;
                     int cap = move(i, posX, posY, targX, targY, COMP);
                     // cout << "Move: " << endl << board << comp << human;
-                    tempv = minVal(alpha, beta, cmove, curDepth + 1, depth);
+                    tempv = minVal(alpha, beta, cmove, curDepth + 1, depth, numMax, numMin, numNode);
                     reset(i, cap, posX, posY, targX, targY, COMP);
                     // cout << "Reset: " << endl << board << comp << human;
                     if (tempv > v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
                     }
-                    if (v >= beta) return v;
+                    if (v >= beta){
+                        ++numMax;
+                        return v;
+                    }
                     if (v > alpha) alpha = v;
                 }
             }
@@ -228,29 +242,33 @@ float Search::maxVal(float alpha, float beta, Result& fmove, int curDepth, int d
 
                     int targX = comp.moves[i].regular[j].x, targY = comp.moves[i].regular[j].y;
                     move(i, posX, posY, targX, targY, COMP);
-                    tempv = minVal(alpha, beta, cmove, curDepth + 1, depth);
+                    tempv = minVal(alpha, beta, cmove, curDepth + 1, depth, numMax, numMin, numNode);
                     reset(i, -1, posX, posY, targX, targY, COMP);
                     if (tempv > v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
                     }
-                    if (v >= beta) return v;
+                    if (v >= beta){
+                        ++numMax;
+                        return v;
+                    }
                     if (v > alpha) alpha = v;
                 }
             }
         }
     }
 
-    // if (counter == 3 && curDepth < 3) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     if (debug) cout << "Max; Depth: " << curDepth << " utility: " << v << endl;
     // if (debug && (v == -6 || v == 6)) cout << "moves zero? " << comp.avaMoves() << board << endl;
     return v;
 }
 
 // minVal: for HUSS player
-float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int depth){
+float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int depth, int& numMax, int& numMin, int& numNode){
     updateMoves();
     if (debug) cout << endl << "Min; Depth: " << curDepth << endl << board << human << comp;
+
+    ++numNode;
 
     // edge cases
 
@@ -265,7 +283,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
     // if times up: evaluated utility
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    if (elapsed.count() >= 14) return eval();
+    if (elapsed.count() >= 15) return eval();
 
 
     // main function
@@ -274,7 +292,7 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
     float v = 6, tempv;
     Result cmove (-1, -1, -1, -1); // result of min
 
-    if (human.avaMoves() == 0) return maxVal(alpha, beta, cmove, curDepth + 1, depth);
+    if (human.avaMoves() == 0) return maxVal(alpha, beta, cmove, curDepth + 1, depth, numMax, numMin, numNode);
 
     bool capture = human.avaCapture();
     for (size_t i = 0; i < human.moves.size(); i++){
@@ -288,14 +306,17 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
                     int targX = human.moves[i].capture[j].x, targY = human.moves[i].capture[j].y;
                     int cap = move(i, posX, posY, targX, targY, HUSS);
                     // cout << "Move: " << endl << board;
-                    tempv = maxVal(alpha, beta, cmove, curDepth + 1, depth);
+                    tempv = maxVal(alpha, beta, cmove, curDepth + 1, depth, numMax, numMin, numNode);
                     reset(i, cap, posX, posY, targX, targY, HUSS);
                     // cout << "Reset: " << endl << board;
                     if (tempv < v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
                     }
-                    if (v <= alpha) return v;
+                    if (v <= alpha){
+                        ++numMin;
+                        return v;
+                    }
                     if (v < beta) beta = v;
                 }
             }
@@ -308,14 +329,17 @@ float Search::minVal(float alpha, float beta, Result& fmove, int curDepth, int d
 
                     int targX = human.moves[i].regular[j].x, targY = human.moves[i].regular[j].y;
                     move(i, posX, posY, targX, targY, HUSS);
-                    tempv = maxVal(alpha, beta, cmove, curDepth + 1, depth);
+                    tempv = maxVal(alpha, beta, cmove, curDepth + 1, depth, numMax, numMin, numNode);
                     reset(i, -1, posX, posY, targX, targY, HUSS);
 
                     if (tempv < v){
                         v = tempv;
                         fmove.update(posX, posY, targX, targY);
                     }
-                    if (v <= alpha) return v;
+                    if (v <= alpha){
+                        ++numMin;
+                        return v;
+                    }
                     if (v < beta) beta = v;
                 }
             }
