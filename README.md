@@ -104,10 +104,6 @@ The difficulty ranges from 1 to 3.
 
 When the difficulty is 1: the depth is restricted to 10; 2: the depth is restricted to 15; 3: the depth is unlimited (to 80)
 
-### Checker game rules
-
-![alt-text]()
-
 
 ### Demo
 
@@ -264,3 +260,7 @@ Number of computer: 6
 
 [...]
 ```
+
+### Checker game rules
+
+![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/req/rule.png?token=AVi1i2_xmQ5NbJzwQiruIj_xGn8viu-oks5a5P-hwA%3D%3D)
