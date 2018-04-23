@@ -1,6 +1,7 @@
 *.DS_Store
 *.pdf
 *.gch
+*.zip
 
 test/
 build/

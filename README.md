@@ -1,6 +1,6 @@
 # CS4613-AI
 
-Homework for CS4613; Spring 2018
+Yuxi Luo; Project for CS4613; Spring 2018
 
 [Checker Game 6 * 6](https://github.com/Skycocoo/CS4613-Artificial-Intelligence/blob/master/req/rule.png)
 
@@ -16,25 +16,21 @@ cd ./CS4613-Artificial-Intelligence
 Open the zipfile and cd into the folder CS4613-AI in shell
 
 Make build directory for cmake:
-
 ```bash
 mkdir build
 cd ./build/
 ```
 
 Run cmake & build executable for this project:
-
 ```bash
 cmake ..
 make
 ```
-
 Run the executable of this project:
 
 ```bash
 ./main
 ```
-
 
 ## General Design
 
@@ -48,8 +44,7 @@ Checker (game)
             -> AvaMoves (human)     -> Move (available moves) -> Point (location)
             -> AvaMoves (computer)  -> Move (available moves) -> Point (location)
             -> Board (checker board)
-            -> Result (result of the search)
-
+            -> Result (optimal move)
 ```
 
 ### Search
