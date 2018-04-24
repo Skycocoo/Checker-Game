@@ -69,7 +69,7 @@ SDL_Window* setUp(const std::string& name){
 }
 
 // check keyboard event
-void checkKeyboard(const SDL_Event& event, bool& done){
+void checkKeyboard(const SDL_Event& event, bool& done, uint& botton, int& mouseX, int& mouseY){
     switch (event.type){
         case SDL_QUIT:
             done = true;
@@ -79,6 +79,11 @@ void checkKeyboard(const SDL_Event& event, bool& done){
             break;
         case SDL_KEYDOWN:
             if (event.key.keysym.scancode == SDL_SCANCODE_Q) done = true;
+            // if (event.key.keysym.scancode == SDL_SCANCODE_A) std::cout << "?" << std::endl;;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            std::cout << "keydown" << std::endl;
+            botton = SDL_GetMouseState(&mouseX, &mouseY);
             break;
     }
 }

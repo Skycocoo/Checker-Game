@@ -25,7 +25,7 @@ public:
     void render();
 
     void convertMouse(int& x, int& y) const;
-
+    void mouseSelect(int x, int y);
 
     // ------------ end of GUI functions ------------ //
 
@@ -62,6 +62,7 @@ private:
 
     Text text;
 
+    bool humanSelect;
 };
 
 
