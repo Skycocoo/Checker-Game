@@ -1,4 +1,5 @@
 <TextureAtlas imagePath="sprites.png">
-	<SubTexture name="b.png" x="0" y="0" width="115" height="107"/>
-	<SubTexture name="w.png" x="0" y="109" width="111" height="115"/>
+	<SubTexture name="c.png" x="117" y="0" width="111" height="115"/>
+	<SubTexture name="h-1.png" x="0" y="109" width="115" height="107"/>
+	<SubTexture name="h.png" x="0" y="0" width="115" height="107"/>
 </TextureAtlas>

@@ -12,9 +12,16 @@ extern float splitScale;
 
 Object::Object(){}
 
-Object::Object(ShaderProgram* program, GLuint texture, const glm::vec3& pos): program(program), texture(texture), pos(pos), shape(1, 1, 1){
+Object::Object(ShaderProgram* program, GLuint texture, const glm::vec3& pos):
+program(program), texture(texture), pos(pos), shape(1, 1, 1){
     projectionMatrix.SetOrthoProjection(-screenWidth, screenWidth, -screenHeight, screenHeight, -1.0f, 1.0f);
 }
+
+Object::Object(ShaderProgram* program, GLuint texture, const XMLData& data, const glm::vec3& pos):
+program(program), texture(texture), pos(pos){
+    setData(data);
+}
+
 
 void Object::setProject(float proj){
     projectionMatrix.SetOrthoProjection(-screenWidth * proj, screenWidth * proj, -screenHeight * proj, screenHeight * proj, -1.0f, 1.0f);
@@ -63,12 +70,12 @@ void Object::setShape(const glm::vec3& shape){
     float w = shape.x / shape.y;
     float h = 1.0;
     vertices = {
-      -0.5f * w, -0.5f * h,
-      0.5f * w, -0.5f * h,
-      0.5f * w, 0.5f * h,
-      -0.5f * w, -0.5f * h,
-      0.5f * w, 0.5f * h,
-      -0.5f * w, 0.5f * h ,
+        -0.5f * w, -0.5f * h,
+        0.5f * w, -0.5f * h,
+        0.5f * w, 0.5f * h,
+        -0.5f * w, -0.5f * h,
+        0.5f * w, 0.5f * h,
+        -0.5f * w, 0.5f * h ,
     };
     this->shape.x = w;
     this->shape.y = h;
@@ -92,10 +99,10 @@ const glm::vec3& Object::getPos() const {
 }
 
 void Object::setData(const XMLData& data){
-    // assume the shape of sheetsprite is 1024 * 512
-    float u = data.x / 128.0,
+    // assume the shape of sheetsprite is 256 * 256
+    float u = data.x / 256.0,
           v = data.y / 256.0,
-          width = data.width / 128.0,
+          width = data.width / 256.0,
           height = data.height / 256.0;
 
     // rescale the image so that the max edge length is 1
@@ -104,22 +111,22 @@ void Object::setData(const XMLData& data){
 
     vertices = {
         -0.5f * w, -0.5f * h,
+        0.5f * w, -0.5f * h,
         0.5f * w, 0.5f * h,
-        -0.5f * w, 0.5f * h,
+        -0.5f * w, -0.5f * h,
         0.5f * w, 0.5f * h,
-        -0.5f * w, -0.5f * h ,
-        0.5f * w, -0.5f * h
+        -0.5f * w, 0.5f * h ,
     };
 
     texCoords = {
         u, v+height,
-        u+width, v,
-        u, v,
+        u+width, v+height,
         u+width, v,
         u, v+height,
-        u+width, v+height
+        u+width, v,
+        u, v
     };
 
-    shape.x = w;
-    shape.y = h;
+    this->shape.x = w;
+    this->shape.y = h;
 }

@@ -13,6 +13,7 @@ class Object{
 public:
     Object();
     Object(ShaderProgram* program, GLuint texture = 0, const glm::vec3& pos = glm::vec3(0, 0, 0));
+    Object(ShaderProgram* program, GLuint texture, const XMLData& data, const glm::vec3& pos = glm::vec3(0, 0, 0));
 
     virtual void update(float elapsed = 0);
     virtual void render(const Matrix& view = Matrix());
@@ -50,6 +51,7 @@ protected:
     // vertices
     glm::vec3 shape; // shape.x: width; shape.y: height; shape.z: 0 / 1
     std::vector<float> vertices = {-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5};
+    // std::vector<float> vertices = {-0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5};
     std::vector<float> texCoords = {0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0};
 
 };

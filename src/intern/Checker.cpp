@@ -5,6 +5,9 @@
 #include "../extern/setUp.h"
 #include <string>
 
+#define RESOURCE_FOLDER "../src/asset/"
+
+
 // represent difficulty of computer
 int difficulty = 1;
 
@@ -24,16 +27,35 @@ board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){
     background = Object(&textured, bg);
     background.setShape(glm::vec3(screenWidth, screenHeight, 0));
     background.setScale(2 * screenHeight);
+
+
+    XMLLoad xml("sprites.xml");
+    GLuint texture;
+    textured = setTextured("sprites.png", texture);
+    checkerH = Object(&textured, texture, xml.getData("h.png"));
+    checkerH2 = Object(&textured, texture, xml.getData("h-1.png"));
+    checkerC = Object(&textured, texture, xml.getData("c.png"));
+    // checkerC.setShape(glm::vec3(float(120) / float(1020) * 2 * screenWidth, float(120) / float(1020) * 2 * screenHeight, 0));
 }
 
 
 void Checker::update(){
     background.update();
+    checkerC.update();
 }
 
 void Checker::render(){
     background.render();
+    // checkerH.render();
+    // checkerH2.render();
+    checkerC.render();
     text.render("Platformer", 1, 2, 0, 3.5);
+}
+
+// convert mouse position to board position
+void Checker::convertMouse(int& x, int& y) const {
+    x /= 120;
+    y /= 120;
 }
 
 

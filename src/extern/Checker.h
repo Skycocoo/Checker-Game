@@ -19,13 +19,15 @@ public:
     Checker();
 
 
-    // ------------ render function ------------ //
+    // ------------ GUI functions ------------ //
 
     void update();
-
     void render();
 
-    // ------------ end of render function ------------ //
+    void convertMouse(int& x, int& y) const;
+
+
+    // ------------ end of GUI functions ------------ //
 
 
     // human turn
@@ -54,6 +56,10 @@ private:
     Search search;
 
     Object background;
+    Object checkerH;
+    Object checkerH2;
+    Object checkerC;
+
     Text text;
 
 };

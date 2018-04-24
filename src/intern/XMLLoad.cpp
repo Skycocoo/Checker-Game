@@ -2,7 +2,7 @@
 // CS3113 Game Programming
 
 #include "../extern/XMLLoad.h"
-#define RESOURCE_FOLDER "asset/"
+#define RESOURCE_FOLDER "../src/asset/"
 
 
 // XMLData

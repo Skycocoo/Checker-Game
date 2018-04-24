@@ -37,10 +37,12 @@ int main() {
     SDL_Event event;
     bool done = false;
     int mouseX, mouseY;
+    
     while (!done) {
         while (SDL_PollEvent(&event)) {
             checkKeyboard(event, done);
         }
+
         uint botton = SDL_GetMouseState(&mouseX, &mouseY);
         if (botton == 1) cout << mouseX / 120 << " " << mouseY / 120 << endl;
 
