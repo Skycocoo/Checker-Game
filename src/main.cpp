@@ -40,12 +40,14 @@ int main() {
     int mouseX, mouseY;
 
     while (!done) {
+        bool humanMove = false;
+
         while (SDL_PollEvent(&event)) {
             checkKeyboard(event, done, botton, mouseX, mouseY);
         }
 
         if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
-            c.mouseSelect(mouseX, mouseY, done);
+            humanMove = c.mouseSelect(mouseX, mouseY, done);
             botton = 0;
         }
 
@@ -56,13 +58,16 @@ int main() {
         c.render();
         SDL_GL_SwapWindow(displayWindow);
 
+        if (humanMove){
+            c.computerTurn();
 
-        // c.computerTurn();
-        // c.update();
-        // // display
-        // glClear(GL_COLOR_BUFFER_BIT);
-        // c.render();
-        // SDL_GL_SwapWindow(displayWindow);
+            c.update();
+            // display
+            glClear(GL_COLOR_BUFFER_BIT);
+            c.render();
+            SDL_GL_SwapWindow(displayWindow);
+        }
+
 
     }
 

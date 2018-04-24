@@ -25,7 +25,7 @@ public:
     void render();
 
     void convertMouse(int& x, int& y) const;
-    void mouseSelect(int x, int y, bool& done);
+    bool mouseSelect(int x, int y, bool& done);
 
     // ------------ end of GUI functions ------------ //
 

@@ -81,17 +81,15 @@ void Checker::convertMouse(int& x, int& y) const {
     y = resultY;
 }
 
-void Checker::mouseSelect(int x, int y, bool& done){
+bool Checker::mouseSelect(int x, int y, bool& done){
 
     // human turn
-
     if (terminalState()){
         done = true;
-        return;
+        return false;
     }
 
     convertMouse(x, y);
-    // std::cout << x << " " << y << std::endl;
 
     // select checker
     // humanSelect = false & want to select the checker
@@ -119,20 +117,15 @@ void Checker::mouseSelect(int x, int y, bool& done){
                 // std::cout << board;
                 updateMoves();
 
+                return true;
 
-                // computer turn
-                if (terminalState()){
-                    done = true;
-                    return;
-                }
-
-                computerTurn();
 
             } else {
                 humanSelect = false;
             }
         }
     }
+    return false;
 
 }
 
