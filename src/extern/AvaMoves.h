@@ -7,13 +7,15 @@
 #include <iostream>
 #include <vector>
 
-class Board;
 #include "Move.h"
+class Board;
+class Checker;
 
 // class AvaMoves:
 // an abstraction of available moves for human / computer
 class AvaMoves{
     friend class Search;
+    friend class Checker;
     // standard output for AvaMoves
     friend std::ostream& operator<<(std::ostream& os, const AvaMoves& h);
 public:

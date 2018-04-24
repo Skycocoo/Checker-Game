@@ -35,21 +35,47 @@ board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){
     checkerH = Object(&textured, texture, xml.getData("h.png"));
     checkerH2 = Object(&textured, texture, xml.getData("h-1.png"));
     checkerC = Object(&textured, texture, xml.getData("c.png"));
-    // checkerC.setShape(glm::vec3(float(120) / float(1020) * 2 * screenWidth, float(120) / float(1020) * 2 * screenHeight, 0));
 }
 
 
 void Checker::update(){
     background.update();
-    checkerC.update();
 }
 
 void Checker::render(){
     background.render();
+    text.render("Checker Game", 1, 2, 0, 3.5);
+
+    float halfTile = float(120) / float (720) * screenHeight;
+    glm::vec3 zero(-screenWidth, screenHeight, 0);
+    glm::vec3 off(halfTile, 3 * halfTile, 0);
+
+    // std::cout << "start rendering" << std::endl;
+
+
+    // checkerH.setPos(zero.x + off.x, zero.y - off.y);
+    // checkerH.update();
     // checkerH.render();
-    // checkerH2.render();
-    checkerC.render();
-    text.render("Platformer", 1, 2, 0, 3.5);
+
+    for (size_t i = 0; i < board.b.size(); i++){
+        for (size_t j = 0; j < board.b[i].size(); j++){
+            if (board.b[i][j] == HUSS){
+                glm::vec3 off((2 * j + 1) * halfTile, (2 * i + 1) * halfTile, 0);
+                // std::cout << "HUSS " << zero.x + off.x << " " << zero.y - off.y << std::endl;
+                checkerH.setPos(zero.x + off.x, zero.y - off.y);
+                checkerH.update();
+                checkerH.render();
+            } else if (board.b[i][j] == COMP){
+                glm::vec3 off((2 * j + 1) * halfTile, (2 * i + 1) * halfTile, 0);
+                // std::cout << "COMP " << zero.x + off.x << " " << zero.y - off.y << std::endl;
+                checkerC.setPos(zero.x + off.x, zero.y - off.y);
+                checkerC.update();
+                checkerC.render();
+            }
+
+        }
+    }
+
 }
 
 // convert mouse position to board position

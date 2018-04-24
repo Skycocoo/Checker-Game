@@ -19,6 +19,7 @@ program(program), texture(texture), pos(pos), shape(1, 1, 1){
 
 Object::Object(ShaderProgram* program, GLuint texture, const XMLData& data, const glm::vec3& pos):
 program(program), texture(texture), pos(pos){
+    projectionMatrix.SetOrthoProjection(-screenWidth, screenWidth, -screenHeight, screenHeight, -1.0f, 1.0f);
     setData(data);
 }
 
