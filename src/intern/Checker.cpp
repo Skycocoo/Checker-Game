@@ -2,14 +2,40 @@
 // For CS4613 Artificial Intelligence; Checker Game project
 
 #include "../extern/Checker.h"
+#include "../extern/setUp.h"
 #include <string>
 
 // represent difficulty of computer
 int difficulty = 1;
 
+extern ShaderProgram textured;
+extern float screenWidth;
+extern float screenHeight;
+
 // constructor
 Checker::Checker():
-board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){}
+board(), human(board, HUSS), comp(board, COMP), search(human, comp, board){
+    GLuint font;
+    textured = setTextured("font.png", font);
+    text = Text(&textured, font);
+
+    GLuint bg;
+    textured = setTextured("background.png", bg);
+    background = Object(&textured, bg);
+    background.setShape(glm::vec3(screenWidth, screenHeight, 0));
+    background.setScale(2 * screenHeight);
+}
+
+
+void Checker::update(){
+    background.update();
+}
+
+void Checker::render(){
+    background.render();
+    text.render("Platformer", 1, 2, 0, 3.5);
+}
+
 
 // human turn
 void Checker::humanTurn(){

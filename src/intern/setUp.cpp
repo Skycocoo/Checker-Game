@@ -4,6 +4,8 @@ extern float screenRatio;
 extern float screenHeight;
 extern float screenWidth;
 
+#define RESOURCE_FOLDER "../src/asset/"
+
 
 // from lecture slide Jan 31, 2018
 GLuint LoadTexture(const char *filePath) {
@@ -54,7 +56,7 @@ SDL_Window* setUp(const std::string& name){
     SDL_GL_MakeCurrent(displayWindow, context);
 
     glViewport(0, 0, 1020, 720);
-    glClearColor(0.376, 0.509, 0.806, 0);
+    glClearColor(1, 1, 1, 1);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

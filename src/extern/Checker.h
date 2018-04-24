@@ -8,12 +8,25 @@
 #include "AvaMoves.h"
 #include "Search.h"
 
+#include "Object.h"
+#include "Text.h"
+
 // class Checker:
 // an abstraction of the game
 class Checker{
 public:
     // constructor
     Checker();
+
+
+    // ------------ render function ------------ //
+
+    void update();
+
+    void render();
+
+    // ------------ end of render function ------------ //
+
 
     // human turn
     void humanTurn();
@@ -39,6 +52,10 @@ private:
     AvaMoves comp;
 
     Search search;
+
+    Object background;
+    Text text;
+
 };
 
 

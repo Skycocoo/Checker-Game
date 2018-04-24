@@ -4,13 +4,9 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#define RESOURCE_FOLDER "../src/asset/"
-#include "stb_image.h"
-
-#include "ShaderProgram.h"
 #include <SDL.h>
-
-
+#include "stb_image.h"
+#include "ShaderProgram.h"
 
 // from lecture slide Jan 31, 2018
 GLuint LoadTexture(const char *filePath);
@@ -26,6 +22,5 @@ SDL_Window* setUp(const std::string& name);
 
 // check keyboard event
 void checkKeyboard(const SDL_Event& event, bool& done);
-
 
 #endif /* setUp_h */
