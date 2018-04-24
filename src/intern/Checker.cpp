@@ -18,7 +18,7 @@ extern float screenHeight;
 
 // constructor
 Checker::Checker():
-board(), human(board, HUSS), comp(board, COMP), search(human, comp, board), humanSelect(false){
+board(), human(board, HUSS), comp(board, COMP), search(human, comp, board, this), humanSelect(false){
     GLuint font;
     textured = setTextured("font.png", font);
     text = Text(&textured, font);
@@ -46,6 +46,8 @@ void Checker::update(){
 void Checker::render(){
     background.render();
     text.render("Checker Game", 1, 2, 0, 3.5);
+    text.renderLeft("Checker Game", 1, 2, 0, 2);
+
 
     float halfTile = float(120) / float (720) * screenHeight;
     glm::vec3 zero(-screenWidth, screenHeight, 0);
@@ -81,7 +83,7 @@ void Checker::convertMouse(int& x, int& y) const {
     y = resultY;
 }
 
-bool Checker::mouseSelect(int x, int y, bool& done){
+bool Checker::humanTurn(int x, int y, bool& done){
 
     // human turn
     if (terminalState()){
@@ -127,53 +129,6 @@ bool Checker::mouseSelect(int x, int y, bool& done){
     }
     return false;
 
-}
-
-
-
-// human turn
-void Checker::humanTurn(){
-    std::cout << "------------Human turn------------" << std::endl;
-
-    // if no legal move for human: do nothing
-    if (human.avaMoves() == 0){
-        std::cout << "Human does not have any available legal move" << std::endl;
-        return;
-    }
-
-    // display available checkers for player
-    std::cout << human;
-
-    std::cout << "Please select the checker in \'x y\' format" << std::endl;
-    bool select = false;
-    int x = 0, y = 0;
-    while (!select){
-        // reads in position for selection
-        std::cin >> x >> y;
-        // if the selection is legal
-        if ((select = human.select(x, y))){
-            std::cout << "Please choose the location to move in \'x y\' format" << std::endl;
-            bool target = false;
-            int targx = 0, targy = 0;
-            while (!target){
-                // reads in target position for the selected checker
-                std::cin >> targx >> targy;
-                // if the target position is legal
-                // make the move & update the checker
-                if ((target = human.checkMove(targx, targy))) {
-                    move(x, y, targx, targy, HUSS);
-                    // update moves for search
-                    search.update(x, y, targx, targy, HUSS);
-                }
-                else std::cout << "Not a legal target location; please input correct locaion" << std::endl;
-            }
-        } else std::cout << "Not a legal checker to be moved; please correct location" << std::endl;
-    }
-
-    // display current board
-    std::cout << board;
-    // update availability for both human and computer
-    updateMoves();
 }
 
 // computer turn

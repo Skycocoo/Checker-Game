@@ -19,19 +19,14 @@ public:
     Checker();
 
 
-    // ------------ GUI functions ------------ //
-
     void update();
     void render();
 
     void convertMouse(int& x, int& y) const;
-    bool mouseSelect(int x, int y, bool& done);
-
-    // ------------ end of GUI functions ------------ //
 
 
     // human turn
-    void humanTurn();
+    bool humanTurn(int x, int y, bool& done);
     // computer turn
     void computerTurn();
 

@@ -9,6 +9,11 @@
 #include "Board.h"
 #include "Result.h"
 
+#include "Text.h"
+
+
+class Checker;
+
 // class Search:
 // an abstraction of search algorithm for Checker Game
 // utilize Alpha-beta Pruning algorithm under Min-max search
@@ -18,7 +23,12 @@ public:
     AvaMoves comp;
 
     // constructor
-    Search(const AvaMoves& human, const AvaMoves& comp, const Board& board);
+    Search(const AvaMoves& human, const AvaMoves& comp, const Board& board, Checker* check);
+
+
+    void renderSearch(float util, int min, int max, int node);
+
+
 
     // update availability for both human and computer
     void updateMoves();
@@ -58,6 +68,9 @@ public:
 private:
     Board board;
     std::chrono::system_clock::time_point start;
+
+    Checker* check;
+    Text text;
 };
 
 #endif

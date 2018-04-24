@@ -47,7 +47,7 @@ int main() {
         }
 
         if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
-            humanMove = c.mouseSelect(mouseX, mouseY, done);
+            humanMove = c.humanTurn(mouseX, mouseY, done);
             botton = 0;
         }
 

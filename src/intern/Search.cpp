@@ -2,16 +2,29 @@
 // For CS4613 Artificial Intelligence; Checker Game project
 
 #include "../extern/Search.h"
+#include "../extern/setUp.h"
 
 // difficulty of the game -> complexity of the search
 extern int difficulty;
+extern ShaderProgram textured;
 
 // constructor
-Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board):
-human(human), comp(comp), board(board){
+Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board, Checker* check):
+human(human), comp(comp), board(board), check(check){
     this->human.updateBoard(this->board);
     this->comp.updateBoard(this->board);
+
+    GLuint font;
+    textured = setTextured("font.png", font);
+    text = Text(&textured, font);
 }
+
+
+void Search::renderSearch(float util, int min, int max, int node){
+    
+}
+
+
 
 // update availability for both human and computer
 void Search::updateMoves(){
