@@ -44,12 +44,18 @@ using namespace std;
 
 int main() {
     // initial set up
-    srand(time(NULL));
+    // srand(time(NULL));
     SDL_Window* displayWindow = setUp("Checker Game");
+    SDL_Renderer* renderer = SDL_CreateRenderer(displayWindow, -1, SDL_RENDERER_ACCELERATED);
 
-    GLuint text;
-    textured = setTextured("font.png", text);
-    Text t(&textured, text);
+    // SDL_Surface* background = SDL_LoadIMG(RESOURCE_FOLDER + "background.png");
+
+    SDL_Texture* img = IMG_LoadTexture(renderer, RESOURCE_FOLDER"background.png");
+
+
+    // GLuint text;
+    // textured = setTextured("font.png", text);
+    // Text t(&textured, text);
 
     SDL_Event event;
     bool done = false;
@@ -57,13 +63,20 @@ int main() {
         while (SDL_PollEvent(&event)) {
             checkKeyboard(event, done);
         }
-        // display
-        glClear(GL_COLOR_BUFFER_BIT);
 
-        t.render("Platformer", 1, 2, 0, 3.5);
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, img, NULL, NULL);
+        SDL_RenderPresent(renderer);
 
-        SDL_GL_SwapWindow(displayWindow);
+        // // display
+        // glClear(GL_COLOR_BUFFER_BIT);
+        //
+        // t.render("Platformer", 1, 2, 0, 3.5);
+        //
+        // SDL_GL_SwapWindow(displayWindow);
     }
+    SDL_DestroyTexture(img);
+	SDL_DestroyRenderer(renderer);
     SDL_Quit();
 
     // Checker c;
