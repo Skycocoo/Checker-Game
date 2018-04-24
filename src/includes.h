@@ -11,11 +11,12 @@
 #include "extern/ShaderProgram.h"
 #include "extern/Text.h"
 #include "extern/XMLLoad.h"
+#include "extern/setUp.h"
 
 #include "glm/glm.hpp"
 
-#include <SDL.h>
-#include <SDL_opengl.h>
-#include <SDL_image.h>
+// #include <SDL.h>
+// #include <SDL_opengl.h>
+// #include <SDL_image.h>
 
 #endif
