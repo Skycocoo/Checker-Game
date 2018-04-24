@@ -46,16 +46,16 @@ int main() {
     // initial set up
     // srand(time(NULL));
     SDL_Window* displayWindow = setUp("Checker Game");
-    SDL_Renderer* renderer = SDL_CreateRenderer(displayWindow, -1, SDL_RENDERER_ACCELERATED);
 
-    // SDL_Surface* background = SDL_LoadIMG(RESOURCE_FOLDER + "background.png");
+    GLuint text;
+    textured = setTextured("font.png", text);
+    Text t(&textured, text);
 
-    SDL_Texture* img = IMG_LoadTexture(renderer, RESOURCE_FOLDER"background.png");
-
-
-    // GLuint text;
-    // textured = setTextured("font.png", text);
-    // Text t(&textured, text);
+    GLuint background;
+    textured = setTextured("background.png", background);
+    Object b(&textured, background);
+    b.setShape(glm::vec3(screenWidth, screenHeight, 0));
+    b.setScale(2*screenHeight);
 
     SDL_Event event;
     bool done = false;
@@ -64,19 +64,16 @@ int main() {
             checkKeyboard(event, done);
         }
 
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, img, NULL, NULL);
-        SDL_RenderPresent(renderer);
+        b.update();
 
-        // // display
-        // glClear(GL_COLOR_BUFFER_BIT);
-        //
-        // t.render("Platformer", 1, 2, 0, 3.5);
-        //
-        // SDL_GL_SwapWindow(displayWindow);
+        // display
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        t.render("Platformer", 1, 2, 0, 3.5);
+        b.render();
+
+        SDL_GL_SwapWindow(displayWindow);
     }
-    SDL_DestroyTexture(img);
-	SDL_DestroyRenderer(renderer);
     SDL_Quit();
 
     // Checker c;

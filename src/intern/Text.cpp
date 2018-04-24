@@ -10,7 +10,7 @@ extern float splitScale;
 
 Text::Text(){}
 
-Text::Text(ShaderProgram* program, GLuint texture): program(program), texture(texture){
+Text::Text(ShaderProgram* program, GLuint texture): Object::Object(program, texture){
     projectionMatrix.SetOrthoProjection(-screenWidth, screenWidth, -screenHeight, screenHeight, -1.0f, 1.0f);
 }
 
