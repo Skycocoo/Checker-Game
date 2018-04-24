@@ -8,5 +8,14 @@
 #include "extern/Move.h"
 #include "extern/AvaMoves.h"
 #include "extern/Checker.h"
+#include "extern/ShaderProgram.h"
+#include "extern/Text.h"
+#include "extern/XMLLoad.h"
+
+#include "glm/glm.hpp"
+
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <SDL_image.h>
 
 #endif

@@ -4,19 +4,13 @@
 #include <iostream>
 #include <vector>
 #include <limits>
-
-#include "includes.h"
-#include "glm/glm.hpp"
-
-#include "extern/ShaderProgram.h"
-#include <SDL.h>
-#include <SDL_opengl.h>
-#include <SDL_image.h>
 #include <string>
 
+#include "includes.h"
+
+#define RESOURCE_FOLDER "../src/asset/"
 #define STB_IMAGE_IMPLEMENTATION
 #include "extern/stb_image.h"
-#define RESOURCE_FOLDER "asset/"
 
 ///////////////////////////////////////////GLOBAL VARIABLES///////////////////////////////////////////
 
@@ -53,12 +47,21 @@ int main() {
     srand(time(NULL));
     SDL_Window* displayWindow = setUp("Checker Game");
 
+    GLuint text;
+    textured = setTextured("font.png", text);
+    Text t(&textured, text);
+
     SDL_Event event;
     bool done = false;
     while (!done) {
-
+        while (SDL_PollEvent(&event)) {
+            checkKeyboard(event, done);
+        }
         // display
         glClear(GL_COLOR_BUFFER_BIT);
+
+        t.render("Platformer", 1, 2, 0, 3.5);
+
         SDL_GL_SwapWindow(displayWindow);
     }
     SDL_Quit();
@@ -103,7 +106,7 @@ GLuint LoadTexture(const char *filePath) {
 // untextured shader
 ShaderProgram setUntextured(){
     ShaderProgram program;
-    program.Load(RESOURCE_FOLDER"Shad/vertex.glsl", RESOURCE_FOLDER"Shad/fragment.glsl");
+    program.Load(RESOURCE_FOLDER"shader/vertex.glsl", RESOURCE_FOLDER"shader/fragment.glsl");
     glUseProgram(program.programID);
 
     return program;
@@ -112,7 +115,7 @@ ShaderProgram setUntextured(){
 // textured shader
 ShaderProgram setTextured(const string& filepath, GLuint& texture){
     ShaderProgram program;
-    program.Load(RESOURCE_FOLDER"Shad/vertex_textured.glsl", RESOURCE_FOLDER"Shad/fragment_textured.glsl");
+    program.Load(RESOURCE_FOLDER"shader/vertex_textured.glsl", RESOURCE_FOLDER"shader/fragment_textured.glsl");
     texture = LoadTexture((RESOURCE_FOLDER + filepath).c_str());
 
     return program;

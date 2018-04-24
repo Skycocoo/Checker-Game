@@ -6,10 +6,9 @@ Yuxi Luo; Project for CS4613; Spring 2018
 
 ## Installation with cmake
 
-<!-- Clone this project:
-
+<!-- Clone this project: Note that I use .gitmodules to include glm, the clone should be in recursive mode
 ```bash
-git clone git@github.com:Skycocoo/CS4613-Artificial-Intelligence.git
+git clone git@github.com:Skycocoo/CS4613-Artificial-Intelligence.git --recursive
 cd ./CS4613-Artificial-Intelligence
 ``` -->
 
