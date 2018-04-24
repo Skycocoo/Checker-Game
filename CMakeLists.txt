@@ -16,7 +16,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_IMAGE REQUIRED)
 
 # setup include directory
-include_directories(src/extern ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+include_directories(src/extern src/glm ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 
 # compile all the cpp files and link to `checker` library
 file(GLOB checker_sources src/intern/*.cpp src/extern/*.h)
