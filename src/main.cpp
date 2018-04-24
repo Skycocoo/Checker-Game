@@ -32,7 +32,7 @@ int main() {
     SDL_Window* displayWindow = setUp("Checker Game");
 
     Checker c;
-    // c.play();
+    c.play();
 
     SDL_Event event;
     bool done = false;
@@ -45,11 +45,10 @@ int main() {
         }
 
         if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
-            c.mouseSelect(mouseX, mouseY);
+            c.mouseSelect(mouseX, mouseY, done);
             botton = 0;
         }
 
-        // c.humanTurn();
 
         c.update();
         // display
@@ -66,6 +65,10 @@ int main() {
         // SDL_GL_SwapWindow(displayWindow);
 
     }
+
+    c.determineWinner();
+    std::cout << "------------End of Game------------" << std::endl;
+
     SDL_Quit();
 
 

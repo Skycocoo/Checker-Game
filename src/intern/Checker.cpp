@@ -81,9 +81,17 @@ void Checker::convertMouse(int& x, int& y) const {
     y = resultY;
 }
 
-void Checker::mouseSelect(int x, int y){
+void Checker::mouseSelect(int x, int y, bool& done){
+
+    // human turn
+
+    if (terminalState()){
+        done = true;
+        return;
+    }
+
     convertMouse(x, y);
-    std::cout << x << " " << y << std::endl;
+    // std::cout << x << " " << y << std::endl;
 
     // select checker
     // humanSelect = false & want to select the checker
@@ -93,7 +101,7 @@ void Checker::mouseSelect(int x, int y){
         // humanSelect = true & want to reselect
         int originalCur = human.cur;
         bool select = human.select(x, y);
-        std::cout << std::boolalpha << "select?" << select << std::endl;
+        // std::cout << std::boolalpha << "select?" << select << std::endl;
         if (select){
             humanSelect = true;
         } else {
@@ -107,13 +115,25 @@ void Checker::mouseSelect(int x, int y){
                 move(origx, origy, x, y, HUSS);
                 search.update(origx, origy, x, y, HUSS);
                 humanSelect = false;
+
+                // std::cout << board;
+                updateMoves();
+
+
+                // computer turn
+                if (terminalState()){
+                    done = true;
+                    return;
+                }
+
+                computerTurn();
+
             } else {
                 humanSelect = false;
             }
         }
     }
-    std::cout << board;
-    updateMoves();
+
 }
 
 
@@ -131,67 +151,36 @@ void Checker::humanTurn(){
     // display available checkers for player
     std::cout << human;
 
+    std::cout << "Please select the checker in \'x y\' format" << std::endl;
     bool select = false;
-    int x, y, targX, targY;
-    uint bottonS = 0, bottonT = 0;
-
+    int x = 0, y = 0;
     while (!select){
-        while (bottonS != 1){
-            bottonS = SDL_GetMouseState(&x, &y);
-            // std::cout << "mouse " << x << " " << y;
-        }
-        convertMouse(x, y);
-        std::cout << x << " " << y;
+        // reads in position for selection
+        std::cin >> x >> y;
+        // if the selection is legal
         if ((select = human.select(x, y))){
-            // std::cout << "Please choose the location to move in \'x y\' format" << std::endl;
+            std::cout << "Please choose the location to move in \'x y\' format" << std::endl;
             bool target = false;
+            int targx = 0, targy = 0;
             while (!target){
-                while (bottonT != 1){
-                    bottonT = SDL_GetMouseState(&targX, &targY);
-                }
-                convertMouse(targX, targY);
-                if ((target = human.checkMove(targX, targY))){
-                    move(x, y, targX, targY, HUSS);
+                // reads in target position for the selected checker
+                std::cin >> targx >> targy;
+                // if the target position is legal
+                // make the move & update the checker
+                if ((target = human.checkMove(targx, targy))) {
+                    move(x, y, targx, targy, HUSS);
                     // update moves for search
-                    search.update(x, y, targX, targY, HUSS);
+                    search.update(x, y, targx, targy, HUSS);
                 }
+                else std::cout << "Not a legal target location; please input correct locaion" << std::endl;
             }
-        }
+        } else std::cout << "Not a legal checker to be moved; please correct location" << std::endl;
     }
 
     // display current board
     std::cout << board;
     // update availability for both human and computer
     updateMoves();
-
-    // std::cout << "Please select the checker in \'x y\' format" << std::endl;
-    // bool select = false;
-    // int x = 0, y = 0;
-    // while (!select){
-    //     // reads in position for selection
-    //     std::cin >> x >> y;
-    //     // if the selection is legal
-    //     if ((select = human.select(x, y))){
-    //         std::cout << "Please choose the location to move in \'x y\' format" << std::endl;
-    //         bool target = false;
-    //         int targx = 0, targy = 0;
-    //         while (!target){
-    //             // reads in target position for the selected checker
-    //             std::cin >> targx >> targy;
-    //             // if the target position is legal
-    //             // make the move & update the checker
-    //             if ((target = human.checkMove(targx, targy))) {
-    //                 move(x, y, targx, targy, HUSS);
-    //                 // update moves for search
-    //                 search.update(x, y, targx, targy, HUSS);
-    //             }
-    //             else std::cout << "Not a legal target location; please input correct locaion" << std::endl;
-    //         }
-    //     } else std::cout << "Not a legal checker to be moved; please correct location" << std::endl;
-    // }
-
-
-
 }
 
 // computer turn
@@ -294,16 +283,6 @@ void Checker::play(){
     // if computer move first
     if (flag == 2) computerTurn();
 
-    // game
-    while (true){
-        humanTurn();
-        if (terminalState()) break;
-        computerTurn();
-        if (terminalState()) break;
-    }
-
-    determineWinner();
-    std::cout << "------------End of Game------------" << std::endl;
 }
 
 // check the terminal state for the game
