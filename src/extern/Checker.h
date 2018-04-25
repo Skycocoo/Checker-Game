@@ -23,7 +23,7 @@ public:
     void render();
 
     void convertMouse(int& x, int& y) const;
-
+    bool humanAva() const;
 
     // human turn
     bool humanTurn(int x, int y, bool& done);

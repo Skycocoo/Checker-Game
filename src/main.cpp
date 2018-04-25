@@ -47,11 +47,12 @@ int main() {
             checkKeyboard(event, done, botton, mouseX, mouseY);
         }
 
-        if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
+        if (c.humanAva()){
+            humanMove = true;
+        } else if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
             humanMove = c.humanTurn(mouseX, mouseY, done);
             botton = 0;
         }
-
 
         c.update();
         // display
@@ -67,6 +68,10 @@ int main() {
             glClear(GL_COLOR_BUFFER_BIT);
             c.render();
             SDL_GL_SwapWindow(displayWindow);
+        }
+
+        if (c.terminalState()){
+            done = true;
         }
 
 

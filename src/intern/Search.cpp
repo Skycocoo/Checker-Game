@@ -3,6 +3,7 @@
 
 #include "../extern/Search.h"
 #include "../extern/setUp.h"
+#include "../extern/Checker.h"
 
 // difficulty of the game -> complexity of the search
 extern int difficulty;
@@ -11,7 +12,7 @@ extern SDL_Window* displayWindow;
 
 // constructor
 Search::Search(const AvaMoves& human, const AvaMoves& comp, const Board& board, Checker* check):
-human(human), comp(comp), board(board), check(check){
+human(human), comp(comp), board(board), check(check), depth(0), nodes(0), min(0), max(0){
     this->human.updateBoard(this->board);
     this->comp.updateBoard(this->board);
 
@@ -20,16 +21,50 @@ human(human), comp(comp), board(board), check(check){
     text = Text(&textured, font);
 }
 
+void Search::render(){
+    // glClear(GL_COLOR_BUFFER_BIT);
 
-void Search::renderSearch(float util, int min, int max, int node, int depth){
+    // check->render();
+
+    float x = 3.5, x2 = 4.0;
+
+    text.renderLeft("Enemy", 1, 2, x, 4.5);
+    text.renderLeft("Depth: ", 0.5, 1, x, 3.5);
+    text.renderLeft(std::to_string(this->depth), 0.5, 1, x2, 3);
+    text.renderLeft("Nodes: ", 0.5, 1, x, 2.5);
+    text.renderLeft(std::to_string(this->nodes), 0.5, 1, x2, 2);
+    text.renderLeft("Min prune: ", 0.5, 1, x, 1.5);
+    text.renderLeft(std::to_string(this->min), 0.5, 1, x2, 1);
+    text.renderLeft("Max prune: ", 0.5, 1, x, 0.5);
+    text.renderLeft(std::to_string(this->max), 0.5, 1, x2, 0);
+
+    // SDL_GL_SwapWindow(displayWindow);
+}
+
+
+
+
+void Search::renderSearch(int min, int max, int nodes, int depth){
+    this->min = min;
+    this->max = max;
+    this->nodes = nodes;
+    this->depth = depth;
+
     glClear(GL_COLOR_BUFFER_BIT);
 
-    text.renderLeft("Enemy Turn", 1, 2, 0, 4.5);
-    text.renderLeft("Current Depth: " + std::to_string(depth), 0.5, 1, 0, 3.5);
-    text.renderLeft("Utility: " + std::to_string(util), 0.5, 1, 0, 2.5);
-    text.renderLeft("Min prune: " + std::to_string(min), 0.5, 1, 0, 1.5);
-    text.renderLeft("Max prune: " + std::to_string(max), 0.5, 1, 0, 0.5);
-    text.renderLeft("Number of nodes: " + std::to_string(node), 0.5, 1, 0, -0.5);
+    check->render();
+
+    float x = 3.5, x2 = 4.0;
+
+    text.renderLeft("Enemy", 1, 2, x, 4.5);
+    text.renderLeft("Depth: ", 0.5, 1, x, 3.5);
+    text.renderLeft(std::to_string(depth), 0.5, 1, x2, 3);
+    text.renderLeft("Nodes: ", 0.5, 1, x, 2.5);
+    text.renderLeft(std::to_string(nodes), 0.5, 1, x2, 2);
+    text.renderLeft("Min prune: ", 0.5, 1, x, 1.5);
+    text.renderLeft(std::to_string(min), 0.5, 1, x2, 1);
+    text.renderLeft("Max prune: ", 0.5, 1, x, 0.5);
+    text.renderLeft(std::to_string(max), 0.5, 1, x2, 0);
 
     SDL_GL_SwapWindow(displayWindow);
 
@@ -109,8 +144,9 @@ Result Search::iterativeDeep(int maxDepth){
 
     // record starting time of search
     start = std::chrono::system_clock::now();
+    int i = 1;
 
-    for (int i = 1; i < depth; i++){
+    for (; i < depth; i++){
         int numMax = 0, numMin = 0, numNode = 0;
         // retrieve utility for each alpha-beta search
         float tempUtil = alphaBeta(cmove, i, numMax, numMin, numNode);
@@ -131,12 +167,13 @@ Result Search::iterativeDeep(int maxDepth){
             fmove.update(cmove);
             max = numMax, min = numMin, node = numNode;
 
+            renderSearch(min, max, node, i);
 
             // std::cout << "Depth: " << i << " utility: " << tempUtil << fmove;
         }
     }
 
-    // renderSearch(util, min, max, node, depth);
+    renderSearch(min, max, node, i);
 
     std::cout << "Result of this search:\n\tutility: " << util << " number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << std::endl << fmove;
 

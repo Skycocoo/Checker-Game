@@ -45,6 +45,9 @@ void Checker::update(){
 
 void Checker::render(){
     background.render();
+
+    search.render();
+
     // text.render("Checker Game", 1, 2, 0, 3.5);
     // text.renderLeft("Checker Game", 0.5, 1, 0, 2);
 
@@ -82,6 +85,12 @@ void Checker::convertMouse(int& x, int& y) const {
     y = resultY;
 }
 
+
+bool Checker::humanAva() const{
+    return human.avaMoves() == 0;
+}
+
+
 bool Checker::humanTurn(int x, int y, bool& done){
 
     // human turn
@@ -89,13 +98,6 @@ bool Checker::humanTurn(int x, int y, bool& done){
         done = true;
         return false;
     }
-
-    // if no legal move for computer: do nothing
-    if (human.avaMoves() == 0){
-        // std::cout << "Computer does not have any available legal move" << std::endl;
-        return true;
-    }
-
 
     convertMouse(x, y);
 
@@ -124,9 +126,7 @@ bool Checker::humanTurn(int x, int y, bool& done){
 
                 // std::cout << board;
                 updateMoves();
-
                 return true;
-
 
             } else {
                 humanSelect = false;

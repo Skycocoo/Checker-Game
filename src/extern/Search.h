@@ -25,8 +25,8 @@ public:
     // constructor
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board, Checker* check);
 
-
-    void renderSearch(float util, int min, int max, int node, int depth);
+    void render();
+    void renderSearch(int min, int max, int nodes, int depth);
 
 
 
@@ -71,6 +71,8 @@ private:
 
     Checker* check;
     Text text;
+
+    int depth, nodes, min, max;
 };
 
 #endif
