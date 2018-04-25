@@ -81,7 +81,7 @@ int main() {
         }
 
         if (mode == STATE_GAME_LEVEL) {
-            game.mouse(button, mouseX, mouseY, done);
+            game.mouse(button, mouseX, mouseY);
         } else {
             game.update();
             glClear(GL_COLOR_BUFFER_BIT);

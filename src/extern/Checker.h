@@ -22,6 +22,7 @@ public:
     void update();
     void render();
 
+    void setDiff(int d) const;
     void convertMouse(int& x, int& y) const;
     bool humanAva() const;
 
@@ -40,8 +41,9 @@ public:
     void play();
     // check the terminal state for the game
     bool terminalState() const;
+
     // determine the winner of the game
-    void determineWinner() const;
+    int determineWinner() const;
 
 private:
     Board board;

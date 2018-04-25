@@ -97,6 +97,11 @@ void Checker::render(){
 
 }
 
+void Checker::setDiff(int d) const {
+    difficulty = d;
+}
+
+
 // convert mouse position to board position
 void Checker::convertMouse(int& x, int& y) const {
     // x and y on the board:
@@ -272,8 +277,9 @@ bool Checker::terminalState() const {
 }
 
 // determine the winner of the game
-void Checker::determineWinner() const{
-    if (board.numH > board.numC) std::cout << "Winner is Human" << std::endl;
-    else if (board.numH == board.numC) std::cout << "There is a draw" << std::endl;
-    else std::cout << "Winner is Computer" << std::endl;
+// 1: human win; 2: computer win; 3: draw
+int Checker::determineWinner() const{
+    if (board.numH > board.numC) return 1;
+    else if (board.numH == board.numC) return 2;
+    else return 3;
 }

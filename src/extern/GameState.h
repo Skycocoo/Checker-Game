@@ -12,7 +12,7 @@ public:
 
     void setOrder(int o);
     void setDiff(int d);
-    void mouse(uint& button, int mouseX, int mouseY, bool& done);
+    void mouse(uint& button, int mouseX, int mouseY);
 
     void update();
     void render();

@@ -36,8 +36,11 @@ void GameState::setOrder(int o){
 
 void GameState::setDiff(int d){
     this->diff = d;
+    c.setDiff(d);
     if (this->order != 0 && this->diff != 0){
+
         mode = STATE_GAME_LEVEL;
+
     }
 }
 
@@ -90,7 +93,25 @@ void GameState::displayMainMenu(){
 }
 
 
-void GameState::mouse(uint& button, int mouseX, int mouseY, bool& done){
+void GameState::mouse(uint& button, int mouseX, int mouseY){
+
+    if (order == 2){
+        c.update();
+
+        c.computerTurn();
+
+        // display
+        glClear(GL_COLOR_BUFFER_BIT);
+        c.render();
+        SDL_GL_SwapWindow(displayWindow);
+
+        order = 0;
+    }
+
+
+
+    bool done = false;
+
     bool humanMove = false;
     if (c.humanAva()){
         humanMove = true;
@@ -118,6 +139,10 @@ void GameState::mouse(uint& button, int mouseX, int mouseY, bool& done){
     if (c.terminalState()){
         done = true;
     }
+
+    if (done){
+        mode = STATE_GAME_OVER;
+    }
 }
 
 void GameState::displayLevel(){
@@ -126,5 +151,14 @@ void GameState::displayLevel(){
 }
 
 void GameState::displayOver(){
+    title.render();
     text.render("Game Over", 1, 2, 0, 1.5);
+
+    // 1: human win; 2: computer win; 3: draw
+    int result = c.determineWinner();
+    if (result == 1) text.render("Player wins", 1, 2, 0, 0);
+    else if (result == 2) text.render("Computer wins", 1, 2, 0, 0);
+    else if (result == 3) text.render("End with a tie", 1, 2, 0, 0);
+
+
 }
