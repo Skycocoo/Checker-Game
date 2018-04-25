@@ -29,11 +29,7 @@ board(), human(board, HUSS), comp(board, COMP), search(human, comp, board, this)
     background.setShape(glm::vec3(screenWidth, screenHeight, 0));
     background.setScale(2 * screenHeight);
 
-    GLuint ti;
-    textured = setTextured("title.png", ti);
-    title = Object(&textured, ti);
-    title.setShape(glm::vec3(screenWidth, screenHeight, 0));
-    title.setScale(2 * screenHeight);
+
 
     XMLLoad xml("sprites.xml");
     GLuint texture;

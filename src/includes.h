@@ -12,6 +12,8 @@
 #include "extern/Text.h"
 #include "extern/XMLLoad.h"
 #include "extern/setUp.h"
+#include "extern/GameState.h"
+
 
 #include "glm/glm.hpp"
 

@@ -12,6 +12,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "extern/stb_image.h"
 
+enum GameMode {STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_GAME_OVER};
+GameMode mode;
+
 using namespace std;
 
 ///////////////////////////////////////////GLOBAL VARIABLES///////////////////////////////////////////
@@ -31,9 +34,12 @@ glm::vec3 center = glm::vec3(0, 0, 0);
 int main() {
     // initial set up
     displayWindow = setUp("Checker Game");
+    mode = STATE_MAIN_MENU;
 
-    Checker c;
-    c.play();
+    GameState game;
+
+    // Checker c;
+    // c.play();
 
     SDL_Event event;
     bool done = false;
@@ -41,43 +47,48 @@ int main() {
     int mouseX, mouseY;
 
     while (!done) {
-        bool humanMove = false;
 
         while (SDL_PollEvent(&event)) {
             checkKeyboard(event, done, botton, mouseX, mouseY);
         }
 
-        if (c.humanAva()){
-            humanMove = true;
-        } else if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
-            humanMove = c.humanTurn(mouseX, mouseY, done);
-            botton = 0;
-        }
-
-        c.update();
-        // display
+        game.update();
         glClear(GL_COLOR_BUFFER_BIT);
-        c.render();
+        game.render();
         SDL_GL_SwapWindow(displayWindow);
 
-        if (humanMove){
-            c.computerTurn();
-
-            c.update();
-            // display
-            glClear(GL_COLOR_BUFFER_BIT);
-            c.render();
-            SDL_GL_SwapWindow(displayWindow);
-        }
-
-        if (c.terminalState()){
-            done = true;
-        }
+        // bool humanMove = false;
+        // if (c.humanAva()){
+        //     humanMove = true;
+        // } else if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
+        //     humanMove = c.humanTurn(mouseX, mouseY, done);
+        //     botton = 0;
+        // }
+        //
+        // c.update();
+        // // display
+        // glClear(GL_COLOR_BUFFER_BIT);
+        // c.render();
+        // SDL_GL_SwapWindow(displayWindow);
+        //
+        // if (humanMove){
+        //     c.computerTurn();
+        //
+        //     c.update();
+        //     // display
+        //     glClear(GL_COLOR_BUFFER_BIT);
+        //     c.render();
+        //     SDL_GL_SwapWindow(displayWindow);
+        // }
+        //
+        // if (c.terminalState()){
+        //     done = true;
+        // }
 
 
     }
 
-    c.determineWinner();
+    // c.determineWinner();
     std::cout << "------------End of Game------------" << std::endl;
 
     SDL_Quit();

@@ -51,7 +51,6 @@ private:
     Search search;
 
     Object background;
-    Object title;
 
     Object checkerH;
     Object checkerH2;

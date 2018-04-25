@@ -82,7 +82,7 @@ void checkKeyboard(const SDL_Event& event, bool& done, uint& botton, int& mouseX
             // if (event.key.keysym.scancode == SDL_SCANCODE_A) std::cout << "?" << std::endl;;
             break;
         case SDL_MOUSEBUTTONDOWN:
-            std::cout << "keydown" << std::endl;
+            // std::cout << "keydown" << std::endl;
             botton = SDL_GetMouseState(&mouseX, &mouseY);
             break;
     }
