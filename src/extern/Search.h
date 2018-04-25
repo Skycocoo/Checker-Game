@@ -26,7 +26,7 @@ public:
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board, Checker* check);
 
 
-    void renderSearch(float util, int min, int max, int node);
+    void renderSearch(float util, int min, int max, int node, int depth);
 
 
 

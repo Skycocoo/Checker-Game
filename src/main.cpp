@@ -18,6 +18,7 @@ using namespace std;
 
 float screenRatio = 0.0, screenHeight = 0.0, screenWidth = 0.0, splitScale = 0.0, edge = 1.0;
 ShaderProgram textured;
+SDL_Window* displayWindow;
 
 float fixedStep = 0.0166666f; // 60 FPS (1.0f/60.0f) (update sixty times a second)
 int maxStep = 3;
@@ -29,7 +30,7 @@ glm::vec3 center = glm::vec3(0, 0, 0);
 
 int main() {
     // initial set up
-    SDL_Window* displayWindow = setUp("Checker Game");
+    displayWindow = setUp("Checker Game");
 
     Checker c;
     c.play();
