@@ -106,7 +106,7 @@ Result Search::iterativeDeep(int maxDepth){
             util = tempUtil;
             fmove.update(cmove);
             max = numMax, min = numMin, node = numNode;
-            // std::cout << "Depth: " << i << " utility: " << tempUtil << fmove;
+            std::cout << "Depth: " << i << " utility: " << tempUtil << fmove;
         }
     }
 
@@ -432,7 +432,7 @@ float Search::eval() const {
         fea4 = -board.numH;
 
     // linear weighted sum of features
-    float result = float(fea1 + fea2 + fea3 + fea4) / float(36) * 6;
+    float result = float(5 * fea1 + fea2 + fea3 + 5 * fea4) / float(36) * 6;
     return result;
 }
 
