@@ -77,6 +77,28 @@ void Checker::render(){
         text.renderLeft("Player", 1, 2, 3.5, -3.5);
     }
 
+    if (humanSelect && (human.cur != -1)){
+        if (human.moves[human.cur].isCapture()){
+            for (size_t i = 0; i< human.moves[human.cur].capture.size(); i++){
+                if (human.moves[human.cur].capture[i]){
+                    glm::vec3 off((2 * human.moves[human.cur].capture[i].y + 1) * halfTile, (2 * human.moves[human.cur].capture[i].x + 1) * halfTile, 0);
+                    checkerH2.setPos(zero.x + off.x, zero.y - off.y);
+                    checkerH2.update();
+                    checkerH2.render();
+                }
+            }
+        } else {
+            for (size_t i = 0; i< human.moves[human.cur].regular.size(); i++){
+                if (human.moves[human.cur].regular[i]){
+                    glm::vec3 off((2 * human.moves[human.cur].regular[i].y + 1) * halfTile, (2 * human.moves[human.cur].regular[i].x + 1) * halfTile, 0);
+                    checkerH2.setPos(zero.x + off.x, zero.y - off.y);
+                    checkerH2.update();
+                    checkerH2.render();
+                }
+            }
+        }
+    }
+
 }
 
 // convert mouse position to board position
@@ -127,7 +149,7 @@ bool Checker::humanTurn(int x, int y, bool& done){
             if (target) {
                 move(origx, origy, x, y, HUSS);
                 search.update(origx, origy, x, y, HUSS);
-
+                human.cur = -1;
                 // std::cout << board;
                 updateMoves();
                 return true;

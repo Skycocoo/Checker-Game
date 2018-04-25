@@ -8,6 +8,7 @@
 #include <vector>
 
 class Board;
+class Checker;
 
 // struct Point:
 // an abstraction of the position of the checker
@@ -31,6 +32,7 @@ std::ostream& operator<<(std::ostream& os, const Point& p);
 class Move{
     // allow accessing private fields by Search
     friend class Search;
+    friend class Checker;
     // standard output for Move
     friend std::ostream& operator<<(std::ostream& os, const Move& move);
 public:
