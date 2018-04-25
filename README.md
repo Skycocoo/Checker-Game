@@ -42,6 +42,8 @@ git clone git@github.com:Skycocoo/Checker-Game.git --recursive
 cd ./Checker-Game
 ```
 
+<!-- Open the folder and cd into the folder Checker-Game in shell -->
+
 Make build directory for cmake:
 ```bash
 mkdir build
@@ -215,11 +217,11 @@ When the difficulty is 1: the depth is restricted to 5; 2: the depth is restrict
 
 Menu level and End level:
 
-![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/img/title.png?token=AVi1i8EemFwMo1xWOzqZ5ldSoy9IFjpsks5a6ddUwA%3D%3D)
+![alt-text](https://raw.githubusercontent.com/Skycocoo/Checker-Game/master/img/title.png?token=AVi1i69GdtPlX7IQqiiJJj3UBDp0zslfks5a6fPqwA%3D%3D)
 
 Game level:
 
-![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/img/game.png?token=AVi1i029mj8DmKLp1ICeI_e7BdcR_jPHks5a6ddmwA%3D%3D)
+![alt-text](https://raw.githubusercontent.com/Skycocoo/Checker-Game/master/img/game.png?token=AVi1ixE1qG_zpYVIrcrU6RSkEdHxQkg3ks5a6fPYwA%3D%3D)
 
 
 ### Command Line
