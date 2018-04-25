@@ -21,7 +21,7 @@ Yuxi Luo; Project for CS4613; Spring 2018
 
 # Dependencies
 
-Please make sure you have these libraries before installation
+Please make sure you have these libraries installed before cmake
 
 ```
 - OpenGL (find packages with cmake)
@@ -38,28 +38,28 @@ Please make sure you have these libraries before installation
 Clone this project: (Note that I use .gitmodules to include glm, the clone should be in recursive mode)
 
 ```bash
-git clone git@github.com:Skycocoo/Checker-Game.git --recursive
-cd ./Checker-Game
+$ git clone git@github.com:Skycocoo/Checker-Game.git --recursive
+$ cd ./Checker-Game
 ```
 
 <!-- Open the folder and cd into the folder Checker-Game in shell -->
 
 Make build directory for cmake:
 ```bash
-mkdir build
-cd ./build/
+$ mkdir build
+$ cd ./build/
 ```
 
 Run cmake & build executable for this project:
 
 ```bash
-cmake ..
-make
+$ cmake ..
+$ make
 ```
 Run the executable of this project:
 
 ```bash
-./main
+$ ./main
 ```
 
 # General Design
