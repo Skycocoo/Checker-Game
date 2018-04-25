@@ -8,7 +8,6 @@
 
 #include "includes.h"
 
-#define RESOURCE_FOLDER "../src/asset/"
 #define STB_IMAGE_IMPLEMENTATION
 #include "extern/stb_image.h"
 
@@ -19,14 +18,9 @@ using namespace std;
 
 ///////////////////////////////////////////GLOBAL VARIABLES///////////////////////////////////////////
 
-float screenRatio = 0.0, screenHeight = 0.0, screenWidth = 0.0, splitScale = 0.0, edge = 1.0;
+float screenRatio = 0.0, screenHeight = 0.0, screenWidth = 0.0;
 ShaderProgram textured;
 SDL_Window* displayWindow;
-
-float fixedStep = 0.0166666f; // 60 FPS (1.0f/60.0f) (update sixty times a second)
-int maxStep = 3;
-
-glm::vec3 center = glm::vec3(0, 0, 0);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,20 +28,24 @@ void updateGame(const SDL_Event& event, GameState& game){
     switch (event.type){
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode){
-
                 case SDL_SCANCODE_1:
+                    // player move first
                     if (mode == STATE_MAIN_MENU) game.setOrder(1);
                     break;
                 case SDL_SCANCODE_2:
+                    // player move second
                     if (mode == STATE_MAIN_MENU) game.setOrder(2);
                     break;
                 case SDL_SCANCODE_A:
+                    // set the level of difficulty to be easy
                     if (mode == STATE_MAIN_MENU) game.setDiff(1);
                     break;
                 case SDL_SCANCODE_B:
+                    // set the level of difficulty to be medium
                     if (mode == STATE_MAIN_MENU) game.setDiff(2);
                     break;
                 case SDL_SCANCODE_C:
+                    // set the level of difficulty to be hard
                     if (mode == STATE_MAIN_MENU) game.setDiff(3);
                     break;
             }
@@ -64,27 +62,29 @@ int main() {
 
     GameState game;
 
-    // Checker c;
-    // c.play();
-
     SDL_Event event;
-    bool done = false;
 
     uint button;
     int mouseX, mouseY;
-
+    bool done = false;
     while (!done) {
 
         while (SDL_PollEvent(&event)) {
-            checkKeyboard(event, done, button, mouseX, mouseY);
+            // check inputs for each loop
+            checkInput(event, done, button, mouseX, mouseY);
+            // update game state if necessary
             updateGame(event, game);
         }
 
         if (mode == STATE_GAME_LEVEL) {
+            // if in the game level: process player's selection & update computer's move
             game.mouse(button, mouseX, mouseY);
         } else {
+            // if in the memu level / end level: display instruction / result
+            // update shaderprogram
             game.update();
             glClear(GL_COLOR_BUFFER_BIT);
+            // render the game
             game.render();
             SDL_GL_SwapWindow(displayWindow);
         }

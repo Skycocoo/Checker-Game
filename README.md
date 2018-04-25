@@ -1,18 +1,29 @@
-# CS4613-AI
+# Checker Game (Simplified)
 
 Yuxi Luo; Project for CS4613; Spring 2018
 
 [Checker Game 6 * 6](https://github.com/Skycocoo/CS4613-Artificial-Intelligence/blob/master/req/rule.png)
 
+## Dependencies
+
+Please make sure you have these libraries before installation
+
+```
+OpenGL and GLEW (find packages with cmake)
+glm (included in the folder)
+
+SDL2 and SDL2_Image (find packages with cmake modules)
+```
+
+
 ## Installation with cmake
 
-<!-- Clone this project: Note that I use .gitmodules to include glm, the clone should be in recursive mode
+Clone this project: (Note that I use .gitmodules to include glm, the clone should be in recursive mode)
+
 ```bash
 git clone git@github.com:Skycocoo/CS4613-Artificial-Intelligence.git --recursive
 cd ./CS4613-Artificial-Intelligence
-``` -->
-
-Open the zipfile and cd into the folder CS4613-AI in shell
+```
 
 Make build directory for cmake:
 ```bash
@@ -21,6 +32,7 @@ cd ./build/
 ```
 
 Run cmake & build executable for this project:
+
 ```bash
 cmake ..
 make
@@ -34,17 +46,25 @@ Run the executable of this project:
 ## General Design
 
 ```
-Checker (game)
-    -> AvaMoves (human)     -> Move (available moves) -> Point (location)
-    -> AvaMoves (computer)  -> Move (available moves) -> Point (location)
-    -> Board (checker board)
+GameState (display)
+    -> Text / Object (render)
+        -> GLuint texture (texture of elements)
+        -> ShaderProgram (graphics)
+            -> Matrix (transformation of graphics)
 
-    -> Search (computer)
-            -> AvaMoves (human)     -> Move (available moves) -> Point (location)
-            -> AvaMoves (computer)  -> Move (available moves) -> Point (location)
-            -> Board (checker board)
-            -> Result (optimal move)
+    -> Checker (game)
+        -> Board (checker board)
+        -> AvaMoves (human)     -> Board -> Move (available moves) -> Point (location)
+        -> AvaMoves (computer)  -> Board -> Move (available moves) -> Point (location)
+        -> Search (computer)
+                -> Board (checker board)
+                -> AvaMoves (human)     -> Board -> Move (available moves) -> Point (location)
+                -> AvaMoves (computer)  -> Board -> Move (available moves) -> Point (location)
+                -> Result (optimal move)
+        -> Text / Object (render)
+
 ```
+
 
 ### Search
 
@@ -82,9 +102,9 @@ If in case 2, then the utility is determined by the number of computer checkers 
 
 There are 4 heuristics to be considered to estimate the utility. Because the range of utility is [-6, 6] (defined earlier in Terminal States), the estimated utility should also be within the range.
 
-1. the number of computer [0, 6]
+1. the number of computer [0, 6] (weighted by 5 to match the 3 and 4 feature)
 
-2. negative: number of enemy [-6, 0]
+2. negative: number of enemy [-6, 0] (weighted by 5 to match the 3 and 4 feature)
 
 3. for each available checker of enemy (human): distance to the other end [0, 30]
 
@@ -92,17 +112,52 @@ There are 4 heuristics to be considered to estimate the utility. Because the ran
 
 In other words, the further the enemy is, and the fewer checkers the enemy has, the better chance to win the game.
 
-
 ### Level of Difficulty
 
 The level of difficulty of the game is implemented by the maximum depth the Search can go to.
 
 The difficulty ranges from 1 to 3.
 
-When the difficulty is 1: the depth is restricted to 10; 2: the depth is restricted to 15; 3: the depth is unlimited (to 80)
+When the difficulty is 1: the depth is restricted to 5; 2: the depth is restricted to 15; 3: the depth is unlimited (to 80)
 
 
-### Demo
+### Classes
+
+
+
+#### AvaMoves
+
+Provides available moves for human / computer. It stores all the checkers for current player, and processes those checkers for every iteration of board, so that it updates the availability of the checkers.
+
+#### Board
+
+Provides board for the game. It uses 2D-vector to represent the 6 * 6 board, and updates the board by the execution of moves by human / computer.
+
+#### Checker
+
+Manages human and computer players. It stores necessary instances to perform human-turn and computer-turn. 
+
+#### GameState
+
+Manages three levels of game mode: Menu level, Game level, and End level
+
+In Menu level, GameState displays instructions of the game, and takes in player's input for their selection to move first / second, and to play with easy / medium / hard mode.
+
+In End level, GameState displays the winner of the game.
+
+In Game level, GameState renders the checker board and generates corresponding checkers on the board. In this level, GameState takes inputs from the mouse to select the checker for player, and to move the checker to the target position. In addition, the statistics of last result from Search are displayed.
+
+When player selected a move, if the move is available, the corresponding available target positions will be highlighted.
+
+
+
+### Demo - GUI
+
+![alt-text]()
+![alt-text]()
+
+
+### Demo - Command Line
 
 ```
 Checker Game, 6 * 6 board

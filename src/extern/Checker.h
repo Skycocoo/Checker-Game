@@ -18,7 +18,6 @@ public:
     // constructor
     Checker();
 
-
     void update();
     void render();
 

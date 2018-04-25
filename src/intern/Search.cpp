@@ -163,13 +163,13 @@ Result Search::iterativeDeep(int maxDepth){
 
             renderSearch(min, max, node, i);
 
-            // std::cout << "Depth: " << i << " utility: " << tempUtil << fmove;
+            // std::cout << "Depmth: " << i << " utility: " << tempUtil << fmove;
         }
     }
 
     renderSearch(min, max, node, i);
 
-    std::cout << "Result of this search:\n\tutility: " << util << " number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << std::endl << fmove;
+    std::cout << "Result of this search:\n\tdepth: " << i << " utility: " << util << " number of max pruning: " << max << " min pruning: " << min << " nodes: " << node << std::endl << fmove;
 
     // if comp is doomed to fail: choose random move
     if (util == -6) return getMove();
@@ -491,7 +491,7 @@ float Search::eval() const {
         fea4 = -board.numH;
 
     // linear weighted sum of features
-    float result = float(fea1 + fea2 + fea3 + fea4) / float(36) * 6;
+    float result = float(5 * fea1 + fea2 + fea3 + 5 * fea4) / float(60) * 6;
     return result;
 }
 

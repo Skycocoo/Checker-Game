@@ -154,11 +154,11 @@ void GameState::displayOver(){
     title.render();
     text.render("Game Over", 1, 2, 0, 1.5);
 
-    // 1: human win; 2: computer win; 3: draw
+    // 1: human win; 2: draw; 3: computer win;
     int result = c.determineWinner();
     if (result == 1) text.render("Player wins", 1, 2, 0, 0);
-    else if (result == 2) text.render("Computer wins", 1, 2, 0, 0);
-    else if (result == 3) text.render("End with a tie", 1, 2, 0, 0);
+    else if (result == 2) text.render("End with a tie", 1, 2, 0, 0);
+    else if (result == 3) text.render("Computer wins", 1, 2, 0, 0);
 
 
 }

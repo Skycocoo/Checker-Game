@@ -69,7 +69,7 @@ SDL_Window* setUp(const std::string& name){
 }
 
 // check keyboard event
-void checkKeyboard(const SDL_Event& event, bool& done, uint& botton, int& mouseX, int& mouseY){
+void checkInput(const SDL_Event& event, bool& done, uint& botton, int& mouseX, int& mouseY){
     switch (event.type){
         case SDL_QUIT:
             done = true;
