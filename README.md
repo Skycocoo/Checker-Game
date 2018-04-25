@@ -2,7 +2,7 @@
 
 Yuxi Luo; Project for CS4613; Spring 2018
 
-[Checker Game 6 * 6](https://github.com/Skycocoo/CS4613-Artificial-Intelligence/blob/master/img/rule.png)
+[Checker Game 6 * 6](https://github.com/Skycocoo/Checker-Game/blob/master/img/rule.png)
 
 
 # Table of Contents
@@ -38,8 +38,8 @@ Please make sure you have these libraries before installation
 Clone this project: (Note that I use .gitmodules to include glm, the clone should be in recursive mode)
 
 ```bash
-git clone git@github.com:Skycocoo/CS4613-Artificial-Intelligence.git --recursive
-cd ./CS4613-Artificial-Intelligence
+git clone git@github.com:Skycocoo/Checker-Game.git --recursive
+cd ./Checker-Game
 ```
 
 Make build directory for cmake:
