@@ -9,7 +9,10 @@
 class GameState{
 public:
     GameState();
-    void init();
+
+    void setOrder(int o);
+    void setDiff(int d);
+    void mouse(uint& button, int mouseX, int mouseY, bool& done);
 
     void update();
     void render();
@@ -23,6 +26,9 @@ private:
     Checker c;
 
     Object title;
+
+    int order;
+    int diff;
 
 };
 

@@ -7,12 +7,13 @@
 
 enum GameMode {STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_GAME_OVER};
 extern GameMode mode;
+extern SDL_Window* displayWindow;
 extern float screenWidth;
 extern float screenHeight;
 
 extern ShaderProgram textured;
 
-GameState::GameState(){
+GameState::GameState(): order(0), diff(0){
     GLuint font;
     textured = setTextured("font.png", font);
     text = Text(&textured, font);
@@ -23,6 +24,24 @@ GameState::GameState(){
     title.setShape(glm::vec3(screenWidth, screenHeight, 0));
     title.setScale(2 * screenHeight);
 }
+
+
+void GameState::setOrder(int o){
+    this->order = o;
+
+    if (this->order != 0 && this->diff != 0){
+        mode = STATE_GAME_LEVEL;
+    }
+}
+
+void GameState::setDiff(int d){
+    this->diff = d;
+    if (this->order != 0 && this->diff != 0){
+        mode = STATE_GAME_LEVEL;
+    }
+}
+
+
 
 
 void GameState::update(){
@@ -60,8 +79,7 @@ void GameState::render(){
 void GameState::displayMainMenu(){
     title.render();
     text.render("Checker Game", 1, 2, 0, 3.5);
-    // text.render("game has a 6*6 board", 0.5, 1, 0, 2);
-    // text.render("checkers can move diagonally", 0.5, 1, 0, 1);
+
     text.render("press 1: move first", 0.5, 1, 0, 2);
     text.render("press 2: move second", 0.5, 1, 0, 1);
     text.render("press a: easy mode", 0.5, 1, 0, -0.5);
@@ -69,6 +87,37 @@ void GameState::displayMainMenu(){
     text.render("press c: hard mode", 0.5, 1, 0, -2.5);
 
     text.render("press Q to quit", 0.5, 1, 0, -4);
+}
+
+
+void GameState::mouse(uint& button, int mouseX, int mouseY, bool& done){
+    bool humanMove = false;
+    if (c.humanAva()){
+        humanMove = true;
+    } else if (button & SDL_BUTTON(SDL_BUTTON_LEFT)){
+        humanMove = c.humanTurn(mouseX, mouseY, done);
+        button = 0;
+    }
+
+    c.update();
+    // display
+    glClear(GL_COLOR_BUFFER_BIT);
+    c.render();
+    SDL_GL_SwapWindow(displayWindow);
+
+    if (humanMove){
+        c.computerTurn();
+
+        c.update();
+        // display
+        glClear(GL_COLOR_BUFFER_BIT);
+        c.render();
+        SDL_GL_SwapWindow(displayWindow);
+    }
+
+    if (c.terminalState()){
+        done = true;
+    }
 }
 
 void GameState::displayLevel(){

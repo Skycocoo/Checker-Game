@@ -30,6 +30,32 @@ glm::vec3 center = glm::vec3(0, 0, 0);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void updateGame(const SDL_Event& event, GameState& game){
+    switch (event.type){
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.scancode){
+
+                case SDL_SCANCODE_1:
+                    if (mode == STATE_MAIN_MENU) game.setOrder(1);
+                    break;
+                case SDL_SCANCODE_2:
+                    if (mode == STATE_MAIN_MENU) game.setOrder(2);
+                    break;
+                case SDL_SCANCODE_A:
+                    if (mode == STATE_MAIN_MENU) game.setDiff(1);
+                    break;
+                case SDL_SCANCODE_B:
+                    if (mode == STATE_MAIN_MENU) game.setDiff(2);
+                    break;
+                case SDL_SCANCODE_C:
+                    if (mode == STATE_MAIN_MENU) game.setDiff(3);
+                    break;
+            }
+            break;
+    }
+}
+
+
 
 int main() {
     // initial set up
@@ -43,48 +69,25 @@ int main() {
 
     SDL_Event event;
     bool done = false;
-    uint botton;
+
+    uint button;
     int mouseX, mouseY;
 
     while (!done) {
 
         while (SDL_PollEvent(&event)) {
-            checkKeyboard(event, done, botton, mouseX, mouseY);
+            checkKeyboard(event, done, button, mouseX, mouseY);
+            updateGame(event, game);
         }
 
-        game.update();
-        glClear(GL_COLOR_BUFFER_BIT);
-        game.render();
-        SDL_GL_SwapWindow(displayWindow);
-
-        // bool humanMove = false;
-        // if (c.humanAva()){
-        //     humanMove = true;
-        // } else if (botton & SDL_BUTTON(SDL_BUTTON_LEFT)){
-        //     humanMove = c.humanTurn(mouseX, mouseY, done);
-        //     botton = 0;
-        // }
-        //
-        // c.update();
-        // // display
-        // glClear(GL_COLOR_BUFFER_BIT);
-        // c.render();
-        // SDL_GL_SwapWindow(displayWindow);
-        //
-        // if (humanMove){
-        //     c.computerTurn();
-        //
-        //     c.update();
-        //     // display
-        //     glClear(GL_COLOR_BUFFER_BIT);
-        //     c.render();
-        //     SDL_GL_SwapWindow(displayWindow);
-        // }
-        //
-        // if (c.terminalState()){
-        //     done = true;
-        // }
-
+        if (mode == STATE_GAME_LEVEL) {
+            game.mouse(button, mouseX, mouseY, done);
+        } else {
+            game.update();
+            glClear(GL_COLOR_BUFFER_BIT);
+            game.render();
+            SDL_GL_SwapWindow(displayWindow);
+        }
 
     }
 
