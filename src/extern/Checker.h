@@ -18,11 +18,17 @@ public:
     // constructor
     Checker();
 
+    // update shaders for render
     void update();
+    // render the checker game
     void render();
 
+    // set the difficulty mode
     void setDiff(int d) const;
+    // convert from mouse position to board position
     void convertMouse(int& x, int& y) const;
+
+    // if human does not have available move
     bool humanAva() const;
 
     // human turn

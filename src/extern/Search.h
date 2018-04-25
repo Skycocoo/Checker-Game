@@ -25,9 +25,10 @@ public:
     // constructor
     Search(const AvaMoves& human, const AvaMoves& comp, const Board& board, Checker* check);
 
+    // render the last search result
     void render();
+    // render the current search result for each ieration of iterative deepening search
     void renderSearch(int min, int max, int nodes, int depth);
-
 
 
     // update availability for both human and computer

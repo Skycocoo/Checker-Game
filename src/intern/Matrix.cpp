@@ -2,10 +2,12 @@
 #include "../extern/Matrix.h"
 #include <math.h>
 
+// constructor
 Matrix::Matrix() {
     Identity();
 }
 
+// identity matrix
 void Matrix::Identity() {
     m[0][0] = 1.0;
     m[1][0] = 0.0;
@@ -28,6 +30,7 @@ void Matrix::Identity() {
     m[3][3] = 1.0;
 }
 
+// inverse of matrix
 Matrix Matrix::Inverse() const {
     float m00 = m[0][0], m01 = m[0][1], m02 = m[0][2], m03 = m[0][3];
     float m10 = m[1][0], m11 = m[1][1], m12 = m[1][2], m13 = m[1][3];
@@ -102,6 +105,7 @@ Matrix Matrix::Inverse() const {
     return m2;
 }
 
+// matrix multiplication
 Matrix Matrix::operator * (const Matrix &m2) const {
     Matrix r;
 
@@ -128,22 +132,26 @@ Matrix Matrix::operator * (const Matrix &m2) const {
     return r;
 }
 
+// set position matrix
 void Matrix::SetPosition(float x, float y, float z) {
     m[3][0] = x;
     m[3][1] = y;
     m[3][2] = z;
 }
 
+// set translation matrix
 void Matrix::Translate(float x, float y, float z) {
     Matrix transMatrix;
     transMatrix.SetPosition(x, y, z);
     (*this) = transMatrix * (*this);
 }
 
+// set rotation matrix
 void Matrix::SetRotation(float rotation) {
     SetRoll(rotation);
 }
 
+// set rotation matrix
 void Matrix::SetRoll(float roll) {
     m[0][0] = cos(roll);
     m[1][0] = -sin(roll);
@@ -151,10 +159,12 @@ void Matrix::SetRoll(float roll) {
     m[1][1] = cos(roll);
 }
 
+// set rotation matrix
 void Matrix::Rotate(float rotation) {
     Roll(rotation);
 }
 
+// set rotation matrix
 void Matrix::Roll(float roll) {
     Matrix rollMatrix;
     rollMatrix.SetRoll(roll);
@@ -187,18 +197,21 @@ void Matrix::Yaw(float yaw) {
     (*this) = yawMatrix * (*this);
 }
 
+// set scaling matrix
 void Matrix::SetScale(float x, float y, float z) {
     m[0][0] = x;
     m[1][1] = y;
     m[2][2] = z;
 }
 
+// set scaling matrix
 void Matrix::Scale(float x, float y, float z) {
     Matrix scaleMatrix;
     scaleMatrix.SetScale(x, y, z);
     (*this) = scaleMatrix * (*this);
 }
 
+// set orthographic projection
 void Matrix::SetOrthoProjection(float left, float right, float bottom, float top, float zNear, float zFar) {
     m[0][0] = 2.0f/(right-left);
     m[1][1] = 2.0f/(top-bottom);
@@ -209,6 +222,7 @@ void Matrix::SetOrthoProjection(float left, float right, float bottom, float top
     m[3][2] = -((zFar+zNear)/(zFar-zNear));
 }
 
+// set perspective projection
 void Matrix::SetPerspectiveProjection(float fov, float aspect, float zNear, float zFar) {
     m[0][0] = 1.0f/tanf(fov/2.0)/aspect;
     m[1][1] = 1.0f/tanf(fov/2.0);

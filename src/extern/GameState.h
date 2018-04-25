@@ -6,19 +6,33 @@
 
 #include "Checker.h"
 
+// class GameState:
+// an abstraction of three levels of game
+// manages the display of the game
 class GameState{
 public:
+    // constructor
     GameState();
 
+    // set the player to move first / second
     void setOrder(int o);
+    // set the difficulty
     void setDiff(int d);
+    // process the mouse input
     void mouse(uint& button, int mouseX, int mouseY);
 
+    // update the shader to render
     void update();
+    // render thr game
     void render();
 
+    // render for menu level
     void displayMainMenu();
-    void displayLevel();
+    
+    // render for game level
+    // void displayLevel
+
+    // render for end level
     void displayOver();
 
 private:
@@ -29,7 +43,6 @@ private:
 
     int order;
     int diff;
-
 };
 
 #endif /* GameState_h */

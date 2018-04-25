@@ -21,6 +21,7 @@ human(human), comp(comp), board(board), check(check), depth(0), nodes(0), min(0)
     text = Text(&textured, font);
 }
 
+// render the last search result
 void Search::render(){
     float x = 3.5, x2 = 4.0;
 
@@ -36,8 +37,7 @@ void Search::render(){
 }
 
 
-
-
+// render the current search result for each ieration of iterative deepening search
 void Search::renderSearch(int min, int max, int nodes, int depth){
     this->min = min;
     this->max = max;

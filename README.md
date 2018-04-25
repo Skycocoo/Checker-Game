@@ -1,4 +1,4 @@
-# Checker Game (Simplified)
+# Checker Game
 
 Yuxi Luo; Project for CS4613; Spring 2018
 
@@ -19,19 +19,21 @@ Yuxi Luo; Project for CS4613; Spring 2018
 
 
 
-## Dependencies
+# Dependencies
 
 Please make sure you have these libraries before installation
 
 ```
-OpenGL and GLEW (find packages with cmake)
-glm (included in the folder)
+- OpenGL (find packages with cmake)
+- GLEW (find packages with cmake)
+- glm (included in the folder)
 
-SDL2 and SDL2_Image (find packages with cmake modules)
+- SDL2 (find packages with cmake modules)
+- SDL2_Image (find packages with cmake modules)
 ```
 
 
-## Installation with cmake
+# Installation with cmake
 
 Clone this project: (Note that I use .gitmodules to include glm, the clone should be in recursive mode)
 
@@ -58,7 +60,7 @@ Run the executable of this project:
 ./main
 ```
 
-## General Design
+# General Design
 
 ```
 GameState (display)
@@ -81,24 +83,24 @@ GameState (display)
 ```
 
 
-### Classes
+## Classes
 
 
-#### AvaMoves
+### AvaMoves
 
 Provides available moves for human / computer. It stores all the checkers for current player, and processes those checkers for every iteration of board, so that it updates the availability of the checkers.
 
-#### Board
+### Board
 
 Provides board for the game. It uses 2D-vector to represent the 6 * 6 board, and updates the board by the execution of moves by human / computer.
 
-#### Checker
+### Checker
 
 Manages human and computer players. It stores necessary instances to perform human-turn and computer-turn. For GUI it also includes background and text to display the board & the statistics of Search for GameState.
 
 It takes in the input from GameState and process the human move. After human mvoes, the computer-turn is called immediately, providing corresponding Search results and continue the game.
 
-#### GameState
+### GameState
 
 Manages three levels of game mode: Menu level, Game level, and End level
 
@@ -110,52 +112,52 @@ In Game level, GameState renders the checker board and generates corresponding c
 
 When player selected a move, if the move is available, the corresponding available target positions will be highlighted.
 
-#### Matrix
+### Matrix
 
 Provides mathematics for computing and multiplying matrices
 
-#### Move
+### Move
 
 Holds current checker's position, and contains possible positions for regular move and capture move of the checker
 
-#### Object
+### Object
 
 Stores necessary instances for ShaderProgram to update and render the graphics
 
-#### Result
+### Result
 
 Holds the result of Search. Provides selected position and desired target position for computer.
 
-#### Search
+### Search
 
 Contains human and computer players that separates from Checker, in order to simulate moves for searching optimal move for computer.
 
-#### setUp
+### setUp
 
 Contains basic operations to set up window for rendering and generating shaders.
 
-#### ShaderProgram
+### ShaderProgram
 
 Contains corresponding values that manipulates the attributes of an element that will be rendered.
 
-#### Text
+### Text
 
 Inherits from Object. Provides methods to display texts from font sprite sheet.
 
-#### XMLLoad
+### XMLLoad
 
 Processes xml to provide data for sprite sheet, which contains all the textures of checkers.
 
 
-### Search
+## Search
 
-#### Availability of moves
+### Availability of moves
 
 I uses AvaMoves to generalize availability of moves for human and computer. Inside the class the capture moves and regular moves are differentiated, and the moves are clearly printed to enhance playing experience.
 
-For Search, the execution and reset of a move are implemented with minimum space usage: each specific move is recorded before the execution, and reset after the execution. Because the available moves for human and computer is looped by index in Search, the correct indexing is necessary to ensure the performance of Search.
+For Search, the execution and reset of a move are implemented with minimum space usage: each specific move is recorded before the execution, and reset after the execution. Because the available moves for human and computer is looped by index in Search, the correct indexing is necessary to ensure the performance of Search. Because of resetting, the space usage is largely reduced (comparing to do a deep copy for every iteration).
 
-#### AI algorithm
+### AI algorithm
 
 This project uses [Alpha-Beta Pruning algorithm](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) for [Min-Max Search](https://www.neverstopbuilding.com/blog/2013/12/13/tic-tac-toe-understanding-the-minimax-algorithm13), which reduces time complexity for traditional Min-Max Search.
 
@@ -167,9 +169,9 @@ When 15 seconds are used up by the search (calculated with standard library chro
 
 
 
-### Terminal States and Utility
+## Terminal States and Utility
 
-#### Terminal States
+### Terminal States
 
 Terminal States are determined by two cases:
 
@@ -181,7 +183,7 @@ If in case 1, then the utility is determined by whether computer has checker on 
 
 If in case 2, then the utility is determined by the number of computer checkers subtracted by the number of human checkers. For example, if there is no legal move for both checker, and there are 4 human checkers and 3 computer checkers on the board, the utility becomes 3 - 4 = -1.
 
-#### Heuristics
+### Heuristics
 
 There are 4 heuristics to be considered to estimate the utility. Because the range of utility is [-6, 6] (defined earlier in Terminal States), the estimated utility should also be within the range.
 
@@ -197,7 +199,7 @@ In other words, the further the enemy is, and the fewer checkers the enemy has, 
 
 
 
-### Level of Difficulty
+## Level of Difficulty
 
 The level of difficulty of the game is implemented by the maximum depth the Search can go to.
 
@@ -207,9 +209,9 @@ When the difficulty is 1: the depth is restricted to 5; 2: the depth is restrict
 
 
 
-### Demo
+## Demo
 
-#### GUI
+### GUI
 
 Menu level and End level:
 
@@ -220,7 +222,7 @@ Game level:
 ![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/img/game.png?token=AVi1i029mj8DmKLp1ICeI_e7BdcR_jPHks5a6ddmwA%3D%3D)
 
 
-#### Command Line
+### Command Line
 
 ```
 Checker Game, 6 * 6 board

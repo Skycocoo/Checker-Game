@@ -11,24 +11,29 @@
 
 class Object{
 public:
+    // constructor
     Object();
     Object(ShaderProgram* program, GLuint texture = 0, const glm::vec3& pos = glm::vec3(0, 0, 0));
     Object(ShaderProgram* program, GLuint texture, const XMLData& data, const glm::vec3& pos = glm::vec3(0, 0, 0));
 
+    // update shader to render
     virtual void update(float elapsed = 0);
+    // render the object
     virtual void render(const Matrix& view = Matrix());
 
+    // set scale of object
     void setScale(float size);
+    // set shape of object
     void setShape(const glm::vec3& shape);
+    // set rotation of object
     void setRotate(float rot); // rotate: angle (in radian)
+    // set position of object
     void setPos(const glm::vec3& pos);
+    // set position of object
     void setPos(float x, float y);
 
-    void setProject(float proj);
-
+    // set data from xml to load texture
     void setData(const XMLData& data);
-
-    const glm::vec3& getPos() const;
 
 protected:
 

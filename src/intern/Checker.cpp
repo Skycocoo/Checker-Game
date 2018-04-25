@@ -19,41 +19,52 @@ extern float screenHeight;
 // constructor
 Checker::Checker():
 board(), human(board, HUSS), comp(board, COMP), search(human, comp, board, this), humanSelect(false){
+    // load font sprite sheet for text display
     GLuint font;
     textured = setTextured("font.png", font);
     text = Text(&textured, font);
 
+    // load background image for background display
     GLuint bg;
     textured = setTextured("background.png", bg);
     background = Object(&textured, bg);
+    // scale the image to match the size of display window
     background.setShape(glm::vec3(screenWidth, screenHeight, 0));
     background.setScale(2 * screenHeight);
 
-
-
+    // load textures for checkers from xml
     XMLLoad xml("sprites.xml");
     GLuint texture;
     textured = setTextured("sprites.png", texture);
+    // create checker display for human & human-highlight
     checkerH = Object(&textured, texture, xml.getData("h.png"));
     checkerH2 = Object(&textured, texture, xml.getData("h-1.png"));
+    // create checker display for computer
     checkerC = Object(&textured, texture, xml.getData("c.png"));
 }
 
-
+// update shaders for render
 void Checker::update(){
     background.update();
 }
 
+// render the checker game
 void Checker::render(){
+    // render the background & the last Search result
     background.render();
     search.render();
 
+    // compute size of each tile for displaying the checkers
     float halfTile = float(120) / float (720) * screenHeight;
     glm::vec3 zero(-screenWidth, screenHeight, 0);
     glm::vec3 off(halfTile, 3 * halfTile, 0);
 
+    // place checkers on the board according to their position
     for (size_t i = 0; i < board.b.size(); i++){
         for (size_t j = 0; j < board.b[i].size(); j++){
+            // x and y on the board:
+            // x goes from -screenHeight to screenHeight
+            // y goes from -screenWidth to screenWidth
             if (board.b[i][j] == HUSS){
                 glm::vec3 off((2 * j + 1) * halfTile, (2 * i + 1) * halfTile, 0);
                 checkerH.setPos(zero.x + off.x, zero.y - off.y);
@@ -69,11 +80,14 @@ void Checker::render(){
         }
     }
 
+    // if its human-turn: notify player to select checker
     if (!humanSelect){
         text.renderLeft("Player", 1, 2, 3.5, -3.5);
     }
 
+    // if human selected a checker: highlight possible target positions
     if (humanSelect && (human.cur != -1)){
+        // if the possible move is capture move
         if (human.moves[human.cur].isCapture()){
             for (size_t i = 0; i< human.moves[human.cur].capture.size(); i++){
                 if (human.moves[human.cur].capture[i]){
@@ -84,6 +98,7 @@ void Checker::render(){
                 }
             }
         } else {
+            // if the possible move is regular move
             for (size_t i = 0; i< human.moves[human.cur].regular.size(); i++){
                 if (human.moves[human.cur].regular[i]){
                     glm::vec3 off((2 * human.moves[human.cur].regular[i].y + 1) * halfTile, (2 * human.moves[human.cur].regular[i].x + 1) * halfTile, 0);
@@ -97,6 +112,7 @@ void Checker::render(){
 
 }
 
+// set the difficulty mode
 void Checker::setDiff(int d) const {
     difficulty = d;
 }
@@ -113,15 +129,13 @@ void Checker::convertMouse(int& x, int& y) const {
     y = resultY;
 }
 
-
+// if human does not have available move
 bool Checker::humanAva() const{
     return human.avaMoves() == 0;
 }
 
-
+// human turn
 bool Checker::humanTurn(int x, int y, bool& done){
-
-    // human turn
     if (terminalState()){
         done = true;
         return false;
@@ -137,7 +151,6 @@ bool Checker::humanTurn(int x, int y, bool& done){
         // humanSelect = true & want to reselect
         int originalCur = human.cur;
         bool select = human.select(x, y);
-        // std::cout << std::boolalpha << "select?" << select << std::endl;
         if (select){
             humanSelect = true;
         } else {
@@ -151,7 +164,6 @@ bool Checker::humanTurn(int x, int y, bool& done){
                 move(origx, origy, x, y, HUSS);
                 search.update(origx, origy, x, y, HUSS);
                 human.cur = -1;
-                // std::cout << board;
                 updateMoves();
                 return true;
 
@@ -277,7 +289,7 @@ bool Checker::terminalState() const {
 }
 
 // determine the winner of the game
-// 1: human win; 2: computer win; 3: draw
+// 1: human win; 2: draw; 3: computer win;
 int Checker::determineWinner() const{
     if (board.numH > board.numC) return 1;
     else if (board.numH == board.numC) return 2;

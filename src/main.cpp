@@ -11,9 +11,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "extern/stb_image.h"
 
-enum GameMode {STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_GAME_OVER};
-GameMode mode;
-
 using namespace std;
 
 ///////////////////////////////////////////GLOBAL VARIABLES///////////////////////////////////////////
@@ -21,6 +18,9 @@ using namespace std;
 float screenRatio = 0.0, screenHeight = 0.0, screenWidth = 0.0;
 ShaderProgram textured;
 SDL_Window* displayWindow;
+
+enum GameMode {STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_GAME_OVER};
+GameMode mode;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
