@@ -2,7 +2,22 @@
 
 Yuxi Luo; Project for CS4613; Spring 2018
 
-[Checker Game 6 * 6](https://github.com/Skycocoo/CS4613-Artificial-Intelligence/blob/master/req/rule.png)
+[Checker Game 6 * 6](https://github.com/Skycocoo/CS4613-Artificial-Intelligence/blob/master/img/rule.png)
+
+
+# Table of Contents
+- [Dependencies](#dependencies)
+- [Installation](#installation-with-cmake)
+- [General Deign](#general-design)
+    - [Classes](#classes)
+    - [Search](#search)
+    - [Terminal States and Utility](#terminal-states-and-utility)
+    - [Level of Difficulty](#level-of-difficulty)
+- [Demo](#demo)
+    - [GUI](#gui)
+    - [Command Line](#command-line)
+
+
 
 ## Dependencies
 
@@ -66,6 +81,72 @@ GameState (display)
 ```
 
 
+### Classes
+
+
+#### AvaMoves
+
+Provides available moves for human / computer. It stores all the checkers for current player, and processes those checkers for every iteration of board, so that it updates the availability of the checkers.
+
+#### Board
+
+Provides board for the game. It uses 2D-vector to represent the 6 * 6 board, and updates the board by the execution of moves by human / computer.
+
+#### Checker
+
+Manages human and computer players. It stores necessary instances to perform human-turn and computer-turn. For GUI it also includes background and text to display the board & the statistics of Search for GameState.
+
+It takes in the input from GameState and process the human move. After human mvoes, the computer-turn is called immediately, providing corresponding Search results and continue the game.
+
+#### GameState
+
+Manages three levels of game mode: Menu level, Game level, and End level
+
+In Menu level, GameState displays instructions of the game, and takes in player's input for their selection to move first / second, and to play with easy / medium / hard mode.
+
+In End level, GameState displays the winner of the game.
+
+In Game level, GameState renders the checker board and generates corresponding checkers on the board. In this level, GameState takes inputs from the mouse to select the checker for player, and to move the checker to the target position. In addition, the statistics of last result from Search are displayed.
+
+When player selected a move, if the move is available, the corresponding available target positions will be highlighted.
+
+#### Matrix
+
+Provides mathematics for computing and multiplying matrices
+
+#### Move
+
+Holds current checker's position, and contains possible positions for regular move and capture move of the checker
+
+#### Object
+
+Stores necessary instances for ShaderProgram to update and render the graphics
+
+#### Result
+
+Holds the result of Search. Provides selected position and desired target position for computer.
+
+#### Search
+
+Contains human and computer players that separates from Checker, in order to simulate moves for searching optimal move for computer.
+
+#### setUp
+
+Contains basic operations to set up window for rendering and generating shaders.
+
+#### ShaderProgram
+
+Contains corresponding values that manipulates the attributes of an element that will be rendered.
+
+#### Text
+
+Inherits from Object. Provides methods to display texts from font sprite sheet.
+
+#### XMLLoad
+
+Processes xml to provide data for sprite sheet, which contains all the textures of checkers.
+
+
 ### Search
 
 #### Availability of moves
@@ -84,7 +165,9 @@ For each iteration, Alpha-Beta search provide the optimal move from the current 
 
 When 15 seconds are used up by the search (calculated with standard library chrono), the entire search will be stopped and the last optimal move will be returned to the main game for execution.
 
-### Terminal States & Utility & Heuristics for computer
+
+
+### Terminal States and Utility
 
 #### Terminal States
 
@@ -112,6 +195,8 @@ There are 4 heuristics to be considered to estimate the utility. Because the ran
 
 In other words, the further the enemy is, and the fewer checkers the enemy has, the better chance to win the game.
 
+
+
 ### Level of Difficulty
 
 The level of difficulty of the game is implemented by the maximum depth the Search can go to.
@@ -121,43 +206,21 @@ The difficulty ranges from 1 to 3.
 When the difficulty is 1: the depth is restricted to 5; 2: the depth is restricted to 15; 3: the depth is unlimited (to 80)
 
 
-### Classes
+
+### Demo
+
+#### GUI
+
+Menu level and End level:
+
+![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/img/title.png?token=AVi1i8EemFwMo1xWOzqZ5ldSoy9IFjpsks5a6ddUwA%3D%3D)
+
+Game level:
+
+![alt-text](https://raw.githubusercontent.com/Skycocoo/CS4613-Artificial-Intelligence/master/img/game.png?token=AVi1i029mj8DmKLp1ICeI_e7BdcR_jPHks5a6ddmwA%3D%3D)
 
 
-
-#### AvaMoves
-
-Provides available moves for human / computer. It stores all the checkers for current player, and processes those checkers for every iteration of board, so that it updates the availability of the checkers.
-
-#### Board
-
-Provides board for the game. It uses 2D-vector to represent the 6 * 6 board, and updates the board by the execution of moves by human / computer.
-
-#### Checker
-
-Manages human and computer players. It stores necessary instances to perform human-turn and computer-turn. 
-
-#### GameState
-
-Manages three levels of game mode: Menu level, Game level, and End level
-
-In Menu level, GameState displays instructions of the game, and takes in player's input for their selection to move first / second, and to play with easy / medium / hard mode.
-
-In End level, GameState displays the winner of the game.
-
-In Game level, GameState renders the checker board and generates corresponding checkers on the board. In this level, GameState takes inputs from the mouse to select the checker for player, and to move the checker to the target position. In addition, the statistics of last result from Search are displayed.
-
-When player selected a move, if the move is available, the corresponding available target positions will be highlighted.
-
-
-
-### Demo - GUI
-
-![alt-text]()
-![alt-text]()
-
-
-### Demo - Command Line
+#### Command Line
 
 ```
 Checker Game, 6 * 6 board
