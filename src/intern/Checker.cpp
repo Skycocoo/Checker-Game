@@ -29,6 +29,11 @@ board(), human(board, HUSS), comp(board, COMP), search(human, comp, board, this)
     background.setShape(glm::vec3(screenWidth, screenHeight, 0));
     background.setScale(2 * screenHeight);
 
+    GLuint ti;
+    textured = setTextured("title.png", ti);
+    title = Object(&textured, ti);
+    title.setShape(glm::vec3(screenWidth, screenHeight, 0));
+    title.setScale(2 * screenHeight);
 
     XMLLoad xml("sprites.xml");
     GLuint texture;
@@ -45,11 +50,7 @@ void Checker::update(){
 
 void Checker::render(){
     background.render();
-
     search.render();
-
-    // text.render("Checker Game", 1, 2, 0, 3.5);
-    // text.renderLeft("Checker Game", 0.5, 1, 0, 2);
 
     float halfTile = float(120) / float (720) * screenHeight;
     glm::vec3 zero(-screenWidth, screenHeight, 0);
@@ -70,6 +71,10 @@ void Checker::render(){
             }
 
         }
+    }
+
+    if (!humanSelect){
+        text.renderLeft("Player", 1, 2, 3.5, -3.5);
     }
 
 }
@@ -122,7 +127,6 @@ bool Checker::humanTurn(int x, int y, bool& done){
             if (target) {
                 move(origx, origy, x, y, HUSS);
                 search.update(origx, origy, x, y, HUSS);
-                humanSelect = false;
 
                 // std::cout << board;
                 updateMoves();
@@ -160,6 +164,8 @@ void Checker::computerTurn(){
     comp.checkMove(targx, targy);
     move(x, y, targx, targy, COMP);
     search.update(x, y, targx, targy, COMP);
+
+    humanSelect = false;
 
     // display current board
     std::cout << board;

@@ -22,23 +22,17 @@ human(human), comp(comp), board(board), check(check), depth(0), nodes(0), min(0)
 }
 
 void Search::render(){
-    // glClear(GL_COLOR_BUFFER_BIT);
-
-    // check->render();
-
     float x = 3.5, x2 = 4.0;
 
-    text.renderLeft("Enemy", 1, 2, x, 4.5);
-    text.renderLeft("Depth: ", 0.5, 1, x, 3.5);
-    text.renderLeft(std::to_string(this->depth), 0.5, 1, x2, 3);
-    text.renderLeft("Nodes: ", 0.5, 1, x, 2.5);
-    text.renderLeft(std::to_string(this->nodes), 0.5, 1, x2, 2);
-    text.renderLeft("Min prune: ", 0.5, 1, x, 1.5);
-    text.renderLeft(std::to_string(this->min), 0.5, 1, x2, 1);
-    text.renderLeft("Max prune: ", 0.5, 1, x, 0.5);
-    text.renderLeft(std::to_string(this->max), 0.5, 1, x2, 0);
-
-    // SDL_GL_SwapWindow(displayWindow);
+    text.renderLeft("Enemy", 1, 2, x, 4);
+    text.renderLeft("Depth: ", 0.5, 1, x, 3);
+    text.renderLeft(std::to_string(this->depth), 0.5, 1, x2, 2.5);
+    text.renderLeft("Nodes: ", 0.5, 1, x, 2);
+    text.renderLeft(std::to_string(this->nodes), 0.5, 1, x2, 1.5);
+    text.renderLeft("Min prune: ", 0.5, 1, x, 1);
+    text.renderLeft(std::to_string(this->min), 0.5, 1, x2, 0.5);
+    text.renderLeft("Max prune: ", 0.5, 1, x, 0);
+    text.renderLeft(std::to_string(this->max), 0.5, 1, x2, -0.5);
 }
 
 
@@ -56,15 +50,15 @@ void Search::renderSearch(int min, int max, int nodes, int depth){
 
     float x = 3.5, x2 = 4.0;
 
-    text.renderLeft("Enemy", 1, 2, x, 4.5);
-    text.renderLeft("Depth: ", 0.5, 1, x, 3.5);
-    text.renderLeft(std::to_string(depth), 0.5, 1, x2, 3);
-    text.renderLeft("Nodes: ", 0.5, 1, x, 2.5);
-    text.renderLeft(std::to_string(nodes), 0.5, 1, x2, 2);
-    text.renderLeft("Min prune: ", 0.5, 1, x, 1.5);
-    text.renderLeft(std::to_string(min), 0.5, 1, x2, 1);
-    text.renderLeft("Max prune: ", 0.5, 1, x, 0.5);
-    text.renderLeft(std::to_string(max), 0.5, 1, x2, 0);
+    text.renderLeft("Enemy", 1, 2, x, 4);
+    text.renderLeft("Depth: ", 0.5, 1, x, 3);
+    text.renderLeft(std::to_string(depth), 0.5, 1, x2, 2.5);
+    text.renderLeft("Nodes: ", 0.5, 1, x, 2);
+    text.renderLeft(std::to_string(nodes), 0.5, 1, x2, 1.5);
+    text.renderLeft("Min prune: ", 0.5, 1, x, 1);
+    text.renderLeft(std::to_string(min), 0.5, 1, x2, 0.5);
+    text.renderLeft("Max prune: ", 0.5, 1, x, 0);
+    text.renderLeft(std::to_string(max), 0.5, 1, x2, -0.5);
 
     SDL_GL_SwapWindow(displayWindow);
 
