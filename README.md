@@ -2,8 +2,9 @@
 
 Yuxi Luo; Project for CS4613; Spring 2018
 
-[Checker Game 6 * 6](https://github.com/Skycocoo/Checker-Game/blob/master/img/rule.png)
+[Checker Game 6 * 6 rule](https://github.com/Skycocoo/Checker-Game/blob/master/img/rule.png)
 
+[40s Video Demo](https://vimeo.com/266762101)
 
 # Table of Contents
 - [Dependencies](#dependencies)
