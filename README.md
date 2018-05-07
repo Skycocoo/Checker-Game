@@ -1,6 +1,6 @@
 # Checker Game
 
-Yuxi Luo; Project for CS4613; Spring 2018
+Yuxi Luo; Project for CS4613 Artificial Intelligence; Spring 2018
 
 [Checker Game 6 * 6 rule](https://github.com/Skycocoo/Checker-Game/blob/master/img/rule.png)
 
@@ -218,11 +218,11 @@ When the difficulty is 1: the depth is restricted to 5; 2: the depth is restrict
 
 Menu level and End level:
 
-![alt-text](https://raw.githubusercontent.com/Skycocoo/Checker-Game/master/img/title.png?token=AVi1i69GdtPlX7IQqiiJJj3UBDp0zslfks5a6fPqwA%3D%3D)
+![alt-text](https://github.com/Skycocoo/Checker-Game/blob/master/img/title.png?raw=true)
 
 Game level:
 
-![alt-text](https://raw.githubusercontent.com/Skycocoo/Checker-Game/master/img/game.png?token=AVi1ixE1qG_zpYVIrcrU6RSkEdHxQkg3ks5a6fPYwA%3D%3D)
+![alt-text](https://github.com/Skycocoo/Checker-Game/blob/master/img/game.png?raw=true)
 
 
 ### Command Line
